@@ -1,2 +1,2 @@
 # bo_stepsahead
-Repository for Bayesian optimization taking into account multiple steps ahead
+Repository for Bayesian optimization that takes into account multiple steps ahead.
