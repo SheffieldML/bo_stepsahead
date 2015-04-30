@@ -1,11 +1,8 @@
 %%%%%%%%%%%%
 % Javier Gonzalez
 % 2015
-% exmaple to run the emin_epmgp
+% example to run the emin_epmgp
 %%%%%%%%%%%%
-
-
-%% General test (no available reference value here)
 
 % dimensionality of the problem
 n = 10;
@@ -18,7 +15,7 @@ K = K*K' + eye(n);
 % bounds for the minimum
 eta = -10;
 
-% calculate the integral of  epmgp
+% calculate the integral with epmgp
 [e_min,Int_y,Probs_y,Int_eta] = emin_epmgp(m,K,eta);
 
 % sanity check

@@ -3,23 +3,23 @@
 % 2015
 % code to computer the expected loss multiple steps ahead
 % -- Input 
-% x     : putative point
-% eta   : current minimum
-% n     : number of steps ahead
-% lB    : lower bounds 
-% uB    : upper bounds
-% kernel: kerel function
+% x_star:	putative point
+% eta: 		current minimum
+% n_ahead:	number of steps ahead
+% lB: 		lower bounds 
+% uB: 		upper bounds
+% kernel: 	kernel function
 % -- Output
-% loss  : computed expected loss
-% v_loss: vector of comuted losses for each dpp sample
+% loss: computed expected loss
+% v_loss: vector of computed losses for each dpp sample
 %%%%%%%%%%%%
 function [loss,v_loss] = loss_msahead(x_star, n_ahead, lB, uB, GP)
     % --- fixed options
-    n_bigset_dpp = 500;
-    n_replicates = 10;
-    q            = 50;
+    n_bigset_dpp = 500;  % uniform samples
+    n_replicates = 10;   % dpp replicates
+    q            = 50;   % truncation, for dual dpp
 
-    % --- get constants 
+    % --- get values
     p           = length(x_star);
     v_loss      = zeros(1,n_replicates);
     x           = GP.x;

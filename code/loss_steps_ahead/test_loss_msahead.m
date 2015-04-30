@@ -32,7 +32,7 @@ nlml2 = gp(hyp2, @infExact, [], covfunc, likfunc, x, y);
 m = reshape(m, size(y_grid));
 figure(2); imagesc(m); drawnow;
 
-%%
+% Structure to pass to loss_msahead
 GP          = struct;
 GP.hyp2     = hyp2;
 GP.inf      = {@infExact};
@@ -44,8 +44,7 @@ GP.y        = y;
 eta    = min(y);
 x_star = [pi/2,pi/2];
 
-
-%% compute the value of the loss with different look-ahead steps
+%% compute the value of the loss in a grid with 5 look ahead steps
 n_ahead = 5;
 n_grid  = max(size(x_grid));
 loss10  = zeros(1,n_grid);
