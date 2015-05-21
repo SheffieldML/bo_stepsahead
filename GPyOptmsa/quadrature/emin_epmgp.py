@@ -11,7 +11,8 @@ def emin_epmgp(m,K,eta):
     if mtb == None:
         import matlab_wrapper
         mtb = matlab_wrapper.MatlabSession()
-    mtb.put('K',0.1*np.eye(K.shape[0]))  # symetrize and regularize the matrix
+
+    mtb.put('K',0.5*(K+K.T))  # symetrize and regularize the matrix
     mtb.put('m',m)
     mtb.put('eta',eta)
     mtb.eval("[e_min,Int_y,Probs_y,Int_eta] = emin_epmgp(m,K,eta)")

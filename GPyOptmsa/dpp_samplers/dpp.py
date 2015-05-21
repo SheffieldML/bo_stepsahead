@@ -56,6 +56,7 @@ def sample_conditional_dpp(L,set0,k=None):
     
     # Compute the sample
     sample = sample_dpp(L_compset,k)
+    if k==2: sample = [sample]
     return np.concatenate((set0,sample) ,axis=0)
 
 
@@ -81,6 +82,7 @@ def sample_dual_conditional_dpp(L,set0,q,k=None):
     
     # Take approximated sample
     sample = sample_dual_dpp(L_compset,q,k-1)
+    if k==2: sample = [sample]
     return np.concatenate((set0,sample) ,axis=0)
 
 
@@ -116,7 +118,6 @@ def sample_dual_dpp(L,q,k=None):
         mtb.eval("dpp_sample = sample_dual_dpp(B,decompose_kernel(B'*B))")
         
     dpp_sample = mtb.get('dpp_sample')
-    print dpp_sample
     return dpp_sample.astype(int)
 
 
