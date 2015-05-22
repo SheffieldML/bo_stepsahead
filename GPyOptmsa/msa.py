@@ -19,14 +19,18 @@ class GPGOMSA:
         self.Y = Y
         self.kernel = GPy.kern.RBF(self.input_dim, variance=.1, lengthscale=.1)  + GPy.kern.Bias(self.input_dim)
         self.model  = GPy.models.GPRegression(X,Y,kernel= self.kernel)
-        self.model.Gaussian_noise.constrain_bounded(1e-4,1e6) #to avoid numerical problems
+        self.model.Gaussian_noise.constrain_bounded(1e-2,1e6) #to avoid numerical problems
         self.model.optimize_restarts(5)
         self.loss = None
         self.s_in_min = np.sqrt(self.model.predict(self.X)[1])
+        self.f = f
 
 
-    def run_optimization(self,max_iter,n_ahead=None, eps= 10e-6):
+    def run_optimization(self,max_iter,n_ahead=None, eps= 10e-6, beta=0, n_samples_dpp=5):
 
+        # weigth of the previous acquisition in the dpp sample
+        self.beta = beta
+        self.n_samples_dpp = n_samples_dpp
         # Check the number of steps ahead to look at
         if n_ahead==None:
             self.n_ahead = max_iter
@@ -38,9 +42,6 @@ class GPGOMSA:
         distance_lastX = np.sqrt(sum((self.X[self.X.shape[0]-1,:]-self.X[self.X.shape[0]-2,:])**2))
 
         while k<=max_iter and distance_lastX > eps:
-            print k
-            print self.n_ahead
-
             # update loss
             self.update_loss()
  
@@ -50,7 +51,7 @@ class GPGOMSA:
 
             # Augment the dataset
             self.X = np.vstack((self.X,X_new))
-            self.Y = np.vstack((self.Y,self.loss(X_new)))
+            self.Y = np.vstack((self.Y,self.f(X_new)))
 
             # Update the model
             self.model.set_XY(self.X,self.Y)
@@ -67,8 +68,8 @@ class GPGOMSA:
 
     def update_loss(self):
         # Evaluate the loss ahead acquisition function in a set of representer points
-        x_acq = samples_multidimensional_uniform(self.bounds,10*self.input_dim)
-        y_acq = loss_nsahead(x_acq,self.n_ahead,self.model,self.bounds)
+        x_acq = samples_multidimensional_uniform(self.bounds,15*self.input_dim)
+        y_acq = loss_nsahead(x_acq,self.n_ahead,self.model,self.bounds,self.loss,self.beta,self.n_samples_dpp)
 
         # Build the acquisition: based on a model on the representer points
         self.kernel_acq      = GPy.kern.RBF(self.input_dim, variance=.1, lengthscale=.1)  + GPy.kern.Bias(self.input_dim)

@@ -12,10 +12,17 @@ def emin_epmgp(m,K,eta):
         import matlab_wrapper
         mtb = matlab_wrapper.MatlabSession()
 
-    mtb.put('K',0.5*(K+K.T))  # symetrize and regularize the matrix
-    mtb.put('m',m)
-    mtb.put('eta',eta)
-    mtb.eval("[e_min,Int_y,Probs_y,Int_eta] = emin_epmgp(m,K,eta)")
-    e_min = mtb.get('e_min')
+    try:
+        mtb.put('K',0.5*(K+K.T))  # symetrize to avoid numerical inconsitencies
+        mtb.put('m',m)
+        mtb.put('eta',eta)
+        mtb.eval("[e_min,Int_y,Probs_y,Int_eta] = emin_epmgp(m,K,eta)")
+        e_min = mtb.get('e_min')
+    except:
+        mtb.put('K',0.5*(K+K.T)+0.1*np.diag(np.ones(K.shape[0])))  # regularize in case of errors caused by K being singular
+        mtb.put('m',m)
+        mtb.put('eta',eta)
+        mtb.eval("[e_min,Int_y,Probs_y,Int_eta] = emin_epmgp(m,K,eta)")
+        e_min = mtb.get('e_min')
     return e_min
 

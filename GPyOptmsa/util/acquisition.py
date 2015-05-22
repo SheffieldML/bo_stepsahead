@@ -3,13 +3,23 @@ from ..quadrature.emin_epmgp import emin_epmgp
 from ..util.general import samples_multidimensional_uniform, reshape, get_moments, get_quantiles
 import numpy as np
 
-def loss_nsahead(x, n_ahead, model, bounds):
+def loss_nsahead(x, n_ahead, model, bounds,current_loss,beta, n_samples_dpp = 5):
+    '''
+    x: 
+    n_ahead: 
+    model: 
+    bounds:
+    current_loss:
+    :param beta: weight of the current loss in the ddp sample
+    '''
+
+
     x = reshape(x,model.X.shape[1]) 
     n_data = x.shape[0]
 
     # --- fixed options
     num_init_dpp    = 500              # uniform samples
-    n_replicates    = 5                # dpp replicates
+    n_replicates    = n_samples_dpp    # dpp replicates
     q               = 50               # truncation, for dual dpp
 
     # --- get values
@@ -25,8 +35,11 @@ def loss_nsahead(x, n_ahead, model, bounds):
         for k in range(n_data):
             X             = np.vstack((x[k,:],X0))
        
-            # --- define kernel matrix for the dpp
-            L   = model.kern.K(X)
+            # --- define kernel matrix for the dpp. Take into account the current loss if available.
+            if current_loss == None:
+                L   = model.kern.K(X)
+            else:
+                L   = model.kern.K(X) - beta*np.diag(current_loss(X))
     
             # --- averages of the dpp samples
             for j in range(n_replicates):

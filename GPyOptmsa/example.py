@@ -23,7 +23,7 @@ Y = f(X)
 BO = GPyOptmsa.msa.GPGOMSA(f,bounds, X,Y)       
     
 # Runs optimization
-BO.run_optimization(max_iter=3)
+BO.run_optimization(max_iter=3,beta=10)
 
 # Plot the acquisition
 BO.plot_loss()
