@@ -15,6 +15,9 @@
 \usepackage{graphicx}
 \usepackage{tikz}
 \usetikzlibrary{bayesnet}
+\tikzstyle{connect}=[-latex, thick]
+\tikzstyle{allconnected}=[line width=0.15cm]
+
 %\usepackage{verbatim}
 %\usepackage[active,tightpage]{preview}
 %\PreviewEnvironment{tikzpicture}
@@ -59,6 +62,10 @@
 \newcommand{\argmax}{\operatorname*{arg\: max}}
 \newcommand{\chol}{\operatorname{\mathsf{C}}}
 
+\newcommand{\data}{\mathcal{D}}
+\newcommand{\xst}{x_{\ast}}
+\newcommand{\yst}{y_{\ast}}
+
 \newtheorem{theorem}{Theorem}
 \newtheorem{lemma}{Lemma}
 \newtheorem{corollary}{Corollary}
@@ -94,15 +101,66 @@ Address \\
 
 %\nipsfinalcopy % Uncomment for camera-ready version
 
-\abstract{
-    We present GLASSES: Global optimisation with Look-Ahead through Stochastic Simulation and Expected-loss Search. Our algorithm tackles the long-standing myopia of Bayesian optimisation approaches.
-}
     
 \begin{document}
 
-
-
 \maketitle
+
+
+\abstract{
+    We present GLASSES: Global optimisation with Look-Ahead through Stochastic Simulation and Expected-loss Search. Our algorithm tackles the long-standing myopia of Bayesian optimisation approaches.
+}
+
+\begin{figure}
+\centering
+\begin{tikzpicture}
+
+    % first row
+    \node[obs] (D0) {$\data_0$};
+    \node[latent, right=of D0, xshift=1.2cm] (D1) {$\data_1$};
+    \node[draw=none, right=of D1, xshift=1.2cm] (Ddots) {$\ldots$};
+    \node[latent, right=of Ddots, xshift=1.2cm] (Dn) {$\data_n$};
+
+    % second row
+    \node[det, below=of D0, xshift=1.2cm] (xst) {$\xst$};
+    \node[latent, right=of xst, xshift=1.2cm] (x2) {$x_2$};
+    \node[latent, right=of x2, xshift=4.8cm] (xn) {$x_n$};
+
+    % third row
+    \node[latent, below=of xst] (yst) {$\yst$};
+    \node[latent, below=of x2] (y2) {$y_2$};
+    \node[draw=none, right=of y2, xshift=1.2cm] (ydots) {$\ldots$};
+    \node[latent, below=of xn] (yn) {$y_n$};
+
+    % Connect the nodes
+    \path 
+        (D0) edge [connect] (D1)
+        (D0) edge [connect] (xst)
+        (xst) edge [connect] (yst)
+        (xst) edge [connect] (D1)
+        (yst) edge [connect, bend right=20] (D1)
+        (yst) edge [allconnected] (y2)
+
+        (D1) edge [connect] (Ddots)
+        (D1) edge [connect] (x2)
+        (x2) edge [connect] (y2)
+        (x2) edge [connect] (Ddots)
+        (y2) edge [connect, bend right=20] (Ddots)
+        (y2) edge [allconnected] (ydots)
+
+        (D1) edge [connect] (Ddots)
+        (D1) edge [connect] (x2)
+        (x2) edge [connect] (y2)
+        (x2) edge [connect] (Ddots)
+        (y2) edge [connect, bend right=20] (Ddots)
+        (ydots) edge [allconnected] (yn)
+
+        (Ddots) edge [connect] (Dn)
+        (Dn) edge [connect] (xn)
+        (xn) edge [connect] (yn)        
+        ;
+\end{tikzpicture}
+\end{figure}
 
 \bibliographystyle{plain}
 \bibliography{bib}
