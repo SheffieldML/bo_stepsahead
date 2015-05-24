@@ -8,6 +8,8 @@
 \usepackage{url}
 \usepackage[utf8x]{inputenc}
 \usepackage[english]{babel}
+\usepackage{natbib}
+\usepackage{nicefrac}
 \usepackage{algorithm}
 \usepackage{algorithmic}
 \usepackage{amsfonts}
@@ -27,7 +29,7 @@
 \newcommand{\vp}{\vec{\phi}}
 \newcommand{\vmu}{\vec{\mu}}
 \newcommand{\vf}{\vec{f}}
-\newcommand{\vw}{\vec{w}}
+
 \newcommand{\vm}{\vec{m}}
 \newcommand{\vx}{\vec{x}}
 \newcommand{\vr}{\vec{r}}
@@ -63,6 +65,8 @@
 \newcommand{\chol}{\operatorname{\mathsf{C}}}
 
 \newcommand{\data}{\mathcal{D}}
+\newcommand{\reals}{\mathbb{R}}
+\newcommand{\sX}{\mathcal{X}}
 \newcommand{\xst}{x_{\ast}}
 \newcommand{\yst}{y_{\ast}}
 
@@ -86,7 +90,7 @@
 
 \title{
     GLASSES: Relieving The Myopia Of Bayesian Optimisation
-    }
+}
     
  
 \author{
@@ -112,10 +116,40 @@ Address \\
 
 \maketitle
 
+\begin{abstract}
+    We present \us: Global optimisation with Look-Ahead through Stochastic Simulation and Expected-loss Search. 
+    The vast majority of global optimisation approaches in use are myopic, in only considering the impact of the next function value; the remaining approaches are able to consider only a handful of future evaluations. 
+    Our novel algorithm, \us, permits the consideration of dozens of evaluations into the future. 
+    We show that the far-horizon planning thus enabled leads to substantive performance gains in empirical tests. 
+\end{abstract}
 
-\abstract{
-    We present \us: Global optimisation with Look-Ahead through Stochastic Simulation and Expected-loss Search. Our algorithm tackles the long-standing myopia of Bayesian optimisation approaches.
-}
+\section{Introduction} % (fold)
+\label{sec:introduction}
+
+Almost all global optimisation techniques are myopic, in considering no more than a single step into the future. 
+We define the multi-step lookahead problem as the global optimisation of an function by considering the significance of the next function evaluation on function evaluations (steps) further into the future. 
+It is clear that a solution to the problem would offer performance gains.
+For example, consider the case in which we have a budget of two evaluations with which to optimise a function $f(x)$ over the domain $\sX = [0, 1] \subset \reals$. 
+If we are strictly myopic, our first evaluation will likely be at 
+$x=\nicefrac{1}{2}$, and our second then at only one of $x=\nicefrac{1}{4}$ and $x=\nicefrac{3}{4}$. 
+This myopic strategy thereby ignores half of the domain $\sX$, regardless of the second choice. 
+If we adopt a two-step lookahead approach, we will select function evaluations that will be more evenly distributed across the domain by the time the budget is exhausted, and will hence be more informative about $f$ and its optimum.
+
+There is a limited literature on the multi-step lookahead problem.
+\cite{osborne_gaussian_2009} perform multi-step lookahead by optimising future evaluation locations, and sampling over future function values. 
+This approach scales poorly with the number of future evaluations considered, and the authors present results for no more than two-step lookahead.
+\cite{Marchant*Ramos*Sanner*2014} reframe the multi-step lookahead problem as a partially observed Markov decision process, and adopt a Monte Carlo tree search approach in solving it. 
+Again, the scaling of the approach permits the authors to consider no more than six steps into the future. 
+
+There is a clear link between the multi-step lookahead problem and that considered in the literature as \emph{batch} Bayesian optimisation. 
+The two problems are distinct but related: the multi-step lookahead problem requires the challenging marginalisation over unknown future evaluation \emph{locations}, in addition to the unknown future evaluation \emph{values} also marginalised by batch approaches. 
+Similarly to the state-of-the-art in multi-step lookahead, the batch literature provides only poor scaling with the number of evaluations.
+\cite{Ginsbourger2009} present results for no more than six simultaneous function evaluations.
+Cite Azimi papers. 
+
+We propose an algorithm, \us, that provides scaling superior to existing alternatives.
+
+% section introduction (end)
 
 \begin{figure}
 \centering
@@ -181,7 +215,7 @@ Let $\bL$ be the kernel matrix corresponding to the evaluation of $L$ on a finit
 \begin{eqnarray}
 p_L(\bx_1 \cup B | \bx_1 \subseteq Z ) = \frac{p_L(Z = \bx_1 \cup B ) }{p(\bx_1 \subseteq Z)} = \frac{\det(\bL_{\bx_1 \cup B})}{\det(\bL - \bI_{\bar{\bx}_1} ) }
 \end{eqnarray}
-where $\bI_{\bar{\bx}_1}$ is the matrix with ones in the diagonal entries indexed by elements of $\Omega - \bx_1$ and zeros elsewhere.  This conditional distribution is again a \dpp over subsets of $\Omega-\bx_1$ (Borodin and Rains, 2005) with kernel 
+where $\bI_{\bar{\bx}_1}$ is the matrix with ones in the diagonal entries indexed by elements of $\Omega - \bx_1$ and zeros elsewhere.  This conditional distribution is again a \dpp over subsets of $\Omega-\bx_1$ \citep{Borodin*Rains*2005} with kernel 
 $$\bL^{\bx_1} = \left( [   (\bL + \bI_{\bar{\bx}_1})^{-1}]_{\bar{\bx}_1} \right)^{-1}.$$
 $[\cdot ]_{\bar{\bx}_1}$ represents the restriction of the matrix to all rows and columns not indexed by $\bx_1$. The previous inverses exist if and only if the probability of $\bx_1$ appearing is nonzero, as is the case in our context. A second marginalization is later needed to generate samples of size k.  Figure \ref{fig1} shows an example of samples from a k-\dpp and a conditional k-\dpp with the same kernel.
  
@@ -241,11 +275,11 @@ where $h_i(\by) = \mathbb{I}\{y_i>\eta\}$.  Merge (\ref{eq:term1}) and (\ref{eq:
  
 \end{proof}
 
-All the elements in (\ref{eq:expected_loss}) can be rewritten in a way that can be computed using EP but the work in (Cunningham, 2011). 
+All the elements in (\ref{eq:expected_loss}) can be rewritten in a way that can be computed using EP but the work in \cite{Cunningham*Hennig*Lacoste-Julien_2011}. 
 
 \begin{itemize}
 \item The second term is a Gaussian probability on unbounded polyhedron in which the limits are aligned with the axis.  
-\item The first term requires some more processing but it is still computable under the assumptions in (Cunningham, 2011). Let $\bw_j$ the $jth$ canonical vector. Then we have that
+\item The first term requires some more processing but it is still computable under the assumptions in \cite{Cunningham*Hennig*Lacoste-Julien_2011}. Let $\bw_j$ the $jth$ canonical vector. Then we have that
 \begin{eqnarray}
 \int_{\IR^n} y_j \prod_{i=1}^n t_{j,i}(\by) \N(\by; \mu, \Sigma) d \by & = & \bw^T  \int_{\IR^n} \by \prod_{i=1}^n t_{j,i}(\by) \N(\by; \mu, \Sigma) d \by \\
 & = & \bw^T E[\by] z_j
