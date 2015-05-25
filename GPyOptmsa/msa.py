@@ -26,7 +26,7 @@ class GPGOMSA:
         self.f = f
 
 
-    def run_optimization(self,max_iter,n_ahead=None, eps= 10e-6, beta=0, n_samples_dpp=5):
+    def run_optimization(self,max_iter,n_ahead=None, eps= 10e-6, beta=1, n_samples_dpp=5):
 
         # weigth of the previous acquisition in the dpp sample
         self.beta = beta
@@ -69,7 +69,7 @@ class GPGOMSA:
     def update_loss(self):
         # Evaluate the loss ahead acquisition function in a set of representer points
         x_acq = samples_multidimensional_uniform(self.bounds,15*self.input_dim)
-        y_acq = loss_nsahead(x_acq,self.n_ahead,self.model,self.bounds,self.loss,self.beta,self.n_samples_dpp)
+        y_acq = loss_nsahead(x_acq,self.n_ahead,self.model,self.bounds,self.beta,self.n_samples_dpp)
 
         # Build the acquisition: based on a model on the representer points
         self.kernel_acq      = GPy.kern.RBF(self.input_dim, variance=.1, lengthscale=.1)  + GPy.kern.Bias(self.input_dim)

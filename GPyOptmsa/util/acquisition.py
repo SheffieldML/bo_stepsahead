@@ -3,7 +3,7 @@ from ..quadrature.emin_epmgp import emin_epmgp
 from ..util.general import samples_multidimensional_uniform, reshape, get_moments, get_quantiles
 import numpy as np
 
-def loss_nsahead(x, n_ahead, model, bounds,current_loss,beta, n_samples_dpp = 5):
+def loss_nsahead(x, n_ahead, model, bounds,beta, n_samples_dpp = 5):
     '''
     x: 
     n_ahead: 
@@ -34,13 +34,17 @@ def loss_nsahead(x, n_ahead, model, bounds,current_loss,beta, n_samples_dpp = 5)
         # --- We need to this separatelly for each data points
         for k in range(n_data):
             X             = np.vstack((x[k,:],X0))
-       
+
             # --- define kernel matrix for the dpp. Take into account the current loss if available.
-            if current_loss == None:
-                L   = model.kern.K(X)
-            else:
-                L   = model.kern.K(X) - beta*np.diag(current_loss(X))
-    
+            # --- diversity
+            K   = model.kern.K(X)
+
+            # --- Quality term
+            Q   = np.diag(np.exp( -model.predict(X)[0])
+
+            # --- 
+            L    = np.dot(np.dot(Q,K),Q)
+
             # --- averages of the dpp samples
             for j in range(n_replicates):
                 # --- take a sample from the dpp (need to re-index to start from zero)
