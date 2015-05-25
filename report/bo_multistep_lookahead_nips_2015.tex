@@ -16,6 +16,8 @@
 \usepackage{graphics}
 \usepackage{graphicx}
 \usepackage{tikz}
+\usepackage{color,soul,amsmath}
+
 \usetikzlibrary{bayesnet}
 \tikzstyle{connect}=[-latex]
 \tikzstyle{allconnected}=[line width=0.1cm]
@@ -211,11 +213,15 @@ We propose an algorithm, \us, that provides scaling superior to existing alterna
 \end{figure}
 
 
-\section{Conditional DPPs for step ahead locations}
+ \section{Look-Ahead through Stochastic Simulation and Expected-loss Search (perhaps other title is better?)}
+
+\subsection{Conditional DPPs for step ahead locations simulation}
 
 To approximate $\Lambda_n(\bx_*)$ we compute  $E_{p(\by)} [\min (\by,\eta)]$ where $\by=\{y_1,\dots,y_n\}$ with $p(\by) \sim \N(\by; \mu, \Sigma)$ is the multivariate random vector that we obtain after evaluation the predictive distribution of the \gp at locations $\bx_*,\bx_2,\dots,\bx_n$. Point $\bx_*$ is fixed (is the point where we evaluate $\Lambda_n$) and we consider $\bx_2,\dots,\bx_n$ to be a sample of the conditional k-\dpp (for $k=n$) on $\bx_*$ with kernel $L$ (in principle, the one from the \gp).
  
-Let $\bL$ be the kernel matrix corresponding to the evaluation of $L$ on a finite set $\Omega$ of potential points (pre-uniformly sampled in the domain of interest, for instance).  The distribution obtained by conditioning on having observed $\bx_* \in \Omega$ can be obtained as follows. Let $B \subset \Omega$ a non intersecting set with $\bx_*$. We have that
+[QUICK DESCRIPTION OF WHY WE SAMPLE FROM A DPP GOES HERE]
+
+Let $\bL$ be the kernel matrix corresponding to the evaluation of $L$ on a finite set $\Omega$ of potential points \emph{i.e} pre-uniformly sampled in the domain of interest.  The distribution obtained by conditioning on having observed $\bx_* \in \Omega$ can be obtained as follows. Let $B \subset \Omega$ a non intersecting set with $\bx_*$. We have that
 \begin{eqnarray}
 p_L(\bx_* \cup B | \bx_* \subseteq Z ) = \frac{p_L(Z = \bx_* \cup B ) }{p(\bx_* \subseteq Z)} = \frac{\det(\bL_{\bx_* \cup B})}{\det(\bL - \bI_{\bar{\bx}_*} ) }
 \end{eqnarray}
@@ -230,8 +236,7 @@ $[\cdot ]_{\bar{\bx}_*}$ represents the restriction of the matrix to all rows an
     \label{fig1}
 \end{figure}
 
-\newpage
-\section{Computation of the Expected loss}
+\subsection{Expectation Propagation to compute the  Expected Loss}
 Our goal is to compute $E_{p(\by)} [\min (\by,\eta)]$ for $\by=\{y_1,\dots,y_n\}$ and $p_0(\by) \sim \N(\by; \mu, \Sigma)$. This  approximates the n-steps ahead expected loss $\Lambda_n(\bx_*)$. The goal of this section is to write  $E_{p(\by)} [\min (\by,\eta)]$ in a way that it is suitable to be computed by Expectation Propagation. Next proposition will do the work (I think).
 
 \begin{proposition}
@@ -250,6 +255,70 @@ $$t_{j,i}(\by)= \left\{ \begin{array}{lcl}
 \end{proposition}
 
 
+
+All the elements in (\ref{eq:expected_loss}) can be rewritten in a way that can be computed using EP but the work in \cite{Cunningham*Hennig*Lacoste-Julien_2011}. 
+
+\begin{itemize}
+\item The second term is a Gaussian probability on unbounded polyhedron in which the limits are aligned with the axis.  
+\item The first term requires some more processing but it is still computable under the assumptions in \cite{Cunningham*Hennig*Lacoste-Julien_2011}. Let $\bw_j$ the $jth$ canonical vector. Then we have that
+\begin{eqnarray}
+\int_{\IR^n} y_j \prod_{i=1}^n t_{j,i}(\by) \N(\by; \mu, \Sigma) d \by & = & \bw^T  \int_{\IR^n} \by \prod_{i=1}^n t_{j,i}(\by) \N(\by; \mu, \Sigma) d \by \\
+& = & \bw^T E[\by] z_j
+\end{eqnarray}
+where the expectation is calculated over the normalized distribution over $P_j$, the one EP approximates with $q(\by)$, and for $z_j$ being the normalizing constant 
+  $$z_j= \int_{\IR^n} \prod_{i=1}^n t_{j,i}(\by) \N(\by; \mu, \Sigma) d \by$$  
+Because EP does moments matching, both the normalizing constant and the expectation are available.
+\end{itemize}
+
+
+\subsection{Approximating the Expected loss function}
+
+[We can describe ]
+
+\subsection{Algorithm}
+
+
+\begin{algorithm}[t!]
+   \caption{Decission process of the \us algorithm.}
+   \label{alg:glasses}
+\begin{algorithmic}
+   \STATE {\bfseries Input:} dataset $\mathcal{D}_{0} = \{(\textbf{x}_0, y_0)\}$, number of remaining evaluations ($n$), representer points ($r$) and \dpp replicates (s).
+\STATE
+   \STATE Fit a \gp with kernel $k$ to $\mathcal{D}_{0}$.
+   \STATE Select $\bx_{1*},\dots,\bx_{r*}$ representer points of the loss.
+   \FOR{$j=1$ {\bfseries to} $r$ }
+   \STATE Take $s$ samples from a conditional n-\dpp of kernel $k$ given $\bx_{j*}$.
+   \STATE Approximate the expected loss at $\bx_j^*$ for the $s$ samples computing $E [\min (\by,\eta)]$.
+  \STATE Average the expected loss for the $s$ samples and obtain $\tilde{\Lambda}_n(\bx_j^*)$.
+   \ENDFOR
+\STATE Approximate $\Lambda_n(\bx_*)$ fitting a $\gp_2$  to $\{(\bx_{j*}, \tilde{\Lambda}_n(\bx_{j*})\}_{j=1}^r$ with posterior mean $\mu_2$.
+   \STATE \textbf{Returns}: New location at $\arg \min_{x \in \mathcal{X}} \left\{\mu_2(\bx)\right\}$.  
+\end{algorithmic}
+\end{algorithm}
+
+\section{Results}
+
+
+\section{Conclusions}
+
+\bibliographystyle{plain}
+\bibliography{bib_glasses}
+
+\clearpage
+\setcounter{section}{0}
+\setcounter{equation}{0}
+\renewcommand{\thesection}{S\arabic{section}}
+\renewcommand{\theequation}{S.\arabic{equation}}
+
+\begin{center}
+{\LARGE  Supplementary materials for:\\
+`GLASSES: Relieving The Myopia Of Bayesian Optimisation"}
+\end{center}
+\begin{center}
+\textbf{Authors here}
+\end{center}
+
+\section{Proofs}
 
 \begin{proof}
 Denote by 
@@ -279,43 +348,5 @@ where $h_i(\by) = \mathbb{I}\{y_i>\eta\}$.  Merge (\ref{eq:term1}) and (\ref{eq:
  
 \end{proof}
 
-All the elements in (\ref{eq:expected_loss}) can be rewritten in a way that can be computed using EP but the work in \cite{Cunningham*Hennig*Lacoste-Julien_2011}. 
-
-\begin{itemize}
-\item The second term is a Gaussian probability on unbounded polyhedron in which the limits are aligned with the axis.  
-\item The first term requires some more processing but it is still computable under the assumptions in \cite{Cunningham*Hennig*Lacoste-Julien_2011}. Let $\bw_j$ the $jth$ canonical vector. Then we have that
-\begin{eqnarray}
-\int_{\IR^n} y_j \prod_{i=1}^n t_{j,i}(\by) \N(\by; \mu, \Sigma) d \by & = & \bw^T  \int_{\IR^n} \by \prod_{i=1}^n t_{j,i}(\by) \N(\by; \mu, \Sigma) d \by \\
-& = & \bw^T E[\by] z_j
-\end{eqnarray}
-where the expectation is calculated over the normalized distribution over $P_j$, the one EP approximates with $q(\by)$, and for $z_j$ being the normalizing constant 
-  $$z_j= \int_{\IR^n} \prod_{i=1}^n t_{j,i}(\by) \N(\by; \mu, \Sigma) d \by$$  
-Because EP does moments matching, both the normalizing constant and the expectation are available.
-\end{itemize}
-
-
-
-\begin{algorithm}[t!]
-   \caption{Decission process of the \us algorithm.}
-   \label{alg:glasses}
-\begin{algorithmic}
-   \STATE {\bfseries Input:} dataset $\mathcal{D}_{0} = \{(\textbf{x}_0, y_0)\}$, number of remaining evaluations ($n$), representer points ($r$) and \dpp replicates (s).
-\STATE
-   \STATE Fit a \gp with kernel $k$ to $\mathcal{D}_{0}$.
-   \STATE Select $\bx_{1*},\dots,\bx_{r*}$ representer points of the loss.
-   \FOR{$j=1$ {\bfseries to} $r$ }
-   \STATE Take $s$ samples from a conditional n-\dpp of kernel $k$ given $\bx_{j*}$.
-   \STATE Approximate the expected loss at $\bx_j^*$ for the $s$ samples computing $E [\min (\by,\eta)]$.
-  \STATE Average the expected loss for the $s$ samples and obtain $\tilde{\Lambda}_n(\bx_j^*)$.
-   \ENDFOR
-\STATE Approximate $\Lambda_n(\bx_*)$ fitting a $\gp_2$  to $\{(\bx_{j*}, \tilde{\Lambda}_n(\bx_{j*})\}_{j=1}^r$ with posterior mean $\mu_2$.
-   \STATE \textbf{Returns}: New location at $\arg \min_{x \in \mathcal{X}} \left\{\mu_2(\bx)\right\}$.  
-\end{algorithmic}
-\end{algorithm}
-
-
-
-\bibliographystyle{plain}
-\bibliography{bib_glasses}
 
 \end{document}

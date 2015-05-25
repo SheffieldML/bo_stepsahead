@@ -1,3 +1,9 @@
 \BOOKMARK [1][-]{section.1}{Introduction}{}
-\BOOKMARK [1][-]{section.2}{Conditional DPPs for step ahead locations}{}
-\BOOKMARK [1][-]{section.3}{Computation of the Expected loss}{}
+\BOOKMARK [1][-]{section.2}{Look-Ahead through Stochastic Simulation and Expected-loss Search \(perhaps other title is better?\)}{}
+\BOOKMARK [2][-]{subsection.2.1}{Conditional DPPs for step ahead locations simulation}{section.2}
+\BOOKMARK [2][-]{subsection.2.2}{Expectation Propagation to compute the Expected Loss}{section.2}
+\BOOKMARK [2][-]{subsection.2.3}{Approximating the Expected loss function}{section.2}
+\BOOKMARK [2][-]{subsection.2.4}{Algorithm}{section.2}
+\BOOKMARK [1][-]{section.3}{Results}{}
+\BOOKMARK [1][-]{section.4}{Conclusions}{}
+\BOOKMARK [1][-]{section.1}{Proofs}{}
