@@ -17,6 +17,12 @@ Alexei Borodin and Eric~M. Rains.
   analogs.
 \newblock {\em Journal of Statistical Physics}, 121(3-4):291–317, Nov 2005.
 
+\bibitem{Brochu*Cora*DeFreitas_2010}
+Eric Brochu, Vlad~M. Cora, and Nando De~Freitas.
+\newblock A tutorial on bayesian optimization of expensive cost functions, with
+  application to active user modeling and hierarchical reinforcement learning.
+\newblock {\em arXiv preprint arXiv:1012.2599}, 2010.
+
 \bibitem{Cunningham*Hennig*Lacoste-Julien_2011}
 John~P. Cunningham, Philipp Hennig, and Simon Lacoste-Julien.
 \newblock {G}aussian probabilities and expectation propagation.

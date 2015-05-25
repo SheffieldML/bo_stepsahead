@@ -32,35 +32,42 @@
 \citation{Lizotte_2008}
 \citation{Jones_2001}
 \citation{Snoek*Larochelle*Adams_2012}
-\citation{Brochu*Cora*De Freitas_2010}
+\citation{Brochu*Cora*DeFreitas_2010}
 \citation{Borodin*Rains*2005}
 \@writefile{lof}{\contentsline {figure}{\numberline {1}{\ignorespaces  A Bayesian network describing the $n$-step lookahead problem. The shaded node ($\mathcal  {D}_0$) is known, and the diamond node ($x_{\ast }$) is the current decision variable. All $y$ nodes are correlated with one another under the \textsc  {gp}\xspace  model. }}{2}{figure.1}}
 \newlabel{fig:bayes_net}{{1}{2}{A Bayesian network describing the $n$-step lookahead problem. The shaded node ($\data _0$) is known, and the diamond node ($\xst $) is the current decision variable. All $y$ nodes are correlated with one another under the \gp model}{figure.1}{}}
 \@writefile{toc}{\contentsline {section}{\numberline {2}Bayesian Optimisation}{2}{section.2}}
 \newlabel{sec:bayesian_optimisation}{{2}{2}{Bayesian Optimisation}{section.2}{}}
-\@writefile{toc}{\contentsline {section}{\numberline {3}Conditional DPPs for step ahead locations}{2}{section.3}}
-\@writefile{lof}{\contentsline {figure}{\numberline {2}{\ignorespaces Left: sample from a k-\textsc  {dpp}\xspace  (k=50) for a SE kernel with length-scale 0.5. Right: sample from a k-\textsc  {dpp}\xspace  (k=50) conditional to $x_1$ (black dot) being in the selected set. }}{3}{figure.2}}
-\newlabel{fig1}{{2}{3}{Left: sample from a k-\dpp (k=50) for a SE kernel with length-scale 0.5. Right: sample from a k-\dpp (k=50) conditional to $x_1$ (black dot) being in the selected set}{figure.2}{}}
-\@writefile{toc}{\contentsline {section}{\numberline {4}Computation of the Expected loss}{3}{section.4}}
-\newlabel{eq:expected_loss}{{2}{3}{Computation of the Expected loss}{equation.4.2}{}}
-\newlabel{eq:term1}{{4}{3}{Computation of the Expected loss}{equation.4.4}{}}
+\@writefile{toc}{\contentsline {section}{\numberline {3}Look-Ahead through Stochastic Simulation and Expected-loss Search (perhaps other title is better?)}{2}{section.3}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {3.1}Conditional DPPs for step ahead locations simulation}{2}{subsection.3.1}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {3.2}Expectation Propagation to compute the Expected Loss}{2}{subsection.3.2}}
 \citation{Cunningham*Hennig*Lacoste-Julien_2011}
 \citation{Cunningham*Hennig*Lacoste-Julien_2011}
 \bibstyle{plain}
 \bibdata{bib_glasses}
 \bibcite{Azimi2011}{{1}{}{{}}{{}}}
+\@writefile{lof}{\contentsline {figure}{\numberline {2}{\ignorespaces Left: sample from a k-\textsc  {dpp}\xspace  (k=50) for a SE kernel with length-scale 0.5. Right: sample from a k-\textsc  {dpp}\xspace  (k=50) conditional to $x_1$ (black dot) being in the selected set. }}{3}{figure.2}}
+\newlabel{fig1}{{2}{3}{Left: sample from a k-\dpp (k=50) for a SE kernel with length-scale 0.5. Right: sample from a k-\dpp (k=50) conditional to $x_1$ (black dot) being in the selected set}{figure.2}{}}
+\newlabel{eq:expected_loss}{{2}{3}{Expectation Propagation to compute the Expected Loss}{equation.3.2}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {3.3}Approximating the Expected loss function}{3}{subsection.3.3}}
 \bibcite{Azimi2012}{{2}{}{{}}{{}}}
 \bibcite{Borodin*Rains*2005}{{3}{}{{}}{{}}}
-\bibcite{Cunningham*Hennig*Lacoste-Julien_2011}{{4}{}{{}}{{}}}
-\bibcite{Garnett*Osborne*Roberts_2010}{{5}{}{{}}{{}}}
-\bibcite{Ginsbourger2009}{{6}{}{{}}{{}}}
-\bibcite{Jones_2001}{{7}{}{{}}{{}}}
+\bibcite{Brochu*Cora*DeFreitas_2010}{{4}{}{{}}{{}}}
+\bibcite{Cunningham*Hennig*Lacoste-Julien_2011}{{5}{}{{}}{{}}}
+\bibcite{Garnett*Osborne*Roberts_2010}{{6}{}{{}}{{}}}
+\bibcite{Ginsbourger2009}{{7}{}{{}}{{}}}
+\bibcite{Jones_2001}{{8}{}{{}}{{}}}
+\bibcite{Lizotte_2008}{{9}{}{{}}{{}}}
+\bibcite{Marchant*Ramos*Sanner*2014}{{10}{}{{}}{{}}}
+\bibcite{martinez-cantin_bayesian_2009}{{11}{}{{}}{{}}}
+\bibcite{osborne_gaussian_2009}{{12}{}{{}}{{}}}
+\bibcite{Snoek*Larochelle*Adams_2012}{{13}{}{{}}{{}}}
 \@writefile{loa}{\contentsline {algorithm}{\numberline {1}{\ignorespaces Decission process of the \textsc  {glasses}\xspace  algorithm.}}{4}{algorithm.1}}
-\newlabel{alg:glasses}{{1}{4}{Computation of the Expected loss}{algorithm.1}{}}
-\newlabel{eq:term2}{{5}{4}{Computation of the Expected loss}{equation.4.5}{}}
-\bibcite{Lizotte_2008}{{8}{}{{}}{{}}}
-\bibcite{Marchant*Ramos*Sanner*2014}{{9}{}{{}}{{}}}
-\bibcite{martinez-cantin_bayesian_2009}{{10}{}{{}}{{}}}
-\bibcite{osborne_gaussian_2009}{{11}{}{{}}{{}}}
-\bibcite{Snoek*Larochelle*Adams_2012}{{12}{}{{}}{{}}}
+\newlabel{alg:glasses}{{1}{4}{Algorithm}{algorithm.1}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {3.4}Algorithm}{4}{subsection.3.4}}
+\@writefile{toc}{\contentsline {section}{\numberline {4}Results}{4}{section.4}}
+\@writefile{toc}{\contentsline {section}{\numberline {5}Conclusions}{4}{section.5}}
 \providecommand\NAT@force@numbers{}\NAT@force@numbers
+\@writefile{toc}{\contentsline {section}{\numberline {S1}Proofs}{6}{section.1}}
+\newlabel{eq:term1}{{S.1}{6}{Proofs}{equation.1.1}{}}
+\newlabel{eq:term2}{{1}{6}{Proofs}{equation.1.1}{}}
