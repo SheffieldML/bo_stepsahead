@@ -1,0 +1,45 @@
+This is BibTeX, Version 0.99c (TeX Live 2009/Debian)
+The top-level auxiliary file: bo_multistep_lookahead_nips_2015.aux
+The style file: plain.bst
+Database file #1: bib_glasses.bib
+You've used 7 entries,
+            2118 wiz_defined-function locations,
+            543 strings with 5444 characters,
+and the built_in function-call counts, 2211 in all, are:
+= -- 201
+> -- 121
+< -- 1
++ -- 48
+- -- 40
+* -- 147
+:= -- 385
+add.period$ -- 22
+call.type$ -- 7
+change.case$ -- 41
+chr.to.int$ -- 0
+cite$ -- 7
+duplicate$ -- 88
+empty$ -- 173
+format.name$ -- 40
+if$ -- 454
+int.to.chr$ -- 0
+int.to.str$ -- 7
+missing$ -- 7
+newline$ -- 39
+num.names$ -- 14
+pop$ -- 47
+preamble$ -- 1
+purify$ -- 34
+quote$ -- 0
+skip$ -- 58
+stack$ -- 0
+substring$ -- 82
+swap$ -- 15
+text.length$ -- 1
+text.prefix$ -- 0
+top$ -- 0
+type$ -- 28
+warning$ -- 0
+while$ -- 18
+width$ -- 8
+write$ -- 77

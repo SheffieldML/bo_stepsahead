@@ -38,6 +38,7 @@
 \newcommand{\vY}{\vec{Y}}
 \newcommand{\vX}{\vec{X}}
 \newcommand{\bx}{\textbf{x}}
+\newcommand{\bz}{\textbf{z}}
 \newcommand{\bw}{\textbf{w}}
 \newcommand{\by}{\textbf{y}}
 \newcommand{\bL}{\textbf{L}}
@@ -84,6 +85,9 @@
 \newtheorem{proof}{Proof}
 \newtheorem{conjecture}{Conjecture}
 
+
+
+\graphicspath{{./},{./figs/}}
 
 
 
@@ -144,8 +148,8 @@ Again, the scaling of the approach permits the authors to consider no more than 
 There is a clear link between the multi-step lookahead problem and that considered in the literature as \emph{batch} Bayesian optimisation. 
 The two problems are distinct but related: the multi-step lookahead problem requires the challenging marginalisation over unknown future evaluation \emph{locations}, in addition to the unknown future evaluation \emph{values} also marginalised by batch approaches. 
 Similarly to the state-of-the-art in multi-step lookahead, the batch literature provides only poor scaling with the number of evaluations.
-\cite{Ginsbourger2009} present results for no more than six simultaneous function evaluations.
-Cite Azimi papers. 
+\cite{Ginsbourger2009} present results for no more than six simultaneous function evaluations.\cite{Azimi2012,Azimi2011} use the surrogate model for $f$ to generate `fake' observations and avoid the marginalization step. This produce a large acumulation of errors that does not allow the use these techniques for the collection of large batches.
+
 
 We propose an algorithm, \us, that provides scaling superior to existing alternatives.
 
@@ -209,15 +213,15 @@ We propose an algorithm, \us, that provides scaling superior to existing alterna
 
 \section{Conditional DPPs for step ahead locations}
 
-To approximate $\Lambda_n(\bx_1)$ we compute  $E_{p(\by)} [\min (\by,\eta)]$ where $\by=\{y_1,\dots,y_n\}$ with $p(\by) \sim \N(\by; \mu, \Sigma)$ is the multivariate random vector that we obtain after evaluation the predictive distribution of the \gp at locations $\bx_1,\bx_2,\dots,\bx_n$. Point $\bx_1$ is fixed (is the point where we evaluate $\Lambda_n$) and we consider $\bx_2,\dots,\bx_n$ to be a sample of the conditional k-\dpp (for $k=n$) on $\bx_1$ with kernel $L$ (in principle, the one from the \gp).
+To approximate $\Lambda_n(\bx_*)$ we compute  $E_{p(\by)} [\min (\by,\eta)]$ where $\by=\{y_1,\dots,y_n\}$ with $p(\by) \sim \N(\by; \mu, \Sigma)$ is the multivariate random vector that we obtain after evaluation the predictive distribution of the \gp at locations $\bx_*,\bx_2,\dots,\bx_n$. Point $\bx_*$ is fixed (is the point where we evaluate $\Lambda_n$) and we consider $\bx_2,\dots,\bx_n$ to be a sample of the conditional k-\dpp (for $k=n$) on $\bx_*$ with kernel $L$ (in principle, the one from the \gp).
  
-Let $\bL$ be the kernel matrix corresponding to the evaluation of $L$ on a finite set $\Omega$ of potential points (pre-uniformly sampled in the domain of interest, for instance).  The distribution obtained by conditioning on having observed $\bx_1 \in \Omega$ can be obtained as follows. Let $B \subset \Omega$ a non intersecting set with $\bx_1$. We have that
+Let $\bL$ be the kernel matrix corresponding to the evaluation of $L$ on a finite set $\Omega$ of potential points (pre-uniformly sampled in the domain of interest, for instance).  The distribution obtained by conditioning on having observed $\bx_* \in \Omega$ can be obtained as follows. Let $B \subset \Omega$ a non intersecting set with $\bx_*$. We have that
 \begin{eqnarray}
-p_L(\bx_1 \cup B | \bx_1 \subseteq Z ) = \frac{p_L(Z = \bx_1 \cup B ) }{p(\bx_1 \subseteq Z)} = \frac{\det(\bL_{\bx_1 \cup B})}{\det(\bL - \bI_{\bar{\bx}_1} ) }
+p_L(\bx_* \cup B | \bx_* \subseteq Z ) = \frac{p_L(Z = \bx_* \cup B ) }{p(\bx_* \subseteq Z)} = \frac{\det(\bL_{\bx_* \cup B})}{\det(\bL - \bI_{\bar{\bx}_*} ) }
 \end{eqnarray}
-where $\bI_{\bar{\bx}_1}$ is the matrix with ones in the diagonal entries indexed by elements of $\Omega - \bx_1$ and zeros elsewhere.  This conditional distribution is again a \dpp over subsets of $\Omega-\bx_1$ \citep{Borodin*Rains*2005} with kernel 
-$$\bL^{\bx_1} = \left( [   (\bL + \bI_{\bar{\bx}_1})^{-1}]_{\bar{\bx}_1} \right)^{-1}.$$
-$[\cdot ]_{\bar{\bx}_1}$ represents the restriction of the matrix to all rows and columns not indexed by $\bx_1$. The previous inverses exist if and only if the probability of $\bx_1$ appearing is nonzero, as is the case in our context. A second marginalization is later needed to generate samples of size k.  Figure \ref{fig1} shows an example of samples from a k-\dpp and a conditional k-\dpp with the same kernel.
+where $\bI_{\bar{\bx}_*}$ is the matrix with ones in the diagonal entries indexed by elements of $\Omega - \bx_*$ and zeros elsewhere.  This conditional distribution is again a \dpp over subsets of $\Omega-\bx_*$ \citep{Borodin*Rains*2005} with kernel 
+$$\bL^{\bx_*} = \left( [   (\bL + \bI_{\bar{\bx}_*})^{-1}]_{\bar{\bx}_*} \right)^{-1}.$$
+$[\cdot ]_{\bar{\bx}_*}$ represents the restriction of the matrix to all rows and columns not indexed by $\bx_*$. The previous inverses exist if and only if the probability of $\bx_*$ appearing is nonzero, as is the case in our context. A second marginalization is later needed to generate samples of size k.  Figure \ref{fig1} shows an example of samples from a k-\dpp and a conditional k-\dpp with the same kernel.
  
 \begin{figure}[ht]
     \centering
@@ -228,7 +232,7 @@ $[\cdot ]_{\bar{\bx}_1}$ represents the restriction of the matrix to all rows an
 
 \newpage
 \section{Computation of the Expected loss}
-Our goal is to compute $E_{p(\by)} [\min (\by,\eta)]$ for $\by=\{y_1,\dots,y_n\}$ and $p_0(\by) \sim \N(\by; \mu, \Sigma)$. This  approximates the n-steps ahead expected loss $\Lambda_n(\bx_1)$. The goal of this section is to write  $E_{p(\by)} [\min (\by,\eta)]$ in a way that it is suitable to be computed by Expectation Propagation. Next proposition will do the work (I think).
+Our goal is to compute $E_{p(\by)} [\min (\by,\eta)]$ for $\by=\{y_1,\dots,y_n\}$ and $p_0(\by) \sim \N(\by; \mu, \Sigma)$. This  approximates the n-steps ahead expected loss $\Lambda_n(\bx_*)$. The goal of this section is to write  $E_{p(\by)} [\min (\by,\eta)]$ in a way that it is suitable to be computed by Expectation Propagation. Next proposition will do the work (I think).
 
 \begin{proposition}
 
@@ -289,7 +293,29 @@ where the expectation is calculated over the normalized distribution over $P_j$,
 Because EP does moments matching, both the normalizing constant and the expectation are available.
 \end{itemize}
 
+
+
+\begin{algorithm}[t!]
+   \caption{Decission process of the \us algorithm.}
+   \label{alg:glasses}
+\begin{algorithmic}
+   \STATE {\bfseries Input:} dataset $\mathcal{D}_{0} = \{(\textbf{x}_0, y_0)\}$, number of remaining evaluations ($n$), representer points ($r$) and \dpp replicates (s).
+\STATE
+   \STATE Fit a \gp with kernel $k$ to $\mathcal{D}_{0}$.
+   \STATE Select $\bx_{1*},\dots,\bx_{r*}$ representer points of the loss.
+   \FOR{$j=1$ {\bfseries to} $r$ }
+   \STATE Take $s$ samples from a conditional n-\dpp of kernel $k$ given $\bx_{j*}$.
+   \STATE Approximate the expected loss at $\bx_j^*$ for the $s$ samples computing $E [\min (\by,\eta)]$.
+  \STATE Average the expected loss for the $s$ samples and obtain $\tilde{\Lambda}_n(\bx_j^*)$.
+   \ENDFOR
+\STATE Approximate $\Lambda_n(\bx_*)$ fitting a $\gp_2$  to $\{(\bx_{j*}, \tilde{\Lambda}_n(\bx_{j*})\}_{j=1}^r$ with posterior mean $\mu_2$.
+   \STATE \textbf{Returns}: New location at $\arg \min_{x \in \mathcal{X}} \left\{\mu_2(\bx)\right\}$.  
+\end{algorithmic}
+\end{algorithm}
+
+
+
 \bibliographystyle{plain}
-\bibliography{bib}
+\bibliography{bib_glasses}
 
 \end{document}
