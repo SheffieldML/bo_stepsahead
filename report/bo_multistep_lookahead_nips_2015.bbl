@@ -1,0 +1,44 @@
+\begin{thebibliography}{1}
+
+\bibitem{Azimi2011}
+Javad Azimi, Ali Jalali, and Xiaoli Fern.
+\newblock Dynamic batch {B}ayesian optimization.
+\newblock {\em CoRR}, abs/1110.3347, 2011.
+
+\bibitem{Azimi2012}
+Javad Azimi, Ali Jalali, and Xiaoli~Zhang Fern.
+\newblock Hybrid batch {B}ayesian optimization.
+\newblock In {\em Proceedings of the 29th International Conference on Machine
+  Learning}, 2012.
+
+\bibitem{Borodin*Rains*2005}
+Alexei Borodin and Eric~M. Rains.
+\newblock {Eynard–Mehta} theorem, {Schur} process, and their {Pfaffian}
+  analogs.
+\newblock {\em Journal of Statistical Physics}, 121(3-4):291–317, Nov 2005.
+
+\bibitem{Cunningham*Hennig*Lacoste-Julien_2011}
+John~P. Cunningham, Philipp Hennig, and Simon Lacoste-Julien.
+\newblock {G}aussian probabilities and expectation propagation.
+\newblock {\em arXiv:1111.6832 [stat]}, Nov 2011.
+\newblock arXiv: 1111.6832.
+
+\bibitem{Ginsbourger2009}
+David Ginsbourger, Rodolphe Le~Riche, and Laurent Carraro.
+\newblock A multi-points criterion for deterministic parallel global
+  optimization based on {G}aussian processes.
+\newblock {\em HAL: hal-00260579}, 2009.
+
+\bibitem{Marchant*Ramos*Sanner*2014}
+Roman Marchant, Fabio Ramos, and Scott Sanner.
+\newblock Sequential {B}ayesian optimisation for spatial-temporal monitoring.
+\newblock In {\em Proceedings of the International Conference on Uncertainty in
+  Artificial Intelligence}, 2014.
+
+\bibitem{osborne_gaussian_2009}
+Michael~A. Osborne, Roman Garnett, and Stephen~J. Roberts.
+\newblock {G}aussian processes for global optimization.
+\newblock In {\em 3rd international conference on learning and intelligent
+  optimization ({LION}3)}, pages 1--15, 2009.
+
+\end{thebibliography}
