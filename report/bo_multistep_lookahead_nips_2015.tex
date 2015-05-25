@@ -122,7 +122,7 @@ Address \\
 
 \begin{abstract}
     We present \us: Global optimisation with Look-Ahead through Stochastic Simulation and Expected-loss Search. 
-    The vast majority of global optimisation approaches in use are myopic, in only considering the impact of the next function value; the remaining approaches are able to consider only a handful of future evaluations. 
+    The majority of global optimisation approaches in use are myopic, in only considering the impact of the next function value; the non-myopic approaches that do exist are able to consider only a handful of future evaluations. 
     Our novel algorithm, \us, permits the consideration of dozens of evaluations into the future. 
     We show that the far-horizon planning thus enabled leads to substantive performance gains in empirical tests. 
 \end{abstract}
@@ -130,14 +130,17 @@ Address \\
 \section{Introduction} % (fold)
 \label{sec:introduction}
 
-Almost all global optimisation techniques are myopic, in considering no more than a single step into the future. 
-The \emph{multi-step lookahead} problem as the global optimisation of an function by considering the significance of the next function evaluation on function evaluations (steps) further into the future. 
+Global optimisation is core to any complex problem where design and choice play a role. 
+Within Machine Learning, such problems are found in the tuning of hyperparameters \cite{Snoek*Larochelle*Adams_2012}, sensor selection \cite{Garnett*Osborne*Roberts_2010} or experimental design \cite{martinez-cantin_bayesian_2009}. 
+Most global optimisation techniques are myopic, in considering no more than a single step into the future. 
+Relieving this myopia requires solving the \emph{multi-step lookahead} problem: the global optimisation of an function by considering the significance of the next function evaluation on function evaluations (steps) further into the future. 
 It is clear that a solution to the problem would offer performance gains.
 For example, consider the case in which we have a budget of two evaluations with which to optimise a function $f(x)$ over the domain $\sX = [0, 1] \subset \reals$. 
 If we are strictly myopic, our first evaluation will likely be at 
 $x=\nicefrac{1}{2}$, and our second then at only one of $x=\nicefrac{1}{4}$ and $x=\nicefrac{3}{4}$. 
-This myopic strategy thereby ignores half of the domain $\sX$, regardless of the second choice. 
-If we adopt a two-step lookahead approach, we will select function evaluations that will be more evenly distributed across the domain by the time the budget is exhausted, that will hence be more informative about $f$ and its optimum.
+This myopic strategy will thereby result in ignoring half of the domain $\sX$, regardless of the second choice. 
+If we adopt a two-step lookahead approach, we will select function evaluations that will be more evenly distributed across the domain by the time the budget is exhausted. 
+We will consequently be better informed about $f$ and its optimum.
 
 There is a limited literature on the multi-step lookahead problem.
 \cite{osborne_gaussian_2009} perform multi-step lookahead by optimising future evaluation locations, and sampling over future function values. 
@@ -148,10 +151,21 @@ Again, the scaling of the approach permits the authors to consider no more than 
 There is a clear link between the multi-step lookahead problem and that considered in the literature as \emph{batch} Bayesian optimisation. 
 The two problems are distinct but related: the multi-step lookahead problem requires the challenging marginalisation over unknown future evaluation \emph{locations}, in addition to the unknown future evaluation \emph{values} also marginalised by batch approaches. 
 Similarly to the state-of-the-art in multi-step lookahead, the batch literature provides only poor scaling with the number of evaluations.
-\cite{Ginsbourger2009} present results for no more than six simultaneous function evaluations.\cite{Azimi2012,Azimi2011} use the surrogate model for $f$ to generate `fake' observations and avoid the marginalization step. This produce a large acumulation of errors that does not allow the use these techniques for the collection of large batches.
-
+\cite{Ginsbourger2009} present results for no more than six simultaneous function evaluations.
+\cite{Azimi2011,Azimi2012} use the surrogate model for $f$ to generate `fake' observations and avoid the marginalization step. 
+This produce a large accumulation of errors that does not allow the use of these techniques for the collection of large batches.
 
 We propose an algorithm, \us, that provides scaling superior to existing alternatives.
+
+\section{Bayesian Optimisation} % (fold)
+\label{sec:bayesian_optimisation}
+
+\cite{Lizotte_2008}
+\cite{Jones_2001}
+\cite{Snoek*Larochelle*Adams_2012}
+\cite{Brochu*Cora*De Freitas_2010}
+
+% section bayesian_optimisation (end)
 
 % section introduction (end)
 
