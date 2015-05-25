@@ -127,13 +127,13 @@ Address \\
 \label{sec:introduction}
 
 Almost all global optimisation techniques are myopic, in considering no more than a single step into the future. 
-We define the multi-step lookahead problem as the global optimisation of an function by considering the significance of the next function evaluation on function evaluations (steps) further into the future. 
+The \emph{multi-step lookahead} problem as the global optimisation of an function by considering the significance of the next function evaluation on function evaluations (steps) further into the future. 
 It is clear that a solution to the problem would offer performance gains.
 For example, consider the case in which we have a budget of two evaluations with which to optimise a function $f(x)$ over the domain $\sX = [0, 1] \subset \reals$. 
 If we are strictly myopic, our first evaluation will likely be at 
 $x=\nicefrac{1}{2}$, and our second then at only one of $x=\nicefrac{1}{4}$ and $x=\nicefrac{3}{4}$. 
 This myopic strategy thereby ignores half of the domain $\sX$, regardless of the second choice. 
-If we adopt a two-step lookahead approach, we will select function evaluations that will be more evenly distributed across the domain by the time the budget is exhausted, and will hence be more informative about $f$ and its optimum.
+If we adopt a two-step lookahead approach, we will select function evaluations that will be more evenly distributed across the domain by the time the budget is exhausted, that will hence be more informative about $f$ and its optimum.
 
 There is a limited literature on the multi-step lookahead problem.
 \cite{osborne_gaussian_2009} perform multi-step lookahead by optimising future evaluation locations, and sampling over future function values. 
