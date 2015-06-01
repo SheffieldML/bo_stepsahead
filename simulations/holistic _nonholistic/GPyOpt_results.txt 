@@ -1,15 +1,15 @@
 --------------------------------- Results file --------------------------------------
 GPyOpt Version 1.0.0 
-Date and time:              Fri 22 May 2015 14:22:27 BST
-Optimization completed:     YES, 10 samples collected.
-Optimization time:          3.67761301994 seconds.
+Date and time:              Tue 26 May 2015 17:16:36 BST
+Optimization completed:     YES, 26 samples collected.
+Optimization time:          28.4276139736 seconds.
 --------------------------------- Problem set up ------------------------------------
 Problem Dimension:          2
-Problem bounds:             (-5, 10), (1, 15)
+Problem bounds:             (0, 1), (0, 1)
 Batch size:                 1
-Acquisition:                EI
+Acquisition:                EL1
 Acquisition optimizer:      DIRECT
 Sparse GP:                  False
 --------------------------------- Summary ------------------------------------------
-Best found minimum:          4.1153771
-Minumum location:            9.90740741  1.25925926
+Best found minimum:         -1.67141915
+Minumum location:            0.28250267  0.31390032

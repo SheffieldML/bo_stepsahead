@@ -1,7 +1,7 @@
 import numpy as np
 import GPy
 from GPyOpt.core.optimization import wrapper_lbfgsb, wrapper_DIRECT
-from .util.general import samples_multidimensional_uniform, reshape, best_value
+from .util.general import samples_multidimensional_uniform, reshape, best_value, multigrid
 from .util.acquisition import loss_nsahead
 import GPyOptmsa
 from .plotting.plots_bo import plot_acquisition, plot_convergence
@@ -26,10 +26,9 @@ class GPGOMSA:
         self.f = f
 
 
-    def run_optimization(self,max_iter,n_ahead=None, eps= 10e-6, beta=1, n_samples_dpp=5):
+    def run_optimization(self,max_iter,n_ahead=None, eps= 10e-6, n_samples_dpp=5):
 
         # weigth of the previous acquisition in the dpp sample
-        self.beta = beta
         self.n_samples_dpp = n_samples_dpp
         # Check the number of steps ahead to look at
         if n_ahead==None:
@@ -68,13 +67,15 @@ class GPGOMSA:
 
     def update_loss(self):
         # Evaluate the loss ahead acquisition function in a set of representer points
-        x_acq = samples_multidimensional_uniform(self.bounds,15*self.input_dim)
-        y_acq = loss_nsahead(x_acq,self.n_ahead,self.model,self.bounds,self.beta,self.n_samples_dpp)
+        #x_acq = samples_multidimensional_uniform(self.bounds,50*self.input_dim)
+        x_acq = multigrid(self.bounds,15)
+        y_acq0 = loss_nsahead(x_acq,self.n_ahead,self.model,self.bounds,self.n_samples_dpp)
+        y_acq  = (y_acq0 - y_acq0.mean())/y_acq0.std()
 
         # Build the acquisition: based on a model on the representer points
         self.kernel_acq      = GPy.kern.RBF(self.input_dim, variance=.1, lengthscale=.1)  + GPy.kern.Bias(self.input_dim)
         self.model_acq       = GPy.models.GPRegression(x_acq,y_acq,kernel=self.kernel_acq)
-        self.model_acq.optimize_restarts(verbose=False)
+        self.model_acq.optimize_restarts(20,verbose=False)
 
         #Update the loss function
         def f(x):

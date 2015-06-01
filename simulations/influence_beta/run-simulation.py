@@ -95,7 +95,7 @@ for experiment in experiments:
         HBObeta10.run_optimization(max_iter=max_iter_dim*input_dim, beta=10)   
         rep_col     = [k]*HBObeta10.Y_best.shape[0]
         res_HBObeta10    = np.vstack((res_HBObeta10,np.vstack((rep_col,HBObeta10.Y_best)).T))   
-        np.save('res_HBObeta10_'+experiment[7:]+'.txt', res_HBObeta10)     
+        np.savetxt('res_HBObeta10_'+experiment[7:]+'.txt', res_HBObeta10)     
 
 
     

@@ -1,0 +1,15 @@
+--------------------------------- Results file --------------------------------------
+GPyOpt Version 1.0.0 
+Date and time:              Sat 23 May 2015 19:13:20 BST
+Optimization completed:     YES, 28 samples collected.
+Optimization time:          30.5730330944 seconds.
+--------------------------------- Problem set up ------------------------------------
+Problem Dimension:          2
+Problem bounds:             (0, 1), (0, 1)
+Batch size:                 1
+Acquisition:                EI
+Acquisition optimizer:      DIRECT
+Sparse GP:                  False
+--------------------------------- Summary ------------------------------------------
+Best found minimum:         -1.5021826
+Minumum location:            0.35596708  0.679495  
