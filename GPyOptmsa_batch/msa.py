@@ -31,10 +31,10 @@ class GPGOMSA:
         
         # ----Init loss
         # myopic loss
-        self.mloss = 
+        self.myopicloss = 
         
         # non-myopic loss
-        self.loss = 
+        self.loss =  
 
 
     def run_optimization(self,max_iter,n_ahead=None, eps= 10e-6, n_samples_dpp=5):

@@ -3,6 +3,23 @@ from ..quadrature.emin_epmgp import emin_epmgp
 from ..util.general import samples_multidimensional_uniform, reshape, get_moments, get_quantiles
 import numpy as np
 
+class AcquisitionBase(object):
+    """
+    Base class for acquisition functions in Bayesian Optimization
+    """
+    def __init__(self, acquisition_par=None):
+        self.model = None
+        if acquisition_par == None: 
+            self.acquisition_par = 0.00
+        else: 
+            self.acquisition_par = acquisition_par      
+
+    def acquisition_function(self, x):
+        pass
+
+    def d_acquisition_function(self, x):
+        pass
+
 class AcquisitionEL1(AcquisitionBase):
     """
     Class for acquisition function that accounts for the Expected loss 1 step ahead
@@ -29,7 +46,7 @@ class AcquisitionEL1(AcquisitionBase):
 class AcquisitionMP(AcquisitionBase):
     """
     """
-    def __init__(self, acq, acquisition_par=None, transform='none'):
+    def __init__(self, acq, acquisition_par=None, transform='softplus'):
         """"""
         super(AcquisitionMP, self).__init__(acquisition_par)
         self.acq = acq
@@ -117,5 +134,8 @@ class AcquisitionMP(AcquisitionBase):
             return scale*self.acq.d_acquisition_function(x)
         else:
             return scale*self.acq.d_acquisition_function(x) - self._d_hammer_function(x, self.X_batch, self.r_x0, self.s_x0)
+
+
+
 
 
