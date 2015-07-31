@@ -1,35 +1,47 @@
 import numpy as np
 import GPy
-from GPyOpt.core.optimization import wrapper_lbfgsb, wrapper_DIRECT
+from GPyOpt.core.optimization import wrapper_lbfgsb, wrapper_DIRECT, estimate_L, estimate_Min
+from GPyOpt.core.acquisition import AcquisitionEL1
 from .util.general import samples_multidimensional_uniform, reshape, best_value, multigrid
 from .util.acquisition import loss_nsahead
 import GPyOptmsa
 from .plotting.plots_bo import plot_acquisition, plot_convergence
 
 
-class GPGOMSA:
+class GLASSES:
     '''
     Class to run Bayesian Optimization with multiple steps ahead
     '''
 
-    def __init__(self,f,bounds,X,Y):
+    def __init__(self,f,bounds,X,Y,n_ahead = 1):
         self.input_dim = len(bounds)
         self.bounds = bounds
         self.X = X
         self.Y = Y
+        
+        # Initialize model
         self.kernel = GPy.kern.RBF(self.input_dim, variance=.1, lengthscale=.1)  + GPy.kern.Bias(self.input_dim)
         self.model  = GPy.models.GPRegression(X,Y,kernel= self.kernel)
         self.model.Gaussian_noise.constrain_bounded(1e-2,1e6) #to avoid numerical problems
         self.model.optimize_restarts(5)
-        self.loss = None
+        
+        # Imitilize loss
+        self.loss = AcquisitionEL1()
+        self.update_loss()
         self.s_in_min = np.sqrt(self.model.predict(self.X)[1])
         self.f = f
+        self.n_ahead = n_ahead # deault steps ahead. To acess this when none optimzation has been done yet
+        self.L = estimate_L(self.model,self.bounds)
+        self.Min = estimate_Min(self.model,self.bounds)
 
 
-    def run_optimization(self,max_iter,n_ahead=None, eps= 10e-6, n_samples_dpp=5):
+    def loss_ahead(self,x):
+        return loss_nsahead(x, self.bounds, self.loss, self.n_ahead, self.L, self.Min, self.model)
+
+    def run_optimization(self,max_iter,n_ahead=None, eps= 10e-6):
 
         # weigth of the previous acquisition in the dpp sample
-        self.n_samples_dpp = n_samples_dpp
+        #self.n_samples_dpp = n_samples_dpp
         # Check the number of steps ahead to look at
         if n_ahead==None:
             self.n_ahead = max_iter
@@ -41,11 +53,13 @@ class GPGOMSA:
         distance_lastX = np.sqrt(sum((self.X[self.X.shape[0]-1,:]-self.X[self.X.shape[0]-2,:])**2))
 
         while k<=max_iter and distance_lastX > eps:
+            print self.n_ahead
+
             # update loss
             self.update_loss()
  
             # Optimize loss
-            X_new = wrapper_DIRECT(self.loss,self.bounds)
+            X_new = wrapper_DIRECT(self.loss_ahead,self.bounds)
             self.suggested_sample = X_new
 
             # Augment the dataset
@@ -60,28 +74,14 @@ class GPGOMSA:
             if n_ahead==None:
                 self.n_ahead -=1
             self.s_in_min = np.vstack((self.s_in_min,np.sqrt(abs(self.model.predict(X_new)[1]))))
+            print 'Iteration ' + str(k) +' completed'
             k += 1
 
         self.Y_best = best_value(self.Y)
 
 
     def update_loss(self):
-        # Evaluate the loss ahead acquisition function in a set of representer points
-        #x_acq = samples_multidimensional_uniform(self.bounds,50*self.input_dim)
-        x_acq = multigrid(self.bounds,15)
-        y_acq0 = loss_nsahead(x_acq,self.n_ahead,self.model,self.bounds,self.n_samples_dpp)
-        y_acq  = (y_acq0 - y_acq0.mean())/y_acq0.std()
-
-        # Build the acquisition: based on a model on the representer points
-        self.kernel_acq      = GPy.kern.RBF(self.input_dim, variance=.1, lengthscale=.1)  + GPy.kern.Bias(self.input_dim)
-        self.model_acq       = GPy.models.GPRegression(x_acq,y_acq,kernel=self.kernel_acq)
-        self.model_acq.optimize_restarts(20,verbose=False)
-
-        #Update the loss function
-        def f(x):
-            x = np.atleast_2d(x)
-            return self.model_acq.predict(x)[0]
-        self.loss = f  
+        self.loss.set_model(self.model) 
 
     def plot_loss(self,filename=None):
         """        

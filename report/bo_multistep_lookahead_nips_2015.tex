@@ -167,6 +167,8 @@ We propose an algorithm, \us, that provides scaling superior to existing alterna
 \cite{Snoek*Larochelle*Adams_2012}
 \cite{Brochu*Cora*DeFreitas_2010}
 
+
+
 % section bayesian_optimisation (end)
 
 % section introduction (end)
@@ -229,26 +231,8 @@ We propose an algorithm, \us, that provides scaling superior to existing alterna
 
  \section{Look-Ahead through Stochastic Simulation and Expected-loss Search (perhaps other title is better?)}
 
-\subsection{Conditional DPPs for step ahead locations simulation}
+\subsection{Predicting future algorithm evaluations}
 
-To approximate $\Lambda_n(\bx_*)$ we compute  $E_{p(\by)} [\min (\by,\eta)]$ where $\by=\{y_1,\dots,y_n\}$ with $p(\by) \sim \N(\by; \mu, \Sigma)$ is the multivariate random vector that we obtain after evaluation the predictive distribution of the \gp at locations $\bx_*,\bx_2,\dots,\bx_n$. Point $\bx_*$ is fixed (is the point where we evaluate $\Lambda_n$) and we consider $\bx_2,\dots,\bx_n$ to be a sample of the conditional k-\dpp (for $k=n$) on $\bx_*$ with kernel $L$ (in principle, the one from the \gp).
- 
-[QUICK DESCRIPTION OF WHY WE SAMPLE FROM A DPP GOES HERE]
-
-Let $\bL$ be the kernel matrix corresponding to the evaluation of $L$ on a finite set $\Omega$ of potential points \emph{i.e} pre-uniformly sampled in the domain of interest.  The distribution obtained by conditioning on having observed $\bx_* \in \Omega$ can be obtained as follows. Let $B \subset \Omega$ a non intersecting set with $\bx_*$. We have that
-\begin{eqnarray}
-p_L(\bx_* \cup B | \bx_* \subseteq Z ) = \frac{p_L(Z = \bx_* \cup B ) }{p(\bx_* \subseteq Z)} = \frac{\det(\bL_{\bx_* \cup B})}{\det(\bL - \bI_{\bar{\bx}_*} ) }
-\end{eqnarray}
-where $\bI_{\bar{\bx}_*}$ is the matrix with ones in the diagonal entries indexed by elements of $\Omega - \bx_*$ and zeros elsewhere.  This conditional distribution is again a \dpp over subsets of $\Omega-\bx_*$ \citep{Borodin*Rains*2005} with kernel 
-$$\bL^{\bx_*} = \left( [   (\bL + \bI_{\bar{\bx}_*})^{-1}]_{\bar{\bx}_*} \right)^{-1}.$$
-$[\cdot ]_{\bar{\bx}_*}$ represents the restriction of the matrix to all rows and columns not indexed by $\bx_*$. The previous inverses exist if and only if the probability of $\bx_*$ appearing is nonzero, as is the case in our context. A second marginalization is later needed to generate samples of size k.  Figure \ref{fig1} shows an example of samples from a k-\dpp and a conditional k-\dpp with the same kernel.
- 
-\begin{figure}[ht]
-    \centering
-  \includegraphics[width=.9\textwidth]{conditional_dpp.pdf}
-\caption{Left: sample from a k-\dpp (k=50) for a SE kernel with length-scale 0.5. Right: sample from a k-\dpp (k=50) conditional to $x_1$ (black dot) being in the selected set. }
-    \label{fig1}
-\end{figure}
 
 \subsection{Expectation Propagation to compute the  Expected Loss}
 Our goal is to compute $E_{p(\by)} [\min (\by,\eta)]$ for $\by=\{y_1,\dots,y_n\}$ and $p_0(\by) \sim \N(\by; \mu, \Sigma)$. This  approximates the n-steps ahead expected loss $\Lambda_n(\bx_*)$. The goal of this section is to write  $E_{p(\by)} [\min (\by,\eta)]$ in a way that it is suitable to be computed by Expectation Propagation. Next proposition will do the work (I think).
@@ -361,6 +345,29 @@ The second term can be written as
 where $h_i(\by) = \mathbb{I}\{y_i>\eta\}$.  Merge (\ref{eq:term1}) and (\ref{eq:term2}) to conclude the proof.
  
 \end{proof}
+
+\section{DPPs (old)}
+
+
+To approximate $\Lambda_n(\bx_*)$ we compute  $E_{p(\by)} [\min (\by,\eta)]$ where $\by=\{y_1,\dots,y_n\}$ with $p(\by) \sim \N(\by; \mu, \Sigma)$ is the multivariate random vector that we obtain after evaluation the predictive distribution of the \gp at locations $\bx_*,\bx_2,\dots,\bx_n$. Point $\bx_*$ is fixed (is the point where we evaluate $\Lambda_n$) and we consider $\bx_2,\dots,\bx_n$ to be a sample of the conditional k-\dpp (for $k=n$) on $\bx_*$ with kernel $L$ (in principle, the one from the \gp).
+ 
+[QUICK DESCRIPTION OF WHY WE SAMPLE FROM A DPP GOES HERE]
+
+Let $\bL$ be the kernel matrix corresponding to the evaluation of $L$ on a finite set $\Omega$ of potential points \emph{i.e} pre-uniformly sampled in the domain of interest.  The distribution obtained by conditioning on having observed $\bx_* \in \Omega$ can be obtained as follows. Let $B \subset \Omega$ a non intersecting set with $\bx_*$. We have that
+\begin{eqnarray}
+p_L(\bx_* \cup B | \bx_* \subseteq Z ) = \frac{p_L(Z = \bx_* \cup B ) }{p(\bx_* \subseteq Z)} = \frac{\det(\bL_{\bx_* \cup B})}{\det(\bL - \bI_{\bar{\bx}_*} ) }
+\end{eqnarray}
+where $\bI_{\bar{\bx}_*}$ is the matrix with ones in the diagonal entries indexed by elements of $\Omega - \bx_*$ and zeros elsewhere.  This conditional distribution is again a \dpp over subsets of $\Omega-\bx_*$ \citep{Borodin*Rains*2005} with kernel 
+$$\bL^{\bx_*} = \left( [   (\bL + \bI_{\bar{\bx}_*})^{-1}]_{\bar{\bx}_*} \right)^{-1}.$$
+$[\cdot ]_{\bar{\bx}_*}$ represents the restriction of the matrix to all rows and columns not indexed by $\bx_*$. The previous inverses exist if and only if the probability of $\bx_*$ appearing is nonzero, as is the case in our context. A second marginalization is later needed to generate samples of size k.  Figure \ref{fig1} shows an example of samples from a k-\dpp and a conditional k-\dpp with the same kernel.
+ 
+\begin{figure}[ht]
+    \centering
+  \includegraphics[width=.9\textwidth]{conditional_dpp.pdf}
+\caption{Left: sample from a k-\dpp (k=50) for a SE kernel with length-scale 0.5. Right: sample from a k-\dpp (k=50) conditional to $x_1$ (black dot) being in the selected set. }
+    \label{fig1}
+\end{figure}
+
 
 
 \end{document}

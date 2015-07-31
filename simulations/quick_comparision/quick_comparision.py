@@ -4,6 +4,7 @@ import GPy
 import numpy as np
 from numpy.random import seed
 from GPyOptmsa.util.general import samples_multidimensional_uniform, multigrid
+from GPyOptmsa.util.acquisition import predict_locations
 import matplotlib.pyplot as plt
 
 seed(123)
@@ -17,23 +18,16 @@ f = objective_noisy.f
 
 
 ## set initial points
-X = samples_multidimensional_uniform(bounds,10)
+X = samples_multidimensional_uniform(bounds,5)
 Y = f(X)
 
 
-max_iter = 20
-# full msa
-BO_mea_full = GPyOptmsa.msa.GPGOMSA(f,bounds, X,Y)       
-BO_msa_full.run_optimization(max_iter=max_iter)
-
 # 3 msa
-BO_mea_3 = GPyOptmsa.msa.GPGOMSA(f,bounds, X,Y)       
-BO_msa_3.run_optimization(max_iter=max_iter,3)
+n_ahead = 3
+max_iter = 10
+BO_glasses = GPyOptmsa.msa.GLASSES(f,bounds, X,Y,n_ahead=n_ahead)       
+BO_glasses.run_optimization(max_iter= max_iter, n_ahead=n_ahead)
 
-# 5msa
-BO_mea_5 = GPyOptmsa.msa.GPGOMSA(f,bounds, X,Y)       
-BO_msa_5.run_optimization(max_iter=max_iter,5)
-
-
-BO_EL = GPyOpt.methods.BayesianOptimization(f=f,bounds=bounds,X=X,Y=Y)  
-BO_EL.run_optimization(max_iter=max_iter, acqu_optimize_method = 'DIRECT')
+# myopic
+EL     = GPyOpt.methods.BayesianOptimization(f=f,bounds=bounds, X=X, Y=Y ,acquisition='EL1')
+EL.run_optimization(max_iter= max_iter,acqu_optimize_method='DIRECT')
