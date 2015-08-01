@@ -169,41 +169,41 @@ This produce a large accumulation of errors that does not allow the use of these
 
 We propose an algorithm, \us, that provides scaling superior to existing alternatives.
 
-\subsection{Bayesian Optimisation with one step look-ahead} % (fold)
 
+\section{Background and challenge}
+\subsection{Bayesian Optimisation with one step look-ahead} % (fold)
 \label{sec:bayesian_optimisation}
 
 
-Let $f: {\mathcal X} \to \bbbr$ be well behaved function defined on a compact subset ${\mathcal X} \subseteq \bbbr^d$. We are interested in solving the global optimization problem of finding $\bx_{M} = \arg \min_{\bx \in {\mathcal X}} f(\bx)$. We assume that $f$ is a \emph{black-box} from which only perturbed evaluations of the type $y_i = f(\bx_i) + \epsilon_i$, with $\epsilon_i \sim\mathcal{N}(0,\sigma^2)$, are  available. The goal is to make a series of  evaluations $\bx_1,\dots,\bx_n$ of $f$ such that the the minimum of $f$ is evaluated as soon as possible.
+Let $f: {\mathcal X} \to \bbbr$ be well behaved function defined on a compact subset ${\mathcal X} \subseteq \bbbr^d$. We are interested in solving the global optimization problem of finding $\bx_{M} = \arg \min_{\bx \in {\mathcal X}} f(\bx)$. We assume that $f$ is a \emph{black-box} from which only perturbed evaluations of the type $y_i = f(\bx_i) + \epsilon_i$, with $\epsilon_i \sim\mathcal{N}(0,\sigma^2)$, are  available. Bayesian Optimization is an heuristic strategy to make a series of evaluations $\bx_1,\dots,\bx_n$ of $f$, tipically very limited in number,  such that the the minimum of $f$ is evaluated as soon as possible. \cite{Lizotte_2008}
+\cite{Jones_2001}
+\cite{Snoek*Larochelle*Adams_2012}
+\cite{Brochu*Cora*DeFreitas_2010}
 
 Assume that $n$ points have been gathered so far, having a dataset $\data_0 = \{(\bx_i,y_i)\}_{i=1}^N = (\bX_0,\bY_0)$. Before collecting any new point, a surrogate probabilistic model for $f$ is calculated. This is topically a Gaussian Process (GP) $p(f) = \mathcal{GP}(\mu; k)$ with mean function $\mu$ and a covariance function $k$, and whose parameters will be denoted by $\theta$.  Let $\I_0$ be the current available information: the conjunction of $\data_0$, the model parameters and the model likelihood type.  Under Gaussian likelihoods, the predictive distribution for $y_*$ at $\bx_*$ is also Gaussian with mean posterior mean and variance
-$$\mu(y_{*}|\I_0) = \bk_{\theta}(\bx_*)^\top[\bK_{\theta} + \sigma^2 \textbf{I}]^{-1}\by,$$
-and
-$$\sigma^2(y_*|\I_0)=k_{\theta}(\bx_*,\bx_*)-\bk_{\theta}(\bx_*)^\top[\bK_{\theta}+\sigma^2 \textbf{I}]^{-1}\bk_{\theta}(\bx_*),$$
+$$\mu(\bx_{*}|\I_0) = \bk_{\theta}(\bx_*)^\top[\bK_{\theta} + \sigma^2 \textbf{I}]^{-1}\by \mbox{ and}$$
+$$\sigma^2(\bx_*|\I_0)=k_{\theta}(\bx_*,\bx_*)-\bk_{\theta}(\bx_*)^\top[\bK_{\theta}+\sigma^2 \textbf{I}]^{-1}\bk_{\theta}(\bx_*),$$
 where $\bK_{\theta}$ is the matrix such that $(\bK_{\theta})_{ij}=k_{\theta}(\bx_i,\bx_j)$,  $\bk_{\theta}(\bx_{*}) = [k_{\theta}(\bx_1,\bx_{*}),\dots,k_{\theta}(\bx_n,\bx_{*})]^\top$ \cite{Rasmussen:2005:GPM:1162254}.  
 
 
-Given the GP model, we now need to determine the best location to sample. Imagine that we only have one remaining evaluation before we need to report our inferred location about the minimum of $f$. Denote by $\eta = \min \bY_0$, the current best found value. We can define the loss of evaluating $f$ this last time at $\bx_*$ assuming it is returning $y_*$ as
+Given the GP model, we now need to determine the best location to sample. Imagine that we only have one remaining evaluation ($n=1$) before we need to report our inferred location about the minimum of $f$. Denote by $\eta = \min \bY_0$, the current best found value. We can define the loss of evaluating $f$ this last time at $\bx_*$ assuming it is returning $y_*$ as
 $$\lambda(y_*)\triangleq \left\{ \begin{array}{lcl}
 y_*;             & \mbox{if}  &  y_* \leq \eta \\
  \eta; & \mbox{if}  & y_* > \eta. \\
 \end{array}
 \right.$$
-Note that the loss corresponds to the new observed minimum, $\min (\eta,y_*)$. The expectation of this loss is therefore given by
+Therefore the loss corresponds is the new observed minimum, $\min (\eta,y_*)$. Its expectation is 
 $$\ \Lambda_1(\bx_*| \I_0) \triangleq \E[ \min (y_*,\eta)]= \int \lambda(y_*)p(y_* |\bx_*,\I_0)dy_*$$
-where the subscript in $\Lambda$ refers to the considered future evaluations, one in this case.  Giving the properties of the GP, $\Lambda_1(\bx_*| \I_0)$ can be computed in closed form for any $\bx_* \in \mathcal{X}$. In particular, for $\Phi$ the usual Gaussian cumulative distribution function we have that
-\begin{eqnarray}\label{eq:expected_loss}
+where the subscript in $\Lambda$ refers to the fact that we are considering one future evaluations.  Giving the properties of the GP, $\Lambda_1(\bx_*| \I_0)$ can be computed in closed form for any $\bx_* \in \mathcal{X}$. In particular, for $\Phi$ the usual Gaussian cumulative distribution function, we have that
+\begin{eqnarray}\label{eq:expected_myopic_loss}
 \Lambda_1(\bx_*| \I_0) &  \triangleq & \eta \int_{\eta}^{\infty} \mathcal{N}(y_*;\mu,\sigma) dy_* \\ \nonumber
 & +  & \int_{-\infty}^{\eta} y_* \mathcal{N}(y_*;\mu,\sigma) dy_*  \\ \nonumber
 & = &  \eta +(\mu  - \eta) \Phi (\eta ; \mu, \sigma) - \sigma \mathcal{N} (\eta, \mu, \sigma), \nonumber
 \end{eqnarray}
 
-where we have abbreviated $\sigma(y_*|\I_0)$ as $\sigma$ and $\mu(y_{*}|\I_0)$ as $\mu$. Finally, the case of having one future evaluation we would select the point where $\Lambda_1(\bx_*| \I_0) $ gives the minimum value, which can  be obtained by any gradient descent algorithm \cite{osborne_bayesian_2010}. 
+where we have abbreviated $\sigma(y_*|\I_0)$ as $\sigma$ and $\mu(y_{*}|\I_0)$ as $\mu$. Finally, the next evaluation is located   where $\Lambda_1(\bx_*| \I_0) $ gives the minimum value. This point can  be obtained by any gradient descent algorithm since analitical expresions for the gradient and Hessian of $\Lambda_1(\bx_*| \I_0)$  exist \cite{osborne_bayesian_2010}. 
 
-\cite{Lizotte_2008}
-\cite{Jones_2001}
-\cite{Snoek*Larochelle*Adams_2012}
-\cite{Brochu*Cora*DeFreitas_2010}
+
 
 % section bayesian_optimisation (end)
 
@@ -265,17 +265,20 @@ where we have abbreviated $\sigma(y_*|\I_0)$ as $\sigma$ and $\mu(y_{*}|\I_0)$ a
 \end{figure*}
 
 
-\subsection{Looking many steps ahead: Challenge and contribution of this work}
+\subsection{Looking many steps ahead and central contribution of this work}
+Expression~(\ref{eq:expected_myopic_loss}) can also be used as a miopic approximation to the optimal decision when $n$ evaluations of $f$ remain available. Indeed, most BO methods are myopic and ignore the future decisions that will be made by the algorithm in the future steps. 
 
-
-%The goal of any batch criterion is to mimic the decisions that would be made under the equivalent (optimal) sequential policy: Consider the choice of selecting $\bx_{t,k}$, the $k$-th element of the $t$-th batch. Under a sequential policy, in which the evaluations of $f$ at all locations prior to $\bx_{t,k}$ are available, the decision is to take $\bx_{t,k}$ as the maximizer of $\alpha(\bx;\I_{t,k-1})$. In the batch case, the decision about where to collect $\bx_{t,k}$ has to incorporate the uncertainty about the locations  $\bx_{t,1},\dots,\bx_{t,k-1}$, and the outcomes of the evaluation of $f$ there. Iteratively marginalizing these sources of uncertainty gives
+Denote by $\{(\bx_j,y_j)\}$ for $j=1,\dots,n$ the remaining $n$ available evaluations and by $\I_j$ the available information after the data set $\data_0$ has been augmented with $(\bx_j,y_j),\dots,(\bx_j,y_j)$ and the parameters $\theta$ of the model updated. We use $\Lambda_n(\bx_*|\I_0 )$ to denote the expected loss of selecting $\bx_*$ given $\I_0$ and  cosidering $n$ future evaluations.  a Proper Bayesian formulation allows us to define this \emph{long-sight} loss  \cite{osborne_bayesian_2010}  as 
 
 \begin{eqnarray}\nonumber
-\Lambda_n(\bx^\star|\I_0 ) &= & \int \lambda(y_n) \prod_{j=1}^{n}p(y_{j}|\bx_{j},\I_{j-1}) p(\bx_{j}|\I_{j-1}) \\ \nonumber
-& & dy_*\dots dy_n d\bx_2\dots d\bx_n\nonumber
+\Lambda_n(\bx_*|\I_0 ) &= & \int \lambda(y_n) \prod_{j=1}^{n}p(y_{j}|\bx_{j},\I_{j-1}) p(\bx_{j}|\I_{j-1}) \\  \label{eq:expected_nonmyopic_loss}
+& & dy_*\dots dy_n d\bx_2\dots d\bx_n
 \end{eqnarray}
-%where $p(y_{t,j}|\bx_{t,j},\I_{t,j-1})= \mathcal{N} \left(y_{t,j};\mu_n(\bx_{t,j};\I_{t,j-1}),\sigma_n^2(\bx_{t,j};\I_{t,j-1} ) \right)$ is the %predictive distribution of the GP at $\bx_{t,j}$ when a total of $n$ points are available and $p(\bx_{t,j}|\I_{t,j-1}) = \delta (\bx_{t,j} - %\arg \max_{\bx \in {\mathcal X}} \alpha(\bx;\I_{t,j-1}) )$ reflects the optimization step required to obtain $\bx_{t,j}$ after the evaluations of $f$ at previous batch-elements have been marginalized. %In Eq. (\ref{eq:optimal_batch}), the `integration' with respect to $\bx_{t,k}$ is explicitly kept as a maximization step, so it is straightforward to identify this expression with the sequential policy when $n_b=1$.
-
+where 
+$$p(y_{j}|\bx_{j},\I_{j-1})= \mathcal{N} \left(y_{j};\mu(\bx_{j};\I_{j-1}),\sigma^2(\bx_{j}|\I_{j-1} ) \right)$$ 
+is the predictive distribution of the GP at $\bx_{j}$  and 
+$$p(\bx_{j}|\I_{j-1}) = \delta (\bx_{j} - \arg \min_{\bx_* \in {\mathcal X}} \Lambda_j(\bx_*|\I_{j-1}))$$ 
+reflects the optimization step required to obtain $\bx_{j}$ after all previous the evaluations $f$ have been iteratively optimized and marginalized.  The graphical probalistic model underlying \ref{eq:expected_nonmyopic_loss} is illustrated in Figure \ref{fig:bayes_net}.
 
 
 %The optimization in Eq.~(\ref{eq:optimal_batch}) is intractable even for small batch-sizes, due to the optimization-marginalization loop required to obtain $\bx_{t,k}$.
