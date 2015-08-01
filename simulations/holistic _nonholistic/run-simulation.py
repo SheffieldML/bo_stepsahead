@@ -96,7 +96,7 @@ n_inits      = 26
 n_replicates = 4
 
 # -------- load results
-best_res_GLASSES_full   = np.loadtxt('res_HBOfull_'+experiment[7:]+'.txt')[1:(n_inits*n_replicates+1),1].reshape(n_replicates,n_inits).mean(0)
+best_res_GLASSES_full   = np.loadtxt('res_GLASSES_full_'+experiment[7:]+'.txt')[1:(n_inits*n_replicates+1),1].reshape(n_replicates,n_inits).mean(0)
 best_GLASSES_O3       = np.loadtxt('res_GLASSES_O3_'+experiment[7:]+'.txt')[1:(n_inits*n_replicates+1),1].reshape(n_replicates,n_inits).mean(0)
 best_GLASSES_O5       = np.loadtxt('res_GLASSES_O5_'+experiment[7:]+'.txt')[1:(n_inits*n_replicates+1),1].reshape(n_replicates,n_inits).mean(0)
 best_HBO10      = np.loadtxt('res_HBO10_'+experiment[7:]+'.txt')[1:(n_inits*n_replicates+1),1].reshape(n_replicates,n_inits).mean(0)
