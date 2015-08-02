@@ -97,7 +97,7 @@
 
 
 
-\graphicspath{{./},{./figs/}}
+\graphicspath{{./},{./diagrams/}}
 
 % If your paper is accepted, change the options for the package
 % aistats2016 as follows:
@@ -268,20 +268,20 @@ where we have abbreviated $\sigma(y_*|\I_0)$ as $\sigma$ and $\mu(y_{*}|\I_0)$ a
 \subsection{Looking many steps ahead and central contribution of this work}
 Expression~(\ref{eq:expected_myopic_loss}) can also be used as a miopic approximation to the optimal decision when $n$ evaluations of $f$ remain available. Indeed, most BO methods are myopic and ignore the future decisions that will be made by the algorithm in the future steps. 
 
-Denote by $\{(\bx_j,y_j)\}$ for $j=1,\dots,n$ the remaining $n$ available evaluations and by $\I_j$ the available information after the data set $\data_0$ has been augmented with $(\bx_j,y_j),\dots,(\bx_j,y_j)$ and the parameters $\theta$ of the model updated. We use $\Lambda_n(\bx_*|\I_0 )$ to denote the expected loss of selecting $\bx_*$ given $\I_0$ and  cosidering $n$ future evaluations.  a Proper Bayesian formulation allows us to define this \emph{long-sight} loss  \cite{osborne_bayesian_2010}  as 
-
+Denote by $\{(\bx_j,y_j)\}$ for $j=1,\dots,n$ the remaining $n$ available evaluations and by $\I_j$ the available information after the data set $\data_0$ has been augmented with $(\bx_j,y_j),\dots,(\bx_j,y_j)$ and the parameters $\theta$ of the model updated. We use $\Lambda_n(\bx_*|\I_0 )$ to denote the expected loss of selecting $\bx_*$ given $\I_0$ and  cosidering $n$ future evaluations.  A Proper Bayesian formulation allows us to define this \emph{long-sight} loss  \cite{osborne_bayesian_2010}  as 
 \begin{eqnarray}\nonumber
-\Lambda_n(\bx_*|\I_0 ) &= & \int \lambda(y_n) \prod_{j=1}^{n}p(y_{j}|\bx_{j},\I_{j-1}) p(\bx_{j}|\I_{j-1}) \\  \label{eq:expected_nonmyopic_loss}
-& & dy_*\dots dy_n d\bx_2\dots d\bx_n
+\Lambda_n(\bx_*|\I_0 ) &= & \int \lambda(y_n) \prod_{j=1}^{n}p(y_{j}|\bx_{j},\I_{j-1}) p(\bx_{j}|\I_{j-1})\\\label{eq:expected_nonmyopic_loss}
+& & dy_*\dots dy_n d\bx_2\dots d\bx_n\footnote{We assume that $p(\bx_*|\I_0)=1$}
 \end{eqnarray}
 where 
 $$p(y_{j}|\bx_{j},\I_{j-1})= \mathcal{N} \left(y_{j};\mu(\bx_{j};\I_{j-1}),\sigma^2(\bx_{j}|\I_{j-1} ) \right)$$ 
 is the predictive distribution of the GP at $\bx_{j}$  and 
-$$p(\bx_{j}|\I_{j-1}) = \delta (\bx_{j} - \arg \min_{\bx_* \in {\mathcal X}} \Lambda_j(\bx_*|\I_{j-1}))$$ 
+$$p(\bx_{j}|\I_{j-1}) = \delta (\bx_{j} - \arg \min_{\bx_* \in {\mathcal X}} \Lambda_{n-j+1}(\bx_*|\I_{j-1}))$$ 
 reflects the optimization step required to obtain $\bx_{j}$ after all previous the evaluations $f$ have been iteratively optimized and marginalized.  The graphical probalistic model underlying \ref{eq:expected_nonmyopic_loss} is illustrated in Figure \ref{fig:bayes_net}.
 
+To evaluate Eq.~(\ref{eq:expected_nonmyopic_loss}) we can successively sample from $y_1$ to $y_{j-1}$ and optimize for the appropiate $\Lambda_{n-j+1}(\bx_*|\I_{j-1})$. This is in done in \cite{osborne_bayesian_2010} for only two steps look ahead given the computational burden required to compute this loss for longer horizons. Note that analytical expression are only available in the myopic case $\Lambda_1(\bx_*| \I_0)$.
 
-%The optimization in Eq.~(\ref{eq:optimal_batch}) is intractable even for small batch-sizes, due to the optimization-marginalization loop required to obtain $\bx_{t,k}$.
+The goal of this work is \emph{to propose an approximation to Eq.~(\ref{eq:expected_nonmyopic_loss}) with a minimal computational burden that will allow to relieve the myopic aspect of Bayesian optimization in a wide class of problems}. The key aspect ou our approach is to split the recursive optimization marginalization loop in Eq.~(\ref{eq:expected_nonmyopic_loss}) in two independent optimization-marginalizaiton steps\hl{... (too tired for this now..)}
 
 
 
@@ -289,6 +289,20 @@ reflects the optimization step required to obtain $\bx_{j}$ after all previous t
  \section{The {\us}  Algorithm}
 
 \subsection{Predicticting BO future steps}
+
+%\begin{figure*}[t!]
+%    \centering
+%    \begin{subfigure}%{0.5\textwidth}
+%        \centering
+%        \includegraphics[height=2.5in]{predicted_locations1.png}
+%    \end{subfigure}%
+%    \begin{subfigure}%{0.5\textwidth}
+%        \centering
+%        \includegraphics[height=2.5in]{predicted_locations2.png}
+%        \caption{Lorem ipsum, lorem ipsum,Lorem ipsum, lorem ipsum,Lorem ipsum}
+%    \end{subfigure}
+%
+%\end{figure*}
 
 
 \subsection{Computing the Expected Loss}
