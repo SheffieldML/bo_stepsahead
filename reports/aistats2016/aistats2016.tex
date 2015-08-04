@@ -3,6 +3,8 @@
 
 
 \usepackage{hyperref}
+%\usepackage[demo]{graphicx}
+%\usepackage{subcaption}
 \usepackage{url}
 \usepackage[utf8x]{inputenc}
 \usepackage[english]{babel}
@@ -96,6 +98,9 @@
 \newtheorem{proof}{Proof}
 \newtheorem{conjecture}{Conjecture}
 
+\newcommand*{\addheight}[2][.5ex]{%
+  \raisebox{0pt}[\dimexpr\height+(#1)\relax]{#2}%
+}
 
 
 \graphicspath{{./},{./diagrams/}}
@@ -187,7 +192,7 @@ $$\sigma^2(\bx_*|\I_0)=k_{\theta}(\bx_*,\bx_*)-\bk_{\theta}(\bx_*)^\top[\bK_{\th
 where $\bK_{\theta}$ is the matrix such that $(\bK_{\theta})_{ij}=k_{\theta}(\bx_i,\bx_j)$,  $\bk_{\theta}(\bx_{*}) = [k_{\theta}(\bx_1,\bx_{*}),\dots,k_{\theta}(\bx_n,\bx_{*})]^\top$ \cite{Rasmussen:2005:GPM:1162254}.  
 
 
-Given the GP model, we now need to determine the best location to sample. Imagine that we only have one remaining evaluation ($n=1$) before we need to report our inferred location about the minimum of $f$. Denote by $\eta = \min \bY_0$, the current best found value. We can define the loss of evaluating $f$ this last time at $\bx_*$ assuming it is returning $y_*$ as
+Given the GP model, we now need to determine the best location to sample. Imagine that we only have one remaining evaluation ($n=1$) before we need to report our inferred location about the minimum of $f$. Denote by $\eta = \min \{\bY_0\}$, the current best found value. We can define the loss of evaluating $f$ this last time at $\bx_*$ assuming it is returning $y_*$ as
 $$\lambda(y_*)\triangleq \left\{ \begin{array}{lcl}
 y_*;             & \mbox{if}  &  y_* \leq \eta \\
  \eta; & \mbox{if}  & y_* > \eta. \\
@@ -210,7 +215,7 @@ where we have abbreviated $\sigma(y_*|\I_0)$ as $\sigma$ and $\mu(y_{*}|\I_0)$ a
 
 % section introduction (end)
 
-\begin{figure*}
+\begin{figure*}[t!]
 \centering
 \begin{tikzpicture}
 
@@ -278,13 +283,13 @@ where
 $$p(y_{j}|\bx_{j},\I_{j-1})= \mathcal{N} \left(y_{j};\mu(\bx_{j};\I_{j-1}),\sigma^2(\bx_{j}|\I_{j-1} ) \right)$$ 
 is the predictive distribution of the GP at $\bx_{j}$  and 
 $$p(\bx_{j}|\I_{j-1}) = \delta (\bx_{j} - \arg \min_{\bx_* \in {\mathcal X}} \Lambda_{n-j+1}(\bx_*|\I_{j-1}))$$ 
-reflects the optimization step required to obtain $\bx_{j}$ after all previous the evaluations $f$ have been iteratively optimized and marginalized.  The graphical probabilistic model underlying \ref{eq:expected_nonmyopic_loss} is illustrated in Figure \ref{fig:bayes_net}.
+reflects the optimization step required to obtain $\bx_{j}$ after all previous the evaluations $f$ have been iteratively optimized and marginalized.  The graphical probabilistic model underlying (\ref{eq:expected_nonmyopic_loss}) is illustrated in Figure \ref{fig:bayes_net}.
 
 To evaluate Eq.~(\ref{eq:expected_nonmyopic_loss}) we can successively sample from $y_1$ to $y_{j-1}$ and optimize for the appropriate $\Lambda_{n-j+1}(\bx_*|\I_{j-1})$. This is in done in \cite{osborne_bayesian_2010} for only two steps look ahead given the computational burden required to compute this loss for longer horizons. Note that analytical expression are only available in the myopic case $\Lambda_1(\bx_*| \I_0)$.
 
 \subsection{contribution of this work}
 
-The goal of this work is \emph{to propose an approximation to Eq.~(\ref{eq:expected_nonmyopic_loss}) with a minimal computational burden that will allow to relieve the myopic aspect of classical Bayesian optimization methods}. The key aspect of our approach is to split the recursive optimization marginalization loop in Eq.~(\ref{eq:expected_nonmyopic_loss}) in two independent optimization-marginalization steps that jointly act on all the future steps. The precise contributions of this paper are:
+The goal of this work is \emph{to propose an approximation to Eq.~(\ref{eq:expected_nonmyopic_loss}) with a minimal computational burden that will allow to relieve the myopic aspect of classical Bayesian optimization methods}. The key aspect of our approach is to split the recursive optimization marginalization loop in Eq.~(\ref{eq:expected_nonmyopic_loss}) into two independent optimization-marginalization steps that jointly act on all the future steps. The precise contributions of this paper are:
 
 \begin{itemize}
 \item Method, \hl{it is cool!, etc}
@@ -300,14 +305,27 @@ The goal of this work is \emph{to propose an approximation to Eq.~(\ref{eq:expec
  \section{The GLASSES  Algorithm}
 
 
-\subsection{Oracle multiple steps loook-ahead expected loss}
-Suppose that  we had access to an oracle function $\future_{n}: {\mathcal X}\rightarrow  {\mathcal X}^n$ able to predict the $n$ future  locations that the loss $\Lambda_1(\cdot)$ would suggest if we start evaluating $f$ at $\bx_*$. We assume that $\future_{1}(\bx_*)=\bx_*$, that is, first visited location is always $\bx_*$ itself. We work here under the assumption that the oracle has perfect infomation about the future locations, in the same way we have have perfect information about the locations that the algorithm already visited. This is obviously a totally irreal assumption in practice, but it will help us to set-up our algorithm. We leave for the next sextion the details of how to choose $\future_{n}$ in practice. 
+\begin{table*}
+\begin{tabular}{ccc}
+      \addheight{\includegraphics[width=54mm]{bo_1step.png}} &
+      \addheight{\includegraphics[width=54mm]{bo_2steps.png}}  &
+      \addheight{\includegraphics[width=54mm]{bo_3steps.png}}\\
+      \small Myopic loss &  \small 2 steps ahead & \small 3 steps ahead \\
+      \addheight{\includegraphics[width=54mm]{bo_5steps.png}} &
+      \addheight{\includegraphics[width=54mm]{bo_10steps.png}}  &
+      \addheight{\includegraphics[width=54mm]{bo_20steps.png}}\\
+      \small \small 5 steps ahead' & \small 10 steps ahead & \small 20 steps ahead \\
+\end{tabular}\caption{\hl{(PRELIMINAR PLOTS)} Estimated expected loss for differnt number of steps ahead.}
+\end{table*}
 
-Assuming for now that $\future_{n}$ exists and that we have access to it we it, is possible to rewrite the expected loss in Eq.~(\ref{eq:expected_nonmyopic_loss}) as
+\subsection{Oracle multiple steps loook-ahead expected loss}
+Suppose that  we had access to an oracle function $\future_{n}: {\mathcal X}\rightarrow  {\mathcal X}^n$ able to predict the $n$ future  locations that the loss $\Lambda_n(\cdot)$ would suggest if we start evaluating $f$ at $\bx_*$. We assume that $\future_{1}(\bx_*)=\bx_*$, that is, the first visited location is always $\bx_*$ itself. We work here under the assumption that the oracle has perfect infomation about the future locations, in the same way we have have perfect information about the locations that the algorithm already visited. This is obviously a totally irreal assumption in practice, but it will help us to set-up our algorithm. We leave for the next sextion the details of how to choose $\future_{n}$ in practice. 
+
+Assume, for now, that $\future_{n}$ exists and that we have access to it we it and denote by $\by=\{y_*,\dots,\dots,y_n\}$ the vector of future locations evaluations of $f$ at $\future_n(\bx_*)$.  Under this hypothesis it is possible to rewrite the expected loss in Eq.~(\ref{eq:expected_nonmyopic_loss}) as
 \begin{equation}\label{eq:oracle_expected_nonmyopic_loss}
 \Lambda_n(\bx_*|\I_0, \future_{n}(\bx_*) ) = \E [\min (\by,\eta)], 
 \end{equation}
-where the expectation is taken over the multivariate Gaussian distribution, with mean vector $\mu$ and covariance matrix $\Sigma$, that gives rise after marginalizing the posterior distribution of the GP at $\{\future_{n}(\bx_*)\}$. See supplementary materials for details.
+where the expectation is taken over the multivariate Gaussian distribution, with mean vector $\mu$ and covariance matrix $\Sigma$, that gives rise after marginalizing the posterior distribution of the GP at $\future_{n}(\bx_*)$. See supplementary materials for details.
 
 The intuition about Eq.~(\ref{eq:oracle_expected_nonmyopic_loss}) is as follows: the expected loss at $\bx_*$ is determined by the best possible solution that the algorithm would find in $n$ steps if we started evaluating $f$ at $\bx_*$.... \hl{NOT CLEAR TO ME YET HOW TO FINISH THIS. THIS IS PROBABLY THE MOST IMPORTANT SENTENCE OF THE PAPER... INCLUDE AN FIGURE TO SUPPORT IT?}  
 
@@ -376,22 +394,26 @@ Under the hypothesis of this section, the next evaluation is located where $\Lam
 \end{center}
 
 \section{Oracle Multiple Steps loook-ahead Expected Loss }
+Denote by $\eta_n = \min \{\bY_0, y_*, y_2\dots,y_{n-1}\}$ the value of the best visited location when looking at $n$ evaluations in the future. Note that $\eta_n$ reduces to the current best lost $\eta$ in the one step-ahead case. It is straightforward to see that 
+$$ \min (y_n,\eta_n) = \min (\by,\eta )$$
+It holds hat
+\begin{eqnarray}\label{eq:oracle_expected_nonmyopic_loss}
+\Lambda_n(\bx_*|\I_0, \future_{n}(\bx_*)) & = & \int \min (\by,\eta) \prod_{j=1}^{n}p(y_{j}|\bx_{j},\I_{j-1}, \future_{n}(\bx_*)) dy_*\dots dy_n
+\end{eqnarray}
+where the integrals with respect to $\bx_2\dots d\bx_n$ go out of the integral since $p(\bx_{j}|\I_{j-1}, \future_{n}(\bx_*))=1$, $j=2,\dots,n$.
 
 TODO
 
-\section{EP for the Computation of the Oracle Multiple Steps loook-ahead Expected Loss }
-Denote by 
+\section{Formulation of the Oracle Multiple Steps loook-ahead Expected Loss to be computed using Expectation Propagation}
+Assume that $\by \sim \N(\by; \mu, \Sigma)$. Then we have that
 \begin{eqnarray}\nonumber
-E_{p(\by)} [\min (\by,\eta)] & = & \int_{\IR^n} \min (\by,\eta)  \N(\by; \mu, \Sigma) d\by\\ \nonumber
-& = & \int_{\IR^n - (\eta,\infty)^n } \min (\by)  \N(\by; \mu, \Sigma) d\by + \int_{(\eta,\infty)^n} \eta  \N(\by; \mu, \Sigma) d\by  \nonumber
+\E[\min (\by,\eta)] & = & \int_{\IR^n} \min (\by,\eta)  \N(\by; \mu, \Sigma) d\by\\ \nonumber
+& = & \int_{\IR^n - (\eta,\infty)^n } \min (\by)  \N(\by; \mu, \Sigma) d\by + \int_{(\eta,\infty)^n} \eta  \N(\by; \mu, \Sigma) d\by.  \nonumber
 \end{eqnarray}
-
 The first term can be written as follows:
-
 \begin{equation}
  \int_{\IR^n - (\eta,\infty)^n } \min (\by)  \N(\by; \mu, \Sigma) d\by  =    \sum_{j=1}^n \int_{P_j} y_j \N(\by; \mu, \Sigma) d \by \nonumber
 \end{equation}\nonumber
-
 where $P_j := \{ \by \in\IR^n - (\eta,\infty)^n  : y_j \leq y_i,\,\, \forall i \neq j \}$. We can do this because the regions $P_j$ are disjoint and it holds that $\cup_{j=1}^{n}P_j = \IR^n - (\eta,\infty)^n $.  Also, note that the $\min(\by)$ can be replaced within the integrals since within each $P_j$ it holds that $\min(\by) = y_j$. Rewriting the integral in terms of indicator functions we have that
 \begin{eqnarray}\label{eq:term1}
  \sum_{j=1}^n \int_{P_j} y_j \N(\by; \mu, \Sigma) d \by   =  \sum_{j=1}^n  \int_{\IR^n} y_j \prod_{i=1}^n t_{j,i}(\by) \N(\by; \mu, \Sigma) d \by 
@@ -403,7 +425,7 @@ The second term can be written as
 \begin{equation}\label{eq:term2}
  \int_{(\eta,\infty)^n } \eta  \N(\by; \mu, \Sigma) d\by = \eta\int_{\IR^n} \prod_{i=1}^nh_i(\by) \N(\by; \mu, \Sigma) d\by
 \end{equation}
-where $h_i(\by) = \mathbb{I}\{y_i>\eta\}$.  Merge (\ref{eq:term1}) and (\ref{eq:term2}) to conclude the proof.
+where $h_i(\by) = \mathbb{I}\{y_i>\eta\}$.  Merge (\ref{eq:term1}) and (\ref{eq:term2}) to obtain Eq.  (\ref{eq:expected_loss_oracle}).
  
 
 
