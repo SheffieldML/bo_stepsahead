@@ -266,7 +266,7 @@ where we have abbreviated $\sigma(y_*|\I_0)$ as $\sigma$ and $\mu(y_{*}|\I_0)$ a
 \end{figure*}
 
 
-\subsection{Looking many steps ahead and central contribution of this work}
+\subsection{Looking many steps ahead}
 Expression~(\ref{eq:expected_myopic_loss}) can also be used as a miopic approximation to the optimal decision when $n$ evaluations of $f$ remain available. Indeed, most BO methods are myopic and ignore the future decisions that will be made by the algorithm in the future steps. 
 
 Denote by $\{(\bx_j,y_j)\}$ for $j=1,\dots,n$ the remaining $n$ available evaluations and by $\I_j$ the available information after the data set $\data_0$ has been augmented with $(\bx_j,y_j),\dots,(\bx_j,y_j)$ and the parameters $\theta$ of the model updated. We use $\Lambda_n(\bx_*|\I_0 )$ to denote the expected loss of selecting $\bx_*$ given $\I_0$ and  considering $n$ future evaluations.  A Proper Bayesian formulation allows us to define this \emph{long-sight} loss  \cite{osborne_bayesian_2010}  as 
@@ -282,40 +282,36 @@ reflects the optimization step required to obtain $\bx_{j}$ after all previous t
 
 To evaluate Eq.~(\ref{eq:expected_nonmyopic_loss}) we can successively sample from $y_1$ to $y_{j-1}$ and optimize for the appropriate $\Lambda_{n-j+1}(\bx_*|\I_{j-1})$. This is in done in \cite{osborne_bayesian_2010} for only two steps look ahead given the computational burden required to compute this loss for longer horizons. Note that analytical expression are only available in the myopic case $\Lambda_1(\bx_*| \I_0)$.
 
-The goal of this work is \emph{to propose an approximation to Eq.~(\ref{eq:expected_nonmyopic_loss}) with a minimal computational burden that will allow to relieve the myopic aspect of Bayesian optimization in a wide class of problems}. The key aspect our approach is to split the recursive optimization marginalization loop in Eq.~(\ref{eq:expected_nonmyopic_loss}) in two independent optimization-marginalizaiton that jointly act on all the future steps.
+\subsection{contribution of this work}
+
+The goal of this work is \emph{to propose an approximation to Eq.~(\ref{eq:expected_nonmyopic_loss}) with a minimal computational burden that will allow to relieve the myopic aspect of classical Bayesian optimization methods}. The key aspect of our approach is to split the recursive optimization marginalization loop in Eq.~(\ref{eq:expected_nonmyopic_loss}) in two independent optimization-marginalization steps that jointly act on all the future steps. The precise contributions of this paper are:
+
+\begin{itemize}
+\item Method, \hl{it is cool!, etc}
+\item Code Framework \hl{DESCRIBE - GPyOpt, etc}
+\item Any theoretical property (\hl{can we do something here?)}
+\item Simulations: New pratical insights in the direction that non-myopic methods are the way.\hl{Nice bit! perhaps the most important of the paper from a practical perspective.}
+\item Question here: How would one define a non-myopic version of Entropy Search?? \hl{just curious...}
+\end{itemize}
 
 
 
 
- \section{The {\us}  Algorithm}
-
-\subsection{Predicting BO future steps}
-
-[EXPLAIN HERE HOW WE PREDICT THE FUTURE STEPS OF THE ALGORITHM: batch method of final alternative]
-
-%\begin{figure*}[t!]
-%    \centering
-%    \begin{subfigure}%{0.5\textwidth}
-%        \centering
-%        \includegraphics[height=2.5in]{predicted_locations1.png}
-%    \end{subfigure}%
-%    \begin{subfigure}%{0.5\textwidth}
-%        \centering
-%        \includegraphics[height=2.5in]{predicted_locations2.png}
-%        \caption{Lorem ipsum, lorem ipsum,Lorem ipsum, lorem ipsum,Lorem ipsum}
-%    \end{subfigure}
-%
-%\end{figure*}
+ \section{The GLASSES  Algorithm}
 
 
-\subsection{Computing the Expected Loss}
-The goal of this section is to propose a way of computing Eq.~(\ref{eq:expected_nonmyopic_loss}) when the the putative input $\bx_*$ and the future evaluations $\bx_2,\dots,\bx_n$, that we denote by $\future_{n}(\bx_*)$, are available. Ideally, such evaluations should come from some oracle able to predict the algorithm search. In practice, we will use the method presented in the previous section. 
+\subsection{Oracle multiple steps loook-ahead expected loss}
+Suppose that  we had access to an oracle function $\future_{n}: {\mathcal X}\rightarrow  {\mathcal X}^n$ able to predict the $n$ future  locations that the loss $\Lambda_1(\cdot)$ would suggest if we start evaluating $f$ at $\bx_*$. We assume that $\future_{1}(\bx_*)=\bx_*$, that is, first visited location is always $\bx_*$ itself. We work here under the assumption that the oracle has perfect infomation about the future locations, in the same way we have have perfect information about the locations that the algorithm already visited. This is obviously a totally irreal assumption in practice, but it will help us to set-up our algorithm. We leave for the next sextion the details of how to choose $\future_{n}$ in practice. 
 
-The expected loss Eq.~(\ref{eq:expected_nonmyopic_loss}) when $\future_{n}(\bx_*)$ is available results in
-\begin{equation}
-\Lambda_n(\bx_*|\I_0, \future_{n}(\bx_*) ) = \E [\min (\by,\eta)] 
+Assuming for now that $\future_{n}$ exists and that we have access to it we it, is possible to rewrite the expected loss in Eq.~(\ref{eq:expected_nonmyopic_loss}) as
+\begin{equation}\label{eq:oracle_expected_nonmyopic_loss}
+\Lambda_n(\bx_*|\I_0, \future_{n}(\bx_*) ) = \E [\min (\by,\eta)], 
 \end{equation}
-where the expectation is taken over the multivariate Gaussian distribution, with mean vector $\mu$ and covariance matrix $\Sigma$, that gives rise after marginalizing the posterior distribution of the GP at $\{\bx_*, \future_{n}(\bx_*)\}$. This integral can be calculated using Expectation Propagation (EP) \cite{Minka:2001} by observing that
+where the expectation is taken over the multivariate Gaussian distribution, with mean vector $\mu$ and covariance matrix $\Sigma$, that gives rise after marginalizing the posterior distribution of the GP at $\{\future_{n}(\bx_*)\}$. See supplementary materials for details.
+
+The intuition about Eq.~(\ref{eq:oracle_expected_nonmyopic_loss}) is as follows: the expected loss at $\bx_*$ is determined by the best possible solution that the algorithm would find in $n$ steps if we started evaluating $f$ at $\bx_*$.... \hl{NOT CLEAR TO ME YET HOW TO FINISH THIS. THIS IS PROBABLY THE MOST IMPORTANT SENTENCE OF THE PAPER... INCLUDE AN FIGURE TO SUPPORT IT?}  
+
+To compute Eq.~(\ref{eq:oracle_expected_nonmyopic_loss}) we propose to use Expectation Propagation (EP) \cite{Minka:2001}. This turns out to be a natural operation by observing that
 \begin{eqnarray}\label{eq:expected_loss_oracle}
 \E [\min (\by,\eta)] & = & \eta\int_{\IR^n} \prod_{i=1}^nh_i(\by) \N(\by; \mu, \Sigma) d\by \\  \nonumber
  &+ & \sum_{j=1}^n  \int_{\IR^n} y_j \prod_{i=1}^n t_{j,i}(\by) \N(\by; \mu, \Sigma) d \by
@@ -327,12 +323,16 @@ $$t_{j,i}(\by)= \left\{ \begin{array}{lcl}
  \mathbb{I}\{ 0 \leq y_i-y_j \} &   \mbox{otherwise.} 
 \end{array}
 \right.$$
-See supplementary materials for details. The first term in Eq.~(\ref{eq:expected_loss_oracle}) is a Gaussian probability on unbounded polyhedron in which the limits are aligned with the axis. The second term is the sum of the Gaussian expectations on different non-axis-aligned different polyhedra defined by the indicator functions. Both terms can be easily computed with EP using the approach proposed in \cite{Cunningham*Hennig*Lacoste-Julien_2011}. In a nutshell, to compute the integrals one need to replace the in the indicator functions with univariate Gaussian that play the role of \emph{soft-indicators} in the EP iterations. This method is computationally efficient and it has been shown to work well in a variety of scenarios.
+See supplementary materials for details. The first term in Eq.~(\ref{eq:expected_loss_oracle}) is a Gaussian probability on unbounded polyhedron in which the limits are aligned with the axis. The second term is the sum of the Gaussian expectations on different non-axis-aligned different polyhedra defined by the indicator functions. Both terms can easily computed with EP using the approach proposed in \cite{Cunningham*Hennig*Lacoste-Julien_2011}. In a nutshell, to compute the integrals one need to replace the indicator functions with univariate Gaussian that play the role of \emph{soft-indicators} in the EP iterations. This method is computationally efficient and scales well for high dimensions. Note that when $n=1$, (\ref{eq:oracle_expected_nonmyopic_loss}) tivially reduces to (\ref{eq:expected_myopic_loss}).
+
+Under the hypothesis of this section, the next evaluation is located where $\Lambda_n(\bx_*|\I_0, \future_{n}(\bx_*) )$ gives the minimum value. 
+
+\hl{NOTE HERE ON GRADIENTS OF $\Lambda_n(\bx_*|\I_0, \future_{n}(\bx_*) )$: should be possible to derive but, in practice EP will provide and approximation to the integral so it may not be the best thing to do. Using DIRECT sounds to me here like the best option}.
+
+\subsection{Predicting the future steps of the the algorithm}
 
 
-
-
-\subsection{Algorithm}
+\subsection{Algorithm and computational details}
 
 
 \begin{algorithm*}[t!]
@@ -360,23 +360,26 @@ See supplementary materials for details. The first term in Eq.~(\ref{eq:expected
 \bibliographystyle{plain}
 \bibliography{bib_glasses}
 
+\newpage
 \clearpage
 \setcounter{section}{0}
 \setcounter{equation}{0}
 \renewcommand{\thesection}{S\arabic{section}}
 \renewcommand{\theequation}{S.\arabic{equation}}
-
+\onecolumn
 \begin{center}
-{\LARGE  Supplementary materials for:\\
-`GLASSES: Relieving The Myopia Of Bayesian Optimisation"}
+{\Large  \textbf{Supplementary materials for:\\
+`GLASSES: Relieving The Myopia Of Bayesian Optimisation"}}
 \end{center}
 \begin{center}
 \textbf{Authors here}
 \end{center}
 
-\section{Proofs}
+\section{Oracle Multiple Steps loook-ahead Expected Loss }
 
-\begin{proof}
+TODO
+
+\section{EP for the Computation of the Oracle Multiple Steps loook-ahead Expected Loss }
 Denote by 
 \begin{eqnarray}\nonumber
 E_{p(\by)} [\min (\by,\eta)] & = & \int_{\IR^n} \min (\by,\eta)  \N(\by; \mu, \Sigma) d\by\\ \nonumber
@@ -402,7 +405,7 @@ The second term can be written as
 \end{equation}
 where $h_i(\by) = \mathbb{I}\{y_i>\eta\}$.  Merge (\ref{eq:term1}) and (\ref{eq:term2}) to conclude the proof.
  
-\end{proof}
+
 
 
 \end{document}
