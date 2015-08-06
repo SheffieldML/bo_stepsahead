@@ -319,7 +319,7 @@ The goal of this work is \emph{to propose an approximation to Eq.~(\ref{eq:expec
 \end{table*}
 
 \subsection{Oracle multiple steps loook-ahead expected loss}
-Suppose that  we had access to an oracle function $\future_{n}: {\mathcal X}\rightarrow  {\mathcal X}^n$ able to predict the $n$ future  locations that the loss $\Lambda_n(\cdot)$ would suggest if we start evaluating $f$ at $\bx_*$. We assume that $\future_{1}(\bx_*)=\bx_*$, that is, the first visited location is always $\bx_*$ itself. We work here under the assumption that the oracle has perfect infomation about the future locations, in the same way we have have perfect information about the locations that the algorithm already visited. This is obviously a totally irreal assumption in practice, but it will help us to set-up our algorithm. We leave for the next sextion the details of how to choose $\future_{n}$ in practice. 
+Suppose that  we had access to an oracle function $\future_{n}: {\mathcal X}\rightarrow  {\mathcal X}^n$ able to predict the $n$ future  locations that the loss $\Lambda_n(\cdot)$ would suggest if we start evaluating $f$ at $\bx_*$. We assume that $\future_{1}(\bx_*)=\bx_*$, that is, the first visited location is always $\bx_*$ itself. We work here under the assumption that the oracle has perfect infomation about the future locations, in the same way we have have perfect information about the locations that the algorithm already visited. This is obviously a totally irreal assumption in practice, but it will help us to set-up our algorithm. We leave for the next section the details of how to choose $\future_{n}$ in practice. 
 
 Assume, for now, that $\future_{n}$ exists and that we have access to it we it and denote by $\by=\{y_*,\dots,\dots,y_n\}$ the vector of future locations evaluations of $f$ at $\future_n(\bx_*)$.  Under this hypothesis it is possible to rewrite the expected loss in Eq.~(\ref{eq:expected_nonmyopic_loss}) as
 \begin{equation}\label{eq:oracle_expected_nonmyopic_loss}
@@ -347,7 +347,7 @@ Under the hypothesis of this section, the next evaluation is located where $\Lam
 
 \hl{NOTE HERE ON GRADIENTS OF $\Lambda_n(\bx_*|\I_0, \future_{n}(\bx_*) )$: should be possible to derive but, in practice EP will provide and approximation to the integral so it may not be the best thing to do. Using DIRECT sounds to me here like the best option}.
 
-\subsection{Predicting the future steps of the the algorithm}
+\subsection{Back to the Future: Predicting the future steps of BO}
 
 
 \subsection{Algorithm and computational details}
@@ -395,14 +395,21 @@ Under the hypothesis of this section, the next evaluation is located where $\Lam
 
 \section{Oracle Multiple Steps loook-ahead Expected Loss }
 Denote by $\eta_n = \min \{\bY_0, y_*, y_2\dots,y_{n-1}\}$ the value of the best visited location when looking at $n$ evaluations in the future. Note that $\eta_n$ reduces to the current best lost $\eta$ in the one step-ahead case. It is straightforward to see that 
-$$ \min (y_n,\eta_n) = \min (\by,\eta )$$
+$$ \min (y_n,\eta_n) = \min (\by,\eta ).$$
 It holds hat
 \begin{eqnarray}\label{eq:oracle_expected_nonmyopic_loss}
-\Lambda_n(\bx_*|\I_0, \future_{n}(\bx_*)) & = & \int \min (\by,\eta) \prod_{j=1}^{n}p(y_{j}|\bx_{j},\I_{j-1}, \future_{n}(\bx_*)) dy_*\dots dy_n
+\Lambda_n(\bx_*|\I_0, \future_{n}(\bx_*)) & = & \int \min (\by,\eta) \prod_{j=1}^{n}p(y_{j}|\I_{j-1}, \future_{n}(\bx_*)) dy_*\dots dy_n
 \end{eqnarray}
-where the integrals with respect to $\bx_2\dots d\bx_n$ go out of the integral since $p(\bx_{j}|\I_{j-1}, \future_{n}(\bx_*))=1$, $j=2,\dots,n$.
-
-TODO
+where the integrals with respect to $\bx_2\dots d\bx_n$ are  $p(\bx_{j}|\I_{j-1}, \future_{n}(\bx_*))=1$, $j=2,\dots,n$ since we don't need to optimize for any location and $p(y_{j}|\bx_{j},\I_{j-1}, \future_{n}(\bx_*))=p(y_{j}|\I_{j-1}, \future_{n}(\bx_*))$. Notice that
+\begin{eqnarray}\nonumber
+\prod_{j=1}^{n}p(y_{j}|\I_{j-1}, \future_{n}(\bx_*))& =& p(y_n|\I_{n-1}, \future_{n}(\bx_*)) \prod_{j=1}^{n-1}p(y_{j}|\I_{j-1} \future_{n}(\bx_*))\\\nonumber
+& = & p(y_n,y_{n-1}|\I_{n-2}, \future_{n}(\bx_*))  \prod_{j=1}^{n-2}p(y_{j}|\I_{j-1} \future_{n}(\bx_*))\\\nonumber
+& & \dots \\\nonumber
+& = & p(y_n,y_{n-1},\dots,y_2|\I_{1}, \future_{n}(\bx_*))\prod_{j=1}^{2}p(y_{j}|\I_{j-1} \future_{n}(\bx_*))\\\nonumber
+& = & p(\by|\I_{0}, \future_{n}(\bx_*)) \nonumber
+\end{eqnarray}
+and therefore 
+$$ \Lambda_n(\bx_*|\I_0, \future_{n}(\bx_*)) =\E [\min (\by,\eta)] =\int \min (\by,\eta)p(\by|\I_{0}, \future_{n}(\bx_*))d\by  $$
 
 \section{Formulation of the Oracle Multiple Steps loook-ahead Expected Loss to be computed using Expectation Propagation}
 Assume that $\by \sim \N(\by; \mu, \Sigma)$. Then we have that
