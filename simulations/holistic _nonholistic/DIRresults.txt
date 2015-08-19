@@ -1,1 +1,31 @@
 --------------------------------- Log file --------------------------------
+DIRECT Version 2.0.4
+ Problem Dimension n                    :      2
+ Eps value                              :   0.1000E-03
+ Maximum number of f-evaluations (maxf) :   1000
+ Maximum number of iterations (MaxT)    :   1000
+ Value of f_global                      :  -0.1000+101
+ Global percentage wanted               :   0.1000E-01
+ Volume percentage wanted               :   0.1000E-02
+ Measure percentage wanted              :  -0.1000E+01
+ Epsilon is constant.
+ Jones original DIRECT algorithm is used.
+Bounds on variable x 1    :     -1.00000 <= xi <=      1.00000
+Bounds on variable x 2    :     -1.00000 <= xi <=      1.00000
+---------------------------------------------------------------------------
+ Iteration   # of f-eval.   fmin
+    1           5          -0.0468852488
+    2          11          -0.0492808610
+    4          23          -0.0563385177
+    5          29          -0.0599220687
+    6          37          -0.0606999723
+    8          53          -0.0607487912
+    9          63          -0.0607922120
+DIRECT stopped: Volume of S_min is 0.19D-03% < 0.10D-02% of the original volume.
+--------------------------------- Summary --------------------------------
+Final function value           :   -0.0607922
+Number of function evaluations :           73
+Index  Final solution   x(i) - l(i)   u(i) - x(i) 
+    1    0.1069959       1.1069959      0.8930041
+    2   -0.1563786       0.8436214      1.1563786
+---------------------------------------------------------------------------
