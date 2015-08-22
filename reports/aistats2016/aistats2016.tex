@@ -36,6 +36,7 @@
 \newcommand{\I}{\mathcal{I}}
 
 
+\newcommand{\ud}{\mathrm{d}}
 \newcommand{\E}{\mathbb{E}}
 \newcommand{\Var}{\mathbb{Var}}
 \newcommand{\Cov}{\mathbb{Cov}} 
@@ -49,7 +50,6 @@
 \newcommand{\bx}{\textbf{x}}
 \newcommand{\bX}{\textbf{X}}
 \newcommand{\bY}{\textbf{Y}}
-
 \newcommand{\bz}{\textbf{z}}
 \newcommand{\bw}{\textbf{w}}
 \newcommand{\by}{\textbf{y}}
@@ -182,10 +182,7 @@ We propose an algorithm, \us, that provides scaling superior to existing alterna
 \label{sec:bayesian_optimisation}
 
 
-Let $f: {\mathcal X} \to \bbbr$ be well behaved function defined on a compact subset ${\mathcal X} \subseteq \bbbr^d$. We are interested in solving the global optimization problem of finding $\bx_{M} = \arg \min_{\bx \in {\mathcal X}} f(\bx)$. We assume that $f$ is a \emph{black-box} from which only perturbed evaluations of the type $y_i = f(\bx_i) + \epsilon_i$, with $\epsilon_i \sim\mathcal{N}(0,\sigma^2)$, are  available. Bayesian Optimization is an heuristic strategy to make a series of evaluations $\bx_1,\dots,\bx_n$ of $f$, typically very limited in number,  such that the the minimum of $f$ is evaluated as soon as possible. \cite{Lizotte_2008}
-\cite{Jones_2001}
-\cite{Snoek*Larochelle*Adams_2012}
-\cite{Brochu*Cora*DeFreitas_2010}
+Let $f: {\mathcal X} \to \bbbr$ be well behaved function defined on a compact subset ${\mathcal X} \subseteq \bbbr^d$. We are interested in solving the global optimization problem of finding $\bx_{M} = \arg \min_{\bx \in {\mathcal X}} f(\bx)$. We assume that $f$ is a \emph{black-box} from which only perturbed evaluations of the type $y_i = f(\bx_i) + \epsilon_i$, with $\epsilon_i \sim\mathcal{N}(0,\sigma^2)$, are  available. Bayesian Optimization is an heuristic strategy to make a series of evaluations $\bx_1,\dots,\bx_n$ of $f$, typically very limited in number,  such that the the minimum of $f$ is evaluated as soon as possible \cite{Lizotte_2008,Jones_2001,Snoek*Larochelle*Adams_2012,Brochu*Cora*DeFreitas_2010}.
 
 Assume that $n$ points have been gathered so far, having a dataset $\data_0 = \{(\bx_i,y_i)\}_{i=1}^N = (\bX_0,\bY_0)$. Before collecting any new point, a surrogate probabilistic model for $f$ is calculated. This is topically a Gaussian Process (GP) $p(f) = \mathcal{GP}(\mu; k)$ with mean function $\mu$ and a covariance function $k$, and whose parameters will be denoted by $\theta$.  Let $\I_0$ be the current available information: the conjunction of $\data_0$, the model parameters and the model likelihood type.  Under Gaussian likelihoods, the predictive distribution for $y_*$ at $\bx_*$ is also Gaussian with mean posterior mean and variance
 $$\mu(\bx_{*}|\I_0) = \bk_{\theta}(\bx_*)^\top[\bK_{\theta} + \sigma^2 \textbf{I}]^{-1}\by \mbox{ and}$$
@@ -200,15 +197,15 @@ y_*;             & \mbox{if}  &  y_* \leq \eta \\
 \end{array}
 \right.$$
 Therefore the loss corresponds is the new observed minimum, $\min (\eta,y_*)$. Its expectation is 
-$$\ \Lambda_1(\bx_*| \I_0) \triangleq \E[ \min (y_*,\eta)]= \int \lambda(y_*)p(y_* |\bx_*,\I_0)dy_*$$
+$$\ \Lambda_1(\bx_*| \I_0) \triangleq \E[ \min (y_*,\eta)]= \int \lambda(y_*)p(y_* |\bx_*,\I_0)\ud y_*$$
 where the subscript in $\Lambda$ refers to the fact that we are considering one future evaluations.  Giving the properties of the GP, $\Lambda_1(\bx_*| \I_0)$ can be computed in closed form for any $\bx_* \in \mathcal{X}$. In particular, for $\Phi$ the usual Gaussian cumulative distribution function, we have that
 \begin{eqnarray}\label{eq:expected_myopic_loss}
-\Lambda_1(\bx_*| \I_0) &  \triangleq & \eta \int_{\eta}^{\infty} \mathcal{N}(y_*;\mu,\sigma) dy_* \\ \nonumber
-& +  & \int_{-\infty}^{\eta} y_* \mathcal{N}(y_*;\mu,\sigma) dy_*  \\ \nonumber
-& = &  \eta +(\mu  - \eta) \Phi (\eta ; \mu, \sigma) - \sigma \mathcal{N} (\eta, \mu, \sigma), \nonumber
+\Lambda_1(\bx_*| \I_0) &  \triangleq & \eta \int_{\eta}^{\infty} \mathcal{N}(y_*;\mu,\sigma^2) \ud y_* \\ \nonumber
+& +  & \int_{-\infty}^{\eta} y_* \mathcal{N}(y_*;\mu,\sigma^2) \ud y_*  \\ \nonumber
+& = &  \eta +(\mu  - \eta) \Phi (\eta ; \mu, \sigma^2) - \sigma^2 \mathcal{N} (\eta, \mu, \sigma^2), \nonumber
 \end{eqnarray}
 
-where we have abbreviated $\sigma(y_*|\I_0)$ as $\sigma$ and $\mu(y_{*}|\I_0)$ as $\mu$. Finally, the next evaluation is located   where $\Lambda_1(\bx_*| \I_0) $ gives the minimum value. This point can  be obtained by any gradient descent algorithm since analytical expressions for the gradient and Hessian of $\Lambda_1(\bx_*| \I_0)$  exist \cite{osborne_bayesian_2010}. 
+where we have abbreviated $\sigma^2(y_*|\I_0)$ as $\sigma^2$ and $\mu(y_{*}|\I_0)$ as $\mu$. Finally, the next evaluation is located   where $\Lambda_1(\bx_*| \I_0) $ gives the minimum value. This point can  be obtained by any gradient descent algorithm since analytical expressions for the gradient and Hessian of $\Lambda_1(\bx_*| \I_0)$  exist \cite{osborne_bayesian_2010}. 
 
 
 
@@ -273,12 +270,12 @@ where we have abbreviated $\sigma(y_*|\I_0)$ as $\sigma$ and $\mu(y_{*}|\I_0)$ a
 
 
 \subsection{Looking many steps ahead}
-Expression~(\ref{eq:expected_myopic_loss}) can also be used as a miopic approximation to the optimal decision when $n$ evaluations of $f$ remain available. Indeed, most BO methods are myopic and ignore the future decisions that will be made by the algorithm in the future steps. 
+Expression~(\ref{eq:expected_myopic_loss}) can also be used as a myopic approximation to the optimal decision when $n$ evaluations of $f$ remain available. Indeed, most BO methods are myopic and ignore the future decisions that will be made by the algorithm in the future steps. 
 
 Denote by $\{(\bx_j,y_j)\}$ for $j=1,\dots,n$ the remaining $n$ available evaluations and by $\I_j$ the available information after the data set $\data_0$ has been augmented with $(\bx_j,y_j),\dots,(\bx_j,y_j)$ and the parameters $\theta$ of the model updated. We use $\Lambda_n(\bx_*|\I_0 )$ to denote the expected loss of selecting $\bx_*$ given $\I_0$ and  considering $n$ future evaluations.  A Proper Bayesian formulation allows us to define this \emph{long-sight} loss  \cite{osborne_bayesian_2010}  as 
 \begin{eqnarray}\nonumber
 \Lambda_n(\bx_*|\I_0 ) &= & \int \lambda(y_n) \prod_{j=1}^{n}p(y_{j}|\bx_{j},\I_{j-1}) p(\bx_{j}|\I_{j-1})\\\label{eq:expected_nonmyopic_loss}
-& & dy_*\dots dy_n d\bx_2\dots d\bx_n\footnote{We assume that $p(\bx_*|\I_0)=1$}
+& & \ud y_*\dots \ud y_n \ud\bx_2\dots \ud\bx_n\footnote{We assume that $p(\bx_*|\I_0)=1$}
 \end{eqnarray}
 where 
 $$p(y_{j}|\bx_{j},\I_{j-1})= \mathcal{N} \left(y_{j};\mu(\bx_{j};\I_{j-1}),\sigma^2(\bx_{j}|\I_{j-1} ) \right)$$ 
@@ -290,7 +287,7 @@ To evaluate Eq.~(\ref{eq:expected_nonmyopic_loss}) we can successively sample fr
 
 \subsection{contribution of this work}
 
-The goal of this work is \emph{to propose an approximation to Eq.~(\ref{eq:expected_nonmyopic_loss}) with a minimal computational burden that will allow to relieve the myopic aspect of classical Bayesian optimization methods}. The key aspect of our approach is to split the recursive optimization marginalization loop in Eq.~(\ref{eq:expected_nonmyopic_loss}) into two independent optimization-marginalization steps that jointly act on all the future steps. The precise contributions of this paper are:
+The goal of this work is \emph{to propose a scalable approximation to Eq.~(\ref{eq:expected_nonmyopic_loss}) that will relieve the myopia of classical Bayesian optimization methods}. The key aspect of our approach is to split the recursive optimization marginalization loop in Eq.~(\ref{eq:expected_nonmyopic_loss}) into two independent optimization-marginalization steps that jointly act on all the future steps. The precise contributions of this paper are:
 
 \begin{itemize}
 \item Method, \hl{it is cool!, etc}
@@ -298,6 +295,9 @@ The goal of this work is \emph{to propose an approximation to Eq.~(\ref{eq:expec
 \item Any theoretical property (\hl{can we do something here?)}
 \item Simulations: New pratical insights in the direction that non-myopic methods are the way.\hl{Nice bit! perhaps the most important of the paper from a practical perspective.}
 \item Question here: How would one define a non-myopic version of Entropy Search?? \hl{just curious...}
+\hl{
+    MO says: it'd be possible, but even more crazily expensive. You'd need to see what the entropy in the location of the minimum is after the next n evaluations, and then marginalise over the locations and values of the last n-1 of them. 
+}
 \end{itemize}
 
 
@@ -320,7 +320,7 @@ The goal of this work is \emph{to propose an approximation to Eq.~(\ref{eq:expec
 \end{table*}
 
 \subsection{Oracle multiple steps loook-ahead expected loss}
-Suppose that  we had access to an oracle function $\future_{n}: {\mathcal X}\rightarrow  {\mathcal X}^n$ able to predict the $n$ future  locations that the loss $\Lambda_n(\cdot)$ would suggest if we start evaluating $f$ at $\bx_*$. We assume that $\future_{1}(\bx_*)=\bx_*$, that is, the first visited location is always $\bx_*$ itself. We work here under the assumption that the oracle has perfect infomation about the future locations, in the same way we have have perfect information about the locations that the algorithm already visited. This is obviously a totally irreal assumption in practice, but it will help us to set-up our algorithm. We leave for the next section the details of how to choose $\future_{n}$ in practice. 
+Suppose that  we had access to an oracle function $\future_{n}: {\mathcal X}\rightarrow  {\mathcal X}^n$ able to predict the $n$ future  locations that the loss $\Lambda_n(\cdot)$ would suggest if we start evaluating $f$ at $\bx_*$. We assume that $\future_{1}(\bx_*)=\bx_*$, that is, the first visited location is always $\bx_*$ itself. We work here under the assumption that the oracle has perfect information about the future locations, in the same way we have have perfect information about the locations that the algorithm already visited. This is obviously a totally unrealistic assumption in practice, but it will help us to set-up our algorithm. We leave for the next section the details of how to marginalise over the unknown $\future_{n}$. 
 
 Assume, for now, that $\future_{n}$ exists and that we have access to it we it and denote by $\by=\{y_*,\dots,\dots,y_n\}$ the vector of future locations evaluations of $f$ at $\future_n(\bx_*)$.  Under this hypothesis it is possible to rewrite the expected loss in Eq.~(\ref{eq:expected_nonmyopic_loss}) as
 \begin{equation}\label{eq:oracle_expected_nonmyopic_loss}
@@ -328,12 +328,17 @@ Assume, for now, that $\future_{n}$ exists and that we have access to it we it a
 \end{equation}
 where the expectation is taken over the multivariate Gaussian distribution, with mean vector $\mu$ and covariance matrix $\Sigma$, that gives rise after marginalizing the posterior distribution of the GP at $\future_{n}(\bx_*)$. See supplementary materials for details.
 
-The intuition about Eq.~(\ref{eq:oracle_expected_nonmyopic_loss}) is as follows: the expected loss at $\bx_*$ is determined by the best possible solution that the algorithm would find in $n$ steps if we started evaluating $f$ at $\bx_*$.... \hl{NOT CLEAR TO ME YET HOW TO FINISH THIS. THIS IS PROBABLY THE MOST IMPORTANT SENTENCE OF THE PAPER... INCLUDE AN FIGURE TO SUPPORT IT?}  
+The intuition behind Eq.~(\ref{eq:oracle_expected_nonmyopic_loss}) is as follows: the expected loss at $\bx_*$ is the best possible function value that we expect to find in the next $n$ steps, conditional on the first evaluation being made at $\bx_*$. The expected loss depends not just on the next function evaluation, but how we expect to benefit from the remaining $n-1$ evaluations. 
+
+\hl{NOT CLEAR TO ME YET HOW TO FINISH THIS. THIS IS PROBABLY THE MOST IMPORTANT SENTENCE OF THE PAPER... INCLUDE AN FIGURE TO SUPPORT IT?}  
+\hl{
+    MO: a figure is an excellent idea!
+} 
 
 To compute Eq.~(\ref{eq:oracle_expected_nonmyopic_loss}) we propose to use Expectation Propagation (EP) \cite{Minka:2001}. This turns out to be a natural operation by observing that
 \begin{eqnarray}\label{eq:expected_loss_oracle}
-\E [\min (\by,\eta)] & = & \eta\int_{\IR^n} \prod_{i=1}^nh_i(\by) \N(\by; \mu, \Sigma) d\by \\  \nonumber
- &+ & \sum_{j=1}^n  \int_{\IR^n} y_j \prod_{i=1}^n t_{j,i}(\by) \N(\by; \mu, \Sigma) d \by
+\E [\min (\by,\eta)] & = & \eta\int_{\IR^n} \prod_{i=1}^nh_i(\by) \N(\by; \mu, \Sigma) \ud \by \\  \nonumber
+ &+ & \sum_{j=1}^n  \int_{\IR^n} y_j \prod_{i=1}^n t_{j,i}(\by) \N(\by; \mu, \Sigma) \ud \by
 \end{eqnarray}
 where  $h_i(\by) = \mathbb{I}\{y_i>\eta\}$ and
 $$t_{j,i}(\by)= \left\{ \begin{array}{lcl}
@@ -347,6 +352,10 @@ See supplementary materials for details. The first term in Eq.~(\ref{eq:expected
 Under the hypothesis of this section, the next evaluation is located where $\Lambda_n(\bx_*|\I_0, \future_{n}(\bx_*) )$ gives the minimum value. 
 
 \hl{NOTE HERE ON GRADIENTS OF $\Lambda_n(\bx_*|\I_0, \future_{n}(\bx_*) )$: should be possible to derive but, in practice EP will provide and approximation to the integral so it may not be the best thing to do. Using DIRECT sounds to me here like the best option}.
+
+\hl{
+    Good point, and I think using DIRECT should be fine. That said, if you did want gradients, what about autograd: https://github.com/HIPS/autograd/?
+}
 
 \subsection{Back to the Future: Predicting the future steps of BO}
 
@@ -440,9 +449,9 @@ Denote by $\eta_n = \min \{\bY_0, y_*, y_2\dots,y_{n-1}\}$ the value of the best
 $$ \min (y_n,\eta_n) = \min (\by,\eta ).$$
 It holds hat
 \begin{eqnarray}\label{eq:oracle_expected_nonmyopic_loss}
-\Lambda_n(\bx_*|\I_0, \future_{n}(\bx_*)) & = & \int \min (\by,\eta) \prod_{j=1}^{n}p(y_{j}|\I_{j-1}, \future_{n}(\bx_*)) dy_*\dots dy_n
+\Lambda_n(\bx_*|\I_0, \future_{n}(\bx_*)) & = & \int \min (\by,\eta) \prod_{j=1}^{n}p(y_{j}|\I_{j-1}, \future_{n}(\bx_*)) \ud y_*\dots \ud y_n
 \end{eqnarray}
-where the integrals with respect to $\bx_2\dots d\bx_n$ are  $p(\bx_{j}|\I_{j-1}, \future_{n}(\bx_*))=1$, $j=2,\dots,n$ since we don't need to optimize for any location and $p(y_{j}|\bx_{j},\I_{j-1}, \future_{n}(\bx_*))=p(y_{j}|\I_{j-1}, \future_{n}(\bx_*))$. Notice that
+where the integrals with respect to $\bx_2\dots \ud\bx_n$ are  $p(\bx_{j}|\I_{j-1}, \future_{n}(\bx_*))=1$, $j=2,\dots,n$ since we don't need to optimize for any location and $p(y_{j}|\bx_{j},\I_{j-1}, \future_{n}(\bx_*))=p(y_{j}|\I_{j-1}, \future_{n}(\bx_*))$. Notice that
 \begin{eqnarray}\nonumber
 \prod_{j=1}^{n}p(y_{j}|\I_{j-1}, \future_{n}(\bx_*))& =& p(y_n|\I_{n-1}, \future_{n}(\bx_*)) \prod_{j=1}^{n-1}p(y_{j}|\I_{j-1} \future_{n}(\bx_*))\\\nonumber
 & = & p(y_n,y_{n-1}|\I_{n-2}, \future_{n}(\bx_*))  \prod_{j=1}^{n-2}p(y_{j}|\I_{j-1} \future_{n}(\bx_*))\\\nonumber
@@ -461,11 +470,11 @@ Assume that $\by \sim \N(\by; \mu, \Sigma)$. Then we have that
 \end{eqnarray}
 The first term can be written as follows:
 \begin{equation}
- \int_{\IR^n - (\eta,\infty)^n } \min (\by)  \N(\by; \mu, \Sigma) d\by  =    \sum_{j=1}^n \int_{P_j} y_j \N(\by; \mu, \Sigma) d \by \nonumber
+ \int_{\IR^n - (\eta,\infty)^n } \min (\by)  \N(\by; \mu, \Sigma) d\by  =    \sum_{j=1}^n \int_{P_j} y_j \N(\by; \mu, \Sigma) \ud \by \nonumber
 \end{equation}\nonumber
 where $P_j := \{ \by \in\IR^n - (\eta,\infty)^n  : y_j \leq y_i,\,\, \forall i \neq j \}$. We can do this because the regions $P_j$ are disjoint and it holds that $\cup_{j=1}^{n}P_j = \IR^n - (\eta,\infty)^n $.  Also, note that the $\min(\by)$ can be replaced within the integrals since within each $P_j$ it holds that $\min(\by) = y_j$. Rewriting the integral in terms of indicator functions we have that
 \begin{eqnarray}\label{eq:term1}
- \sum_{j=1}^n \int_{P_j} y_j \N(\by; \mu, \Sigma) d \by   =  \sum_{j=1}^n  \int_{\IR^n} y_j \prod_{i=1}^n t_{j,i}(\by) \N(\by; \mu, \Sigma) d \by 
+ \sum_{j=1}^n \int_{P_j} y_j \N(\by; \mu, \Sigma) \ud \by   =  \sum_{j=1}^n  \int_{\IR^n} y_j \prod_{i=1}^n t_{j,i}(\by) \N(\by; \mu, \Sigma) \ud \by 
 \end{eqnarray}
 
 where $t_{j,i}(y) =\mathbb{I}\{y_i \leq\eta\}$ if $j=i$ and $t_{j,i}(y) =\mathbb{I}\{y_j \leq y_i \}$ otherwise.
