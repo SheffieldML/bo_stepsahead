@@ -268,6 +268,54 @@ where we have abbreviated $\sigma^2(y_*|\I_0)$ as $\sigma^2$ and $\mu(y_{*}|\I_0
 \label{fig:bayes_net}
 \end{figure*}
 
+\begin{figure*}[t!]
+\centering
+\begin{tikzpicture}
+
+    % first row
+    \node[obs] (D0) {$\data_0$};
+
+    % second row
+    \node[det, below=of D0, xshift=1.2cm] (xst) {$\xst$};
+    \node[latent, right=of xst, xshift=1.2cm] (x2) {$x_2$};
+    \node[draw=none, right=of x2, xshift=1.2cm] (xdots) {$\ldots$};
+    \node[latent, right=of x2, xshift=4.8cm] (xn) {$x_n$};
+
+    % third row
+    \node[latent, below=of xst] (yst) {$\yst$};
+    \node[latent, below=of x2] (y2) {$y_2$};
+    \node[draw=none, right=of y2, xshift=1.2cm] (ydots) {$\ldots$};
+    \node[latent, below=of xn] (yn) {$y_n$};
+
+    % Connect the nodes
+    \path 
+        (D0) edge [connect] (xst)
+        (xst) edge [connect] (yst)
+        (yst) edge [allconnected] (y2)
+
+        (D0) edge [connect, bend left=20] (x2)
+        (D0) edge [connect, bend left=10] (xn)
+
+        (xst) edge [allconnected] (x2)
+        (x2) edge [allconnected] (x2)
+        (x2) edge [allconnected] (xdots)
+        (xdots) edge [allconnected] (xn)
+
+        (x2) edge [connect] (y2)
+        (y2) edge [allconnected] (ydots)
+
+        (x2) edge [connect] (y2)
+        (ydots) edge [allconnected] (yn)
+
+        (xn) edge [connect] (yn)        
+        ;
+\end{tikzpicture}
+\caption{
+    A Bayesian network describing our approximation to the $n$-step lookahead problem. 
+}
+\label{fig:bayes_net}
+\end{figure*}
+
 
 \subsection{Looking many steps ahead}
 Expression~(\ref{eq:expected_myopic_loss}) can also be used as a myopic approximation to the optimal decision when $n$ evaluations of $f$ remain available. Indeed, most BO methods are myopic and ignore the future decisions that will be made by the algorithm in the future steps. 
