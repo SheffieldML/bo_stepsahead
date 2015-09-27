@@ -2,6 +2,7 @@
 \usepackage{aistats2016}
 
 \usepackage{booktabs}
+\usepackage{natbib}
 
 \usepackage{hyperref}
 %\usepackage[demo]{graphicx}
@@ -150,7 +151,7 @@
 \label{sec:introduction}
 
 Global optimisation is core to any complex problem where design and choice play a role. 
-Within Machine Learning, such problems are found in the tuning of hyperparameters \cite{Snoek*Larochelle*Adams_2012}, sensor selection \cite{Garnett*Osborne*Roberts_2010} or experimental design \cite{martinez-cantin_bayesian_2009}. 
+Within Machine Learning, such problems are found in the tuning of hyperparameters \citep{Snoek*Larochelle*Adams_2012}, sensor selection \citep{Garnett*Osborne*Roberts_2010} or experimental design \citep{martinez-cantin_bayesian_2009}. 
 Most global optimisation techniques are myopic, in considering no more than a single step into the future. 
 Relieving this myopia requires solving the \emph{multi-step lookahead} problem: the global optimisation of an function by considering the significance of the next function evaluation on function evaluations (steps) further into the future. 
 It is clear that a solution to the problem would offer performance gains.
@@ -162,16 +163,17 @@ If we adopt a two-step lookahead approach, we will select function evaluations t
 We will consequently be better informed about $f$ and its optimum.
 
 There is a limited literature on the multi-step lookahead problem.
-\cite{osborne_gaussian_2009} perform multi-step lookahead by optimising future evaluation locations, and sampling over future function values. 
+\citep{osborne_gaussian_2009} perform multi-step lookahead by optimising future evaluation locations, and sampling over future function values. 
 This approach scales poorly with the number of future evaluations considered, and the authors present results for no more than two-step lookahead.
-\cite{Marchant*Ramos*Sanner*2014} reframe the multi-step lookahead problem as a partially observed Markov decision process, and adopt a Monte Carlo tree search approach in solving it. 
+\citep{Marchant*Ramos*Sanner*2014} reframe the multi-step lookahead problem as a partially observed Markov decision process, and adopt a Monte Carlo tree search approach in solving it. 
 Again, the scaling of the approach permits the authors to consider no more than six steps into the future. 
 
-There is a clear link between the multi-step lookahead problem and that considered in the literature as \emph{batch} Bayesian optimisation. 
-The two problems are distinct but related: the multi-step lookahead problem requires the challenging marginalisation over unknown future evaluation \emph{locations}, in addition to the unknown future evaluation \emph{values} also marginalised by batch approaches. 
+\citep{StreltsovVakili1999}
+
+There exist a link between the multi-step lookahead problem and \emph{batch} Bayesian optimisation, where batches of locations rather than individual obsevations are selected in parallel: the multi-step lookahead problem requires the challenging marginalisation over unknown future evaluation \emph{locations}, in addition to the unknown future evaluation \emph{values} also marginalised by batch approaches. 
 Similarly to the state-of-the-art in multi-step lookahead, the batch literature provides only poor scaling with the number of evaluations.
-\cite{Ginsbourger2009} present results for no more than six simultaneous function evaluations.
-\cite{Azimi2011,Azimi2012} use the surrogate model for $f$ to generate `fake' observations and avoid the marginalization step. 
+\citep{Ginsbourger2009} present results for no more than six simultaneous function evaluations.
+\citep{Azimi2011,Azimi2012} use the surrogate model for $f$ to generate `fake' observations and avoid the marginalization step. 
 This produce a large accumulation of errors that does not allow the use of these techniques for the collection of large batches.
 
 We propose an algorithm, \us, that provides scaling superior to existing alternatives.
@@ -182,12 +184,14 @@ We propose an algorithm, \us, that provides scaling superior to existing alterna
 \label{sec:bayesian_optimisation}
 
 
-Let $f: {\mathcal X} \to \bbbr$ be well behaved function defined on a compact subset ${\mathcal X} \subseteq \bbbr^d$. We are interested in solving the global optimization problem of finding $\bx_{M} = \arg \min_{\bx \in {\mathcal X}} f(\bx)$. We assume that $f$ is a \emph{black-box} from which only perturbed evaluations of the type $y_i = f(\bx_i) + \epsilon_i$, with $\epsilon_i \sim\mathcal{N}(0,\sigma^2)$, are  available. Bayesian Optimization is an heuristic strategy to make a series of evaluations $\bx_1,\dots,\bx_n$ of $f$, typically very limited in number,  such that the the minimum of $f$ is evaluated as soon as possible \cite{Lizotte_2008,Jones_2001,Snoek*Larochelle*Adams_2012,Brochu*Cora*DeFreitas_2010}.
+Let $f: {\mathcal X} \to \bbbr$ be well behaved function defined on a compact subset ${\mathcal X} \subseteq \bbbr^d$. We are interested in solving the global optimization problem of finding 
+$$\bx_{M} = \arg \min_{\bx \in {\mathcal X}} f(\bx).$$ 
+We assume that $f$ is a \emph{black-box} from which only perturbed evaluations of the type $y_i = f(\bx_i) + \epsilon_i$, with $\epsilon_i \sim\mathcal{N}(0,\sigma^2)$, are  available. Bayesian Optimization is an heuristic strategy to make a series of evaluations $\bx_1,\dots,\bx_n$ of $f$, typically very limited in number,  such that the the minimum of $f$ is evaluated as soon as possible \citep{Lizotte_2008,Jones_2001,Snoek*Larochelle*Adams_2012,Brochu*Cora*DeFreitas_2010}.
 
 Assume that $n$ points have been gathered so far, having a dataset $\data_0 = \{(\bx_i,y_i)\}_{i=1}^N = (\bX_0,\bY_0)$. Before collecting any new point, a surrogate probabilistic model for $f$ is calculated. This is topically a Gaussian Process (GP) $p(f) = \mathcal{GP}(\mu; k)$ with mean function $\mu$ and a covariance function $k$, and whose parameters will be denoted by $\theta$.  Let $\I_0$ be the current available information: the conjunction of $\data_0$, the model parameters and the model likelihood type.  Under Gaussian likelihoods, the predictive distribution for $y_*$ at $\bx_*$ is also Gaussian with mean posterior mean and variance
 $$\mu(\bx_{*}|\I_0) = \bk_{\theta}(\bx_*)^\top[\bK_{\theta} + \sigma^2 \textbf{I}]^{-1}\by \mbox{ and}$$
 $$\sigma^2(\bx_*|\I_0)=k_{\theta}(\bx_*,\bx_*)-\bk_{\theta}(\bx_*)^\top[\bK_{\theta}+\sigma^2 \textbf{I}]^{-1}\bk_{\theta}(\bx_*),$$
-where $\bK_{\theta}$ is the matrix such that $(\bK_{\theta})_{ij}=k_{\theta}(\bx_i,\bx_j)$,  $\bk_{\theta}(\bx_{*}) = [k_{\theta}(\bx_1,\bx_{*}),\dots,k_{\theta}(\bx_n,\bx_{*})]^\top$ \cite{Rasmussen:2005:GPM:1162254}.  
+where $\bK_{\theta}$ is the matrix such that $(\bK_{\theta})_{ij}=k_{\theta}(\bx_i,\bx_j)$,  $\bk_{\theta}(\bx_{*}) = [k_{\theta}(\bx_1,\bx_{*}),\dots,k_{\theta}(\bx_n,\bx_{*})]^\top$ \citep{Rasmussen:2005:GPM:1162254}.  
 
 
 Given the GP model, we now need to determine the best location to sample. Imagine that we only have one remaining evaluation ($n=1$) before we need to report our inferred location about the minimum of $f$. Denote by $\eta = \min \{\bY_0\}$, the current best found value. We can define the loss of evaluating $f$ this last time at $\bx_*$ assuming it is returning $y_*$ as
@@ -205,7 +209,7 @@ where the subscript in $\Lambda$ refers to the fact that we are considering one 
 & = &  \eta +(\mu  - \eta) \Phi (\eta ; \mu, \sigma^2) - \sigma^2 \mathcal{N} (\eta, \mu, \sigma^2), \nonumber
 \end{eqnarray}
 
-where we have abbreviated $\sigma^2(y_*|\I_0)$ as $\sigma^2$ and $\mu(y_{*}|\I_0)$ as $\mu$. Finally, the next evaluation is located   where $\Lambda_1(\bx_*| \I_0) $ gives the minimum value. This point can  be obtained by any gradient descent algorithm since analytical expressions for the gradient and Hessian of $\Lambda_1(\bx_*| \I_0)$  exist \cite{osborne_bayesian_2010}. 
+where we have abbreviated $\sigma^2(y_*|\I_0)$ as $\sigma^2$ and $\mu(y_{*}|\I_0)$ as $\mu$. Finally, the next evaluation is located   where $\Lambda_1(\bx_*| \I_0) $ gives the minimum value. This point can  be obtained by any gradient descent algorithm since analytical expressions for the gradient and Hessian of $\Lambda_1(\bx_*| \I_0)$  exist \citep{osborne_bayesian_2010}. 
 
 
 
@@ -311,16 +315,16 @@ where we have abbreviated $\sigma^2(y_*|\I_0)$ as $\sigma^2$ and $\mu(y_{*}|\I_0
         ;
 \end{tikzpicture}
 \caption{
-    A Bayesian network describing our approximation to the $n$-step lookahead problem. 
+    A Bayesian network describing our approximation to the $n$-step lookahead problem. The shaded node ($\data_0$) is known, and the diamond node ($\xst$) is the current decision variable, which is now directly connected with all future steps of the algorithm.
 }
-\label{fig:bayes_net}
+\label{fig:bayes_net_glasses}
 \end{figure*}
 
 
 \subsection{Looking many steps ahead}
 Expression~(\ref{eq:expected_myopic_loss}) can also be used as a myopic approximation to the optimal decision when $n$ evaluations of $f$ remain available. Indeed, most BO methods are myopic and ignore the future decisions that will be made by the algorithm in the future steps. 
 
-Denote by $\{(\bx_j,y_j)\}$ for $j=1,\dots,n$ the remaining $n$ available evaluations and by $\I_j$ the available information after the data set $\data_0$ has been augmented with $(\bx_j,y_j),\dots,(\bx_j,y_j)$ and the parameters $\theta$ of the model updated. We use $\Lambda_n(\bx_*|\I_0 )$ to denote the expected loss of selecting $\bx_*$ given $\I_0$ and  considering $n$ future evaluations.  A Proper Bayesian formulation allows us to define this \emph{long-sight} loss  \cite{osborne_bayesian_2010}  as 
+Denote by $\{(\bx_j,y_j)\}$ for $j=1,\dots,n$ the remaining $n$ available evaluations and by $\I_j$ the available information after the data set $\data_0$ has been augmented with $(\bx_j,y_j),\dots,(\bx_j,y_j)$ and the parameters $\theta$ of the model updated. We use $\Lambda_n(\bx_*|\I_0 )$ to denote the expected loss of selecting $\bx_*$ given $\I_0$ and  considering $n$ future evaluations.  A Proper Bayesian formulation allows us to define this \emph{long-sight} loss  \citep{osborne_bayesian_2010}  as 
 \begin{eqnarray}\nonumber
 \Lambda_n(\bx_*|\I_0 ) &= & \int \lambda(y_n) \prod_{j=1}^{n}p(y_{j}|\bx_{j},\I_{j-1}) p(\bx_{j}|\I_{j-1})\\\label{eq:expected_nonmyopic_loss}
 & & \ud y_*\dots \ud y_n \ud\bx_2\dots \ud\bx_n\footnote{We assume that $p(\bx_*|\I_0)=1$}
@@ -331,27 +335,17 @@ is the predictive distribution of the GP at $\bx_{j}$  and
 $$p(\bx_{j}|\I_{j-1}) = \delta (\bx_{j} - \arg \min_{\bx_* \in {\mathcal X}} \Lambda_{n-j+1}(\bx_*|\I_{j-1}))$$ 
 reflects the optimization step required to obtain $\bx_{j}$ after all previous the evaluations $f$ have been iteratively optimized and marginalized.  The graphical probabilistic model underlying (\ref{eq:expected_nonmyopic_loss}) is illustrated in Figure \ref{fig:bayes_net}.
 
-To evaluate Eq.~(\ref{eq:expected_nonmyopic_loss}) we can successively sample from $y_1$ to $y_{j-1}$ and optimize for the appropriate $\Lambda_{n-j+1}(\bx_*|\I_{j-1})$. This is in done in \cite{osborne_bayesian_2010} for only two steps look ahead given the computational burden required to compute this loss for longer horizons. Note that analytical expression are only available in the myopic case $\Lambda_1(\bx_*| \I_0)$.
+To evaluate Eq.~(\ref{eq:expected_nonmyopic_loss}) we can successively sample from $y_1$ to $y_{j-1}$ and optimize for the appropriate $\Lambda_{n-j+1}(\bx_*|\I_{j-1})$. This is in done in \citep{osborne_bayesian_2010} for only two steps look ahead given the computational burden required to compute this loss for longer horizons. Note that analytical expression are only available in the myopic case $\Lambda_1(\bx_*| \I_0)$.
 
-\subsection{contribution of this work}
+\subsection{Contributions of this work}
 
 The goal of this work is \emph{to propose a scalable approximation to Eq.~(\ref{eq:expected_nonmyopic_loss}) that will relieve the myopia of classical Bayesian optimization methods}. The key aspect of our approach is to split the recursive optimization marginalization loop in Eq.~(\ref{eq:expected_nonmyopic_loss}) into two independent optimization-marginalization steps that jointly act on all the future steps. The precise contributions of this paper are:
 
 \begin{itemize}
-\item Method, \hl{it is cool!, etc}
-\item Code Framework \hl{DESCRIBE - GPyOpt, etc}
-\item Any theoretical property (\hl{can we do something here?)}
-\item Simulations: New pratical insights in the direction that non-myopic methods are the way.\hl{Nice bit! perhaps the most important of the paper from a practical perspective.}
-\item Question here: How would one define a non-myopic version of Entropy Search?? \hl{just curious...}
-\hl{
-    MO says: it'd be possible, but even more crazily expensive. You'd need to see what the entropy in the location of the minimum is after the next n evaluations, and then marginalise over the locations and values of the last n-1 of them. 
-}
+\item A new method to relieve the myopia of Bayesian optimisation that is able to efficiently take into account dozens of steps ahead. The method is based on the prediction of the future steps of the myopic algorithm to efficiently integrate out a long-side loss. We propose different alternatives to carry-out this step in practice.
+\item Together with this work , we deliver a open source Python code framework (link removed for blind review) containing a fully functional  implementation of the method useful to reproduce the results of this work.
+\item Simulations: New practical experiments and insights that show that non-myopic methods outperform myopic approaches in a benchmark of optimisation problems.
 \end{itemize}
-
-
-
-
- \section{The GLASSES  Algorithm}
 
 
 \begin{table*}
@@ -364,10 +358,15 @@ The goal of this work is \emph{to propose a scalable approximation to Eq.~(\ref{
       \addheight{\includegraphics[width=54mm]{bo_10steps.png}}  &
       \addheight{\includegraphics[width=54mm]{bo_20steps.png}}\\
       \small \small 5 steps ahead' & \small 10 steps ahead & \small 20 steps ahead \\
-\end{tabular}\caption{\hl{(PRELIMINAR PLOTS)} Estimated expected loss for differnt number of steps ahead.}
+\end{tabular}\caption{Estimated expected loss for different number of steps ahead in an example with 10 data points and the Six-hump Camel function. Increasing the steps ahead decreases global optimum of the loss; the algorithm will visit more future locations and therefore expected value of the best potential minimum decreases. Increasing the number of steps ahead flatten down the loss since it is likely for the algorithm to hit a good location irrespective of the initial point (all candidate points look better because of the future chances of the algorithm to be in a good location).}
 \end{table*}
 
-\subsection{Oracle multiple steps loook-ahead expected loss}
+
+ \section{The GLASSES  Algorithm}
+
+
+
+\subsection{Oracle multiple steps look-ahead expected loss}
 Suppose that  we had access to an oracle function $\future_{n}: {\mathcal X}\rightarrow  {\mathcal X}^n$ able to predict the $n$ future  locations that the loss $\Lambda_n(\cdot)$ would suggest if we start evaluating $f$ at $\bx_*$. We assume that $\future_{1}(\bx_*)=\bx_*$, that is, the first visited location is always $\bx_*$ itself. We work here under the assumption that the oracle has perfect information about the future locations, in the same way we have have perfect information about the locations that the algorithm already visited. This is obviously a totally unrealistic assumption in practice, but it will help us to set-up our algorithm. We leave for the next section the details of how to marginalise over the unknown $\future_{n}$. 
 
 Assume, for now, that $\future_{n}$ exists and that we have access to it we it and denote by $\by=\{y_*,\dots,\dots,y_n\}$ the vector of future locations evaluations of $f$ at $\future_n(\bx_*)$.  Under this hypothesis it is possible to rewrite the expected loss in Eq.~(\ref{eq:expected_nonmyopic_loss}) as
@@ -376,14 +375,10 @@ Assume, for now, that $\future_{n}$ exists and that we have access to it we it a
 \end{equation}
 where the expectation is taken over the multivariate Gaussian distribution, with mean vector $\mu$ and covariance matrix $\Sigma$, that gives rise after marginalizing the posterior distribution of the GP at $\future_{n}(\bx_*)$. See supplementary materials for details.
 
-The intuition behind Eq.~(\ref{eq:oracle_expected_nonmyopic_loss}) is as follows: the expected loss at $\bx_*$ is the best possible function value that we expect to find in the next $n$ steps, conditional on the first evaluation being made at $\bx_*$. The expected loss depends not just on the next function evaluation, but how we expect to benefit from the remaining $n-1$ evaluations. 
+The intuition behind Eq.~(\ref{eq:oracle_expected_nonmyopic_loss}) is as follows: the expected loss at $\bx_*$ is the best possible function value that we expect to find in the next $n$ steps, conditional on the first evaluation being made at $\bx_*$. The expected loss depends not just on the next function evaluation, but how we expect to benefit from the remaining $n-1$ evaluations. See Figure~\ref{fig:bayes_net_glasses} 
 
-\hl{NOT CLEAR TO ME YET HOW TO FINISH THIS. THIS IS PROBABLY THE MOST IMPORTANT SENTENCE OF THE PAPER... INCLUDE AN FIGURE TO SUPPORT IT?}  
-\hl{
-    MO: a figure is an excellent idea!
-} 
 
-To compute Eq.~(\ref{eq:oracle_expected_nonmyopic_loss}) we propose to use Expectation Propagation (EP) \cite{Minka:2001}. This turns out to be a natural operation by observing that
+To compute Eq.~(\ref{eq:oracle_expected_nonmyopic_loss}) we propose to use Expectation Propagation (EP) \citep{Minka:2001}. This turns out to be a natural operation by observing that
 \begin{eqnarray}\label{eq:expected_loss_oracle}
 \E [\min (\by,\eta)] & = & \eta\int_{\IR^n} \prod_{i=1}^nh_i(\by) \N(\by; \mu, \Sigma) \ud \by \\  \nonumber
  &+ & \sum_{j=1}^n  \int_{\IR^n} y_j \prod_{i=1}^n t_{j,i}(\by) \N(\by; \mu, \Sigma) \ud \by
@@ -395,7 +390,10 @@ $$t_{j,i}(\by)= \left\{ \begin{array}{lcl}
  \mathbb{I}\{ 0 \leq y_i-y_j \} &   \mbox{otherwise.} 
 \end{array}
 \right.$$
-See supplementary materials for details. The first term in Eq.~(\ref{eq:expected_loss_oracle}) is a Gaussian probability on unbounded polyhedron in which the limits are aligned with the axis. The second term is the sum of the Gaussian expectations on different non-axis-aligned different polyhedra defined by the indicator functions. Both terms can easily computed with EP using the approach proposed in \cite{Cunningham*Hennig*Lacoste-Julien_2011}. In a nutshell, to compute the integrals one need to replace the indicator functions with univariate Gaussian that play the role of \emph{soft-indicators} in the EP iterations. This method is computationally efficient and scales well for high dimensions. Note that when $n=1$, (\ref{eq:oracle_expected_nonmyopic_loss}) reduces to (\ref{eq:expected_myopic_loss}).
+See supplementary materials for details. The first term in Eq.~(\ref{eq:expected_loss_oracle}) is a Gaussian probability on unbounded polyhedron in which the limits are aligned with the axis. The second term is the sum of the Gaussian expectations on different non-axis-aligned different polyhedra defined by the indicator functions. Both terms can easily computed with EP using the approach proposed in \citep{Cunningham*Hennig*Lacoste-Julien_2011}. In a nutshell, to compute the integrals one need to replace the indicator functions with univariate Gaussian that play the role of \emph{soft-indicators} in the EP iterations. This method is computationally efficient and scales well for high dimensions. Note that when $n=1$, (\ref{eq:oracle_expected_nonmyopic_loss}) reduces to (\ref{eq:expected_myopic_loss}).
+
+
+
 
 Under the hypothesis of this section, the next evaluation is located where $\Lambda_n(\bx_*|\I_0, \future_{n}(\bx_*) )$ gives the minimum value. 
 
@@ -404,6 +402,7 @@ Under the hypothesis of this section, the next evaluation is located where $\Lam
 \hl{
     Good point, and I think using DIRECT should be fine. That said, if you did want gradients, what about autograd: https://github.com/HIPS/autograd/?
 }
+
 
 \subsection{Back to the Future: Predicting the future steps of BO}
 
@@ -415,15 +414,13 @@ Under the hypothesis of this section, the next evaluation is located where $\Lam
    \caption{Decision process of the \us algorithm.}
    \label{alg:glasses}
 \begin{algorithmic}
-   \STATE {\bfseries Input:} dataset $\mathcal{D}_{0} = \{(\textbf{x}_0, y_0)\}$, number of remaining evaluations ($n$).
-   \STATE Fit a \gp with kernel $k$ to $\mathcal{D}_{0}$.
-   \STATE Select $\bx_{1*},\dots,\bx_{r*}$ representer points of the loss.
-   \FOR{$j=1$ {\bfseries to} $r$ }
-   \STATE Take $s$ samples from a conditional n-\dpp of kernel $k$ given $\bx_{j*}$.
-   \STATE Approximate the expected loss at $\bx_j^*$ for the $s$ samples computing $E [\min (\by,\eta)]$.
-  \STATE Average the expected loss for the $s$ samples and obtain $\tilde{\Lambda}_n(\bx_j^*)$.
+   \STATE {\bfseries Input:} dataset $\mathcal{D}_{0} = \{(\textbf{x}_0, y_0)\}$, number of remaining evaluations ($n$), look-ahead predictor $\future$.
+   \FOR{$j=$ {\bfseries to} $n$ }
+   \STATE Fit a \gp with kernel $k$ to $\mathcal{D}_{j}$.
+   \STATE Select next location $\bx_j$ by taking  $\bx_j = \arg \min_{\bx \in {\mathcal X}}\Lambda_{n-j}(\bx_*|\I_0, \future_{n-j}(\bx_*) )$.
+   \STATE Evaluate $f$ at $\bx_j$ and obtain $y_j$.
+   \STATE Augment the dataset $\mathcal{D}_{j} = \{\mathcal{D}_{j-1} \cup (\textbf{x}_j, y_j)\}$.
    \ENDFOR
-\STATE Approximate $\Lambda_n(\bx_*)$ fitting a $\gp_2$  to $\{(\bx_{j*}, \tilde{\Lambda}_n(\bx_{j*})\}_{j=1}^r$ with posterior mean $\mu_2$.
    \STATE \textbf{Returns}: New location at $\arg \min_{x \in \mathcal{X}} \left\{\mu_2(\bx)\right\}$.  
 \end{algorithmic}
 \end{algorithm*}
@@ -474,7 +471,7 @@ Under the hypothesis of this section, the next evaluation is located where $\Lam
 
 \section{Conclusions}
 
-\bibliographystyle{plain}
+\bibliographystyle{plainnat}
 \bibliography{bib_glasses}
 
 \newpage
@@ -496,7 +493,7 @@ Under the hypothesis of this section, the next evaluation is located where $\Lam
 Denote by $\eta_n = \min \{\bY_0, y_*, y_2\dots,y_{n-1}\}$ the value of the best visited location when looking at $n$ evaluations in the future. Note that $\eta_n$ reduces to the current best lost $\eta$ in the one step-ahead case. It is straightforward to see that 
 $$ \min (y_n,\eta_n) = \min (\by,\eta ).$$
 It holds hat
-\begin{eqnarray}\label{eq:oracle_expected_nonmyopic_loss}
+\begin{eqnarray}\nonumber
 \Lambda_n(\bx_*|\I_0, \future_{n}(\bx_*)) & = & \int \min (\by,\eta) \prod_{j=1}^{n}p(y_{j}|\I_{j-1}, \future_{n}(\bx_*)) \ud y_*\dots \ud y_n
 \end{eqnarray}
 where the integrals with respect to $\bx_2\dots \ud\bx_n$ are  $p(\bx_{j}|\I_{j-1}, \future_{n}(\bx_*))=1$, $j=2,\dots,n$ since we don't need to optimize for any location and $p(y_{j}|\bx_{j},\I_{j-1}, \future_{n}(\bx_*))=p(y_{j}|\I_{j-1}, \future_{n}(\bx_*))$. Notice that
