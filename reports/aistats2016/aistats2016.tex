@@ -163,7 +163,7 @@ If we adopt a two-step lookahead approach, we will select function evaluations t
 We will consequently be better informed about $f$ and its optimum.
 
 There is a limited literature on the multi-step lookahead problem.
-\citep{osborne_gaussian_2009} perform multi-step lookahead by optimising future evaluation locations, and sampling over future function values. 
+\cite{osborne_gaussian_2009} perform multi-step lookahead by optimising future evaluation locations, and sampling over future function values. 
 This approach scales poorly with the number of future evaluations considered, and the authors present results for no more than two-step lookahead.
 \citep{Marchant*Ramos*Sanner*2014} reframe the multi-step lookahead problem as a partially observed Markov decision process, and adopt a Monte Carlo tree search approach in solving it. 
 Again, the scaling of the approach permits the authors to consider no more than six steps into the future. 
@@ -447,47 +447,121 @@ Under the hypothesis of this section, the next evaluation is located where $\Lam
 
 \section{Results}
 
-\begin{table*}
-\begin{tabular}{lrrrrr}
+
+\subsection{Testing the validity of the approach}
+To study the validity of our approximation we choose a variety of functions with a variety of dimensions a defined in various domains. See Table \ref{}.
+
+\begin{table}[t!]
+\begin{center}
+\begin{tabular}{lcc}
 \toprule
-      problem &        EL &      GL-2 &      GL-3 &      GL-5 &     GL-10 \\
+Name & Domain & $D$ \\
 \midrule
-      cosines & -1.562084 & -1.577403 & -1.586372 & \textbf{-1.600443} & -1.465383 \\
-       branin &  \textbf{0.727696} &  1.018735 &  1.865223 &  1.847867 &  1.190992 \\
- sixhumpcamel & \textbf{-1.111226} & -1.099144 & -1.085236 & -1.091393 & -1.104145 \\
-    mccormick & -1.939604 & -1.936456 & -1.916778 & -1.950658 & \textbf{-2.003377} \\
-       powers & -0.125614 & \textbf{-0.185978} & -0.149429 & -0.158541 & -0.180303 \\
+\hline
+Cosines & $[0,1]\times[0,1]$ & 2\\
+Branin &$[-5,10]\times[-5,10]$ & 2\\
+ Sixhumpcamel  &$[-2,2]\times[-1,1]$ & 2\\
+McCormick  & $[-1.5,4]\times[-3,4]$& 2\\
+Goldstein &$[-2,2]\times[-2,2]$& 2\\
+Egg-holder   &$[-512,512]\times[-512,512]$ & 2\\
+Powers  & $[-1,1]\times[-1,1]$& 2\\ \hline
+Alpine2-2  &  & 2\\
+Alpine2-5  & $[-10,10]^{D}$& 5\\
+Alpine2-10  & & 10\\\hline
+gSobol-2  & & 2\\
+gSobol-5  &$[-5,5]^{D}$ & 5\\
+gSobol-10  & & 10\\
+\bottomrule
+\end{tabular}\caption{Details of the functions used in the experiments}
+\end{center}
+\end{table}
+
+
+\begin{table*}[t!]
+\begin{center}
+\begin{tabular}{lrrrrrr}
+\toprule
+     noise-free &        EL &      GL-2 &      GL-3 &      GL-5 &     GL-10 & GL-(n-k) \\
+\midrule
+      Cosines & -1.562084 & -1.577403 & -1.586372 & \textbf{-1.600443} & -1.465383 &\\
+       Branin &  \textbf{0.727696} &  1.018735 &  1.865223 &  1.847867 &  1.190992 & \\
+ Sixhumpcamel & \textbf{-1.111226} & -1.099144 & -1.085236 & -1.091393 & -1.104145 & \\
+    McCormick & -1.939604 & -1.936456 & -1.916778 & -1.950658 & \textbf{-2.003377} & \\
+       Goldstein &&&&&\\
+       Egg-holder &&&&&\\   
+       Powers & -0.125614 & \textbf{-0.185978} & -0.149429 & -0.158541 & -0.180303 & \\
+       Alpine2 (d=2) &&&&&\\
+       Alpine2 (d=5) &&&&&\\
+       Alpine2 (d=10) &&&&&\\
+       gSobol (d=2) &&&&&\\
+       gSobol (d=5) &&&&&\\
+       gSobol (d=10) &&&&&\\
+\bottomrule
+\toprule
+     $sd.=0.1 $ &        EL &      GL-2 &      GL-3 &      GL-5 &     GL-10 & GL-(n-k) \\
+\midrule
+      Cosines & -1.562084 & -1.577403 & -1.586372 & \textbf{-1.600443} & -1.465383 &\\
+       Branin &  \textbf{0.727696} &  1.018735 &  1.865223 &  1.847867 &  1.190992 & \\
+ Sixhumpcamel & \textbf{-1.111226} & -1.099144 & -1.085236 & -1.091393 & -1.104145 & \\
+    McCormick & -1.939604 & -1.936456 & -1.916778 & -1.950658 & \textbf{-2.003377} & \\
+       Powers & -0.125614 & \textbf{-0.185978} & -0.149429 & -0.158541 & -0.180303 & \\
+              Goldstein &&&&&\\
+       Egg-holder &&&&&\\   
+       Alpine2 (d=2) &&&&&\\
+       Alpine2 (d=5) &&&&&\\
+       Alpine2 (d=10) &&&&&\\
+       gSobol (d=2) &&&&&\\
+       gSobol (d=5) &&&&&\\
+       gSobol (d=10) &&&&&\\
+\bottomrule
+\toprule
+     $sd.=0.25 $ &        EL &      GL-2 &      GL-3 &      GL-5 &     GL-10 & GL-(n-k) \\
+\midrule
+      Cosines & &&&&&\\
+       Branin & &&&&&\\
+ Sixhumpcamel & &&&&&\\
+    McCormick & &&&&&\\
+           Powers & &&&&&\\
+                  Goldstein &&&&&\\
+       Egg-holder &&&&&\\   
+       Alpine2 (d=2) &&&&&\\
+       Alpine2 (d=5) &&&&&\\
+       Alpine2 (d=10) &&&&&\\
+        gSobol (d=2) &&&&&\\
+       gSobol (d=5) &&&&&\\
+       gSobol (d=10) &&&&&\\
 \bottomrule
 \end{tabular}\caption{Results for the mean of the replicates}
+\end{center}
 \end{table*}
 
-\begin{table*}
-\begin{tabular}{lrrrrr}
-\toprule
-      problem &        EL &      GL-2 &      GL-3 &      GL-5 &     GL-10 \\
-\midrule
-      cosines & -1.641266 & -1.614421 & -1.647324 & \textbf{-1.685686} & -1.496753 \\
-       branin &  \textbf{0.501499} &  0.776298 &  1.223222 &  0.791490 &  0.626915 \\
- sixhumpcamel & \textbf{-1.115223} & -1.096584 & -1.073318 & -1.098454 & -1.103938 \\
-    mccormick & -1.970486 & -1.996537 & -1.966840 & -1.998333 & \textbf{-2.031038} \\
-       powers & -0.123350 & -0.159824 & -0.152354 & -0.125650 & \textbf{-0.172454} \\
-\bottomrule
-\end{tabular}\caption{Results for the median of the replicates}
-\end{table*}
+%\begin{table*}
+%\begin{tabular}{lrrrrr}
+%\toprule
+ %     problem &        EL &      GL-2 &      GL-3 &      GL-5 &     GL-10 \\
+%\midrule
+%      cosines & -1.641266 & -1.614421 & -1.647324 & \textbf{-1.685686} & -1.496753 \\
+%       branin &  \textbf{0.501499} &  0.776298 &  1.223222 &  0.791490 &  0.626915 \\
+% sixhumpcamel & \textbf{-1.115223} & -1.096584 & -1.073318 & -1.098454 & -1.103938 \\
+%    mccormick & -1.970486 & -1.996537 & -1.966840 & -1.998333 & \textbf{-2.031038} \\
+%       powers & -0.123350 & -0.159824 & -0.152354 & -0.125650 & \textbf{-0.172454} \\
+%\bottomrule
+%\end{tabular}\caption{Results for the median of the replicates}
+%\end{table*}
 
-\begin{table*}
-\begin{tabular}{lrrrrr}
-\toprule
-      problem &        EL &      GL-2 &      GL-3 &      GL-5 &     GL-10 \\
-\midrule
-      cosines & -1.700992 & -1.899286 & -1.803843 & -1.815387 & \textbf{-1.935917} \\
-       branin &  0.395783 &  \textbf{0.282889} &  0.367038 &  0.305713 &  0.388108 \\
- sixhumpcamel & -1.225345 & -1.240747 & -1.170774 & -1.201114 & \textbf{-1.296890} \\
-    mccormick & \textbf{-2.128225} & -2.126073 & -2.038700 & -2.055372 & -2.077451 \\
-       powers & -0.184954 & \textbf{-0.350845} & -0.267484 & -0.287553 & -0.252537 \\
-\bottomrule
-\end{tabular}\caption{Results for the median of the replicates}
-\end{table*}
+%\begin{table*}
+%\begin{tabular}{lrrrrr}
+%\toprule
+%      problem &        EL &      GL-2 &      GL-3 &      GL-5 &     GL-10 \\
+%\midrule
+%      cosines & -1.700992 & -1.899286 & -1.803843 & -1.815387 & \textbf{-1.935917} \\
+%       branin &  0.395783 &  \textbf{0.282889} &  0.367038 &  0.305713 &  0.388108 \\
+% sixhumpcamel & -1.225345 & -1.240747 & -1.170774 & -1.201114 & \textbf{-1.296890} \\
+%    mccormick & \textbf{-2.128225} & -2.126073 & -2.038700 & -2.055372 & -2.077451 \\
+%       powers & -0.184954 & \textbf{-0.350845} & -0.267484 & -0.287553 & -0.252537 \\
+%\bottomrule
+%\end{tabular}\caption{Results for the median of the replicates}
+%\end{table*}
 
 \section{Conclusions}
 
