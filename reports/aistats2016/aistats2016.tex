@@ -339,16 +339,18 @@ To evaluate Eq.~(\ref{eq:expected_nonmyopic_loss}) we can successively sample fr
 
 \subsection{Contributions of this work}
 
-The goal of this work is \emph{to propose a scalable approximation to Eq.~(\ref{eq:expected_nonmyopic_loss}) that will relieve the myopia of classical Bayesian optimization methods}. The key aspect of our approach is to split the recursive optimization marginalization loop in Eq.~(\ref{eq:expected_nonmyopic_loss}) into two independent optimization-marginalization steps that jointly act on all the future steps. The precise contributions of this paper are:
+The goal of this work is \emph{to propose an efficient approximation to Eq.~(\ref{eq:expected_nonmyopic_loss}) that will relieve the myopia of classical Bayesian optimization}. The precise contributions of this paper are:
 
 \begin{itemize}
-\item A new method to relieve the myopia of Bayesian optimisation that is able to efficiently take into account dozens of steps ahead. The method is based on the prediction of the future steps of the myopic algorithm to efficiently integrate out a long-side loss. We propose different alternatives to carry-out this step in practice.
-\item Together with this work , we deliver a open source Python code framework (link removed for blind review) containing a fully functional  implementation of the method useful to reproduce the results of this work.
+\item A new algorithm, \us, to relieve the myopia of Bayesian optimisation that is able to efficiently take into account dozens of steps ahead. The method is based on the prediction of the future steps of the myopic algorithm to efficiently integrate out a long-side loss. 
+\item The key aspect of our approach is to split the recursive optimization marginalization loop in Eq.~(\ref{eq:expected_nonmyopic_loss}) into two independent optimisation-marginalization steps that jointly act on all the future steps. We propose an Expectation-Propagation formulation for the joint marginalisation and we discuss different strategies to carry out the optimisation step.
+\item Together with this work, we deliver a open source Python code framework (link removed for blind review) containing a fully functional  implementation of the method useful to reproduce the results of this work and applicable in general global optimisation problems.
 \item Simulations: New practical experiments and insights that show that non-myopic methods outperform myopic approaches in a benchmark of optimisation problems.
 \end{itemize}
 
 
-\begin{table*}
+
+\begin{table*}[t!]
 \begin{tabular}{ccc}
       \addheight{\includegraphics[width=54mm]{bo_1step.png}} &
       \addheight{\includegraphics[width=54mm]{bo_2steps.png}}  &
@@ -362,9 +364,9 @@ The goal of this work is \emph{to propose a scalable approximation to Eq.~(\ref{
 \end{table*}
 
 
- \section{The GLASSES  Algorithm}
+ \section{The \us  Algorithm}
 
-
+This section describes the \us algorithm. 
 
 \subsection{Oracle multiple steps look-ahead expected loss}
 Suppose that  we had access to an oracle function $\future_{n}: {\mathcal X}\rightarrow  {\mathcal X}^n$ able to predict the $n$ future  locations that the loss $\Lambda_n(\cdot)$ would suggest if we start evaluating $f$ at $\bx_*$. We assume that $\future_{1}(\bx_*)=\bx_*$, that is, the first visited location is always $\bx_*$ itself. We work here under the assumption that the oracle has perfect information about the future locations, in the same way we have have perfect information about the locations that the algorithm already visited. This is obviously a totally unrealistic assumption in practice, but it will help us to set-up our algorithm. We leave for the next section the details of how to marginalise over the unknown $\future_{n}$. 
@@ -404,7 +406,24 @@ Under the hypothesis of this section, the next evaluation is located where $\Lam
 }
 
 
-\subsection{Back to the Future: Predicting the future steps of BO}
+\subsection{Predicting the future steps of BO}
+
+\begin{table*}[t!]
+\begin{tabular}{ccc}
+      \addheight{\includegraphics[width=54mm]{bo_1step.png}} &
+      \addheight{\includegraphics[width=54mm]{predicted_locations1.png}}  &
+      \addheight{\includegraphics[width=54mm]{predicted_locations2.png}}\\
+      \small Myopic loss &  \small 2 steps ahead & \small 3 steps ahead \\
+\end{tabular}\caption{}
+\end{table*}
+
+\begin{itemize}
+\item There are two ways of doing this.
+\item Probabilistic approach: use a dpp to encode the uncertainty over the future locations and take the MAP: computationally expensive
+\item Alternative: deterministic/heuristic approach. Use a greedy batch method to solve this problem.
+\item We 
+\end{itemize}
+
 
 
 \subsection{Algorithm and computational details}
@@ -415,11 +434,12 @@ Under the hypothesis of this section, the next evaluation is located where $\Lam
    \label{alg:glasses}
 \begin{algorithmic}
    \STATE {\bfseries Input:} dataset $\mathcal{D}_{0} = \{(\textbf{x}_0, y_0)\}$, number of remaining evaluations ($n$), look-ahead predictor $\future$.
-   \FOR{$j=$ {\bfseries to} $n$ }
-   \STATE Fit a \gp with kernel $k$ to $\mathcal{D}_{j}$.
-   \STATE Select next location $\bx_j$ by taking  $\bx_j = \arg \min_{\bx \in {\mathcal X}}\Lambda_{n-j}(\bx_*|\I_0, \future_{n-j}(\bx_*) )$.
-   \STATE Evaluate $f$ at $\bx_j$ and obtain $y_j$.
-   \STATE Augment the dataset $\mathcal{D}_{j} = \{\mathcal{D}_{j-1} \cup (\textbf{x}_j, y_j)\}$.
+   \FOR{$j=0$ {\bfseries to} $n$ }
+   \STATE 1. Fit a \gp with kernel $k$ to $\mathcal{D}_{j}$.
+   \STATE 2. Build a predictor of the future $n-l$ evaluations: $\future_{n-j}(\bx_*)$.
+   \STATE 3. Select next location $\bx_j$ by taking  $\bx_j = \arg \min_{\bx \in {\mathcal X}}\Lambda_{n-j}(\bx_*|\I_0, \future_{n-j}(\bx_*))$.
+   \STATE 4. Evaluate $f$ at $\bx_j$ and obtain $y_j$.
+   \STATE 5. Augment the dataset $\mathcal{D}_{j} = \{\mathcal{D}_{j-1} \cup (\textbf{x}_j, y_j)\}$.
    \ENDFOR
    \STATE \textbf{Returns}: New location at $\arg \min_{x \in \mathcal{X}} \left\{\mu_2(\bx)\right\}$.  
 \end{algorithmic}
