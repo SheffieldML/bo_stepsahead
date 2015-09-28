@@ -73,24 +73,27 @@ def loss_nsahead(X_star, bounds, expected_loss,n_ahead,L, Min, model):
     '''
     Computes the loss n steps n_ahead for the location x_star
     '''
-    # number of points to evaluate
-    n_points = X_star.shape[0]
-    X_loss   = np.zeros((n_points,1))
+    if n_ahead ==1:
+        X_loss=expected_loss.acquisition_function(X_star)
+
+    else:
+        # number of points to evaluate
+        n_points = X_star.shape[0]
+        X_loss   = np.zeros((n_points,1))
     
-    ## --- Current best
-    Y               = model.Y
-    eta             = Y.min()
+        ## --- Current best
+        Y               = model.Y
+        eta             = Y.min()
 
-    for i in range(n_points):
-        # --- Compute future locations
-        future_locations = predict_locations(X_star[i,:],bounds,expected_loss,n_ahead, L, Min, model)
+        for i in range(n_points):
+            # --- Compute future locations
+            future_locations = predict_locations(X_star[i,:],bounds,expected_loss,n_ahead, L, Min, model)
         
-        # --- Evaluate GP at the sample and compute full covariance
-        m, K       = model.predict(future_locations,full_cov=True)
+            # --- Evaluate GP at the sample and compute full covariance
+            m, K       = model.predict(future_locations,full_cov=True)
 
-        # --- Compute the expected loss
-        X_loss[i,:]       = emin_epmgp(m,K,eta)
-
+            # --- Compute the expected loss
+            X_loss[i,:]       = emin_epmgp(m,K,eta)  # this is a bit slow.
     return X_loss
 
 
@@ -113,11 +116,12 @@ def predict_locations(x_star, bounds, expected_loss, n_ahead, L, Min, model):
     ## --- predict the remaining future locations
     while k<n_ahead:
         penalized_loss.update_batches(X_batch,L,Min)
-        #new_sample = wrapper_DIRECT(penalized_loss.acquisition_function,bounds)
-        samples = multigrid(bounds, 100)
+        #new_sample = wrapper_DIRECT(penalized_loss.acquisition_function,bounds)      
+        samples = samples_multidimensional_uniform(bounds, 10000)
         pred_samples = penalized_loss.acquisition_function(samples)
         x0 =  samples[np.argmin(pred_samples)]
         new_sample,_ = wrapper_lbfgsb(f=penalized_loss.acquisition_function,grad_f=None,x0 = np.array(x0),bounds=bounds)
+        new_sample = x0
         X_batch = np.vstack((X_batch,new_sample))
         k +=1
     return X_batch

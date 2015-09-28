@@ -1,7 +1,7 @@
 import numpy as np
 import GPy
 from GPyOpt.core.optimization import wrapper_lbfgsb, wrapper_DIRECT, estimate_L, estimate_Min
-from GPyOpt.core.acquisition import AcquisitionEL1
+from GPyOpt.core.acquisition import AcquisitionEL
 from .util.general import samples_multidimensional_uniform, reshape, best_value, multigrid
 from .util.acquisition import loss_nsahead
 import GPyOptmsa
@@ -13,7 +13,7 @@ class GLASSES:
     Class to run Bayesian Optimization with multiple steps ahead
     '''
 
-    def __init__(self,f,bounds,X,Y,n_ahead = 1):
+    def __init__(self,f,bounds,X,Y,n_ahead = 1,feval_exact=False):
         self.input_dim = len(bounds)
         self.bounds = bounds
         self.X = X
@@ -22,11 +22,16 @@ class GLASSES:
         # Initialize model
         self.kernel = GPy.kern.RBF(self.input_dim, variance=.1, lengthscale=.1)  + GPy.kern.Bias(self.input_dim)
         self.model  = GPy.models.GPRegression(X,Y,kernel= self.kernel)
-        self.model.Gaussian_noise.constrain_bounded(1e-2,1e6) #to avoid numerical problems
+        
+        if feval_exact==True:
+            self.model.Gaussian_noise.constrain_bounded(1e-2,1e6) #to avoid numerical problems
+        else:
+            self.model.Gaussian_noise.constrain_fixed(0.0001)
+
         self.model.optimize_restarts(5)
         
         # Imitilize loss
-        self.loss = AcquisitionEL1()
+        self.loss = AcquisitionEL()
         self.update_loss()
         self.s_in_min = np.sqrt(self.model.predict(self.X)[1])
         self.f = f
@@ -38,28 +43,31 @@ class GLASSES:
     def loss_ahead(self,x):
         return loss_nsahead(x, self.bounds, self.loss, self.n_ahead, self.L, self.Min, self.model)
 
-    def run_optimization(self,max_iter,n_ahead=None, eps= 10e-6):
+    def run_optimization(self,max_iter, eps= 10e-6, ahead_remaining = False):
 
         # weigth of the previous acquisition in the dpp sample
         #self.n_samples_dpp = n_samples_dpp
         # Check the number of steps ahead to look at
-        if n_ahead==None:
-            self.n_ahead = max_iter
-        else:
-            self.n_ahead = n_ahead
+        #if n_ahead==None:
+        #    self.n_ahead = max_iter
+        #else:
+        #    self.n_ahead = n_ahead
 
         # initial stop conditions
         k = 1
         distance_lastX = np.sqrt(sum((self.X[self.X.shape[0]-1,:]-self.X[self.X.shape[0]-2,:])**2))
 
         while k<=max_iter and distance_lastX > eps:
-            print self.n_ahead
+
+            if ahead_remaining == True:
+                self.n_ahead = max_iter-k+1
 
             # update loss
             self.update_loss()
- 
+
             # Optimize loss
             X_new = wrapper_DIRECT(self.loss_ahead,self.bounds)
+
             self.suggested_sample = X_new
 
             # Augment the dataset
@@ -71,8 +79,6 @@ class GLASSES:
             self.model.optimize_restarts(verbose=False)
 
             # Update steps ahead if needed
-            if n_ahead==None:
-                self.n_ahead -=1
             self.s_in_min = np.vstack((self.s_in_min,np.sqrt(abs(self.model.predict(X_new)[1]))))
             print 'Iteration ' + str(k) +' completed'
             k += 1
