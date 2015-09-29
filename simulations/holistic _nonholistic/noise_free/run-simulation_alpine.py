@@ -24,9 +24,9 @@ experiments = [ #'func = cosines(sd=.0)',
                 'func = alpine2(input_dim=2,sd=.0)',
                 'func = alpine2(input_dim=5,sd=.0)',
                 'func = alpine2(input_dim=10,sd=.0)'
-                #'func = gSobol(np.array([1,1]),sd=.1)',
-                #'func = gSobol(np.array([1,1,1,1,1]),sd=.1)',
-                #'func = gSobol(np.array([1,1,1,1,1,1,1,1,1,1]),sd=.1)'
+                #'func = ackley(input_dim=2,sd=.0)',
+                #'func = ackley(input_dim=5,sd=.0)',
+                #'func = ackley(input_dim=10,sd=.0)'
               ]
 
 NR              = 10            # Different initial points.
@@ -55,12 +55,12 @@ for experiment in experiments:
         Y = f(X)
 
         # --- Crete the optimization objects
-        GLASSES_02 = GPyOptmsa.msa.GLASSES(f,bounds, X,Y,n_ahead=2) 
-        GLASSES_03   = GPyOptmsa.msa.GLASSES(f,bounds, X,Y,n_ahead=3) 
-        GLASSES_05   = GPyOptmsa.msa.GLASSES(f,bounds, X,Y,n_ahead=5)
-        GLASSES_10   = GPyOptmsa.msa.GLASSES(f,bounds, X,Y,n_ahead=10)
-        GLASSES_H    = GPyOptmsa.msa.GLASSES(f,bounds, X,Y)
-        EL           = GPyOpt.methods.BayesianOptimization(f=f,bounds=bounds, X=X, Y=Y ,acquisition='EL') 
+        GLASSES_02 = GPyOptmsa.msa.GLASSES(f,bounds, X,Y,n_ahead=2,exact_feval=True) 
+        GLASSES_03   = GPyOptmsa.msa.GLASSES(f,bounds, X,Y,n_ahead=3,exact_feval=True) 
+        GLASSES_05   = GPyOptmsa.msa.GLASSES(f,bounds, X,Y,n_ahead=5,exact_feval=True)
+        GLASSES_10   = GPyOptmsa.msa.GLASSES(f,bounds, X,Y,n_ahead=10,exact_feval=True)
+        GLASSES_H    = GPyOptmsa.msa.GLASSES(f,bounds, X,Y,exact_feval=True)
+        EL           = GPyOpt.methods.BayesianOptimization(f=f,bounds=bounds, X=X, Y=Y ,acquisition='EL',exact_feval=True) 
 
         # --- Run the optimizations
         print experiment

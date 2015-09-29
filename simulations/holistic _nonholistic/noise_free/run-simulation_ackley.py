@@ -14,19 +14,19 @@ from GPyOpt.fmodels.experimentsNd import *
 
 
 ## Simulation setup    
-experiments = [ 'func = cosines(sd=.0)',
-                'func = branin(sd=.0)',
-                'func = sixhumpcamel(sd=.0)',
-                'func = mccormick(sd=.0)',
-                'func = powers(sd=.0)',
-                'func = eggholder(sd=.0)',
-                'func = goldstein(sd=.0)',
-                'func = alpine2(input_dim=2,sd=.0)'
-                'func = alpine2(input_dim=5,sd=.0)',
-                'func = alpine2(input_dim=10,sd=.0)'
-                'func = gSobol(np.array([1,1]),sd=.1)',
-                'func = gSobol(np.array([1,1,1,1,1]),sd=.1)',
-                'func = gSobol(np.array([1,1,1,1,1,1,1,1,1,1]),sd=.1)'
+experiments = [ #'func = cosines(sd=.0)',
+                #'func = branin(sd=.0)',
+                #'func = sixhumpcamel(sd=.0)',
+                #'func = mccormick(sd=.0)',
+                #'func = powers(sd=.0)',
+                #'func = eggholder(sd=.0)',
+                #'func = goldstein(sd=.0)',
+                #'func = alpine2(input_dim=2,sd=.0)'
+                #'func = alpine2(input_dim=5,sd=.0)',
+                #'func = alpine2(input_dim=10,sd=.0)'
+                'func = ackley(input_dim=2,sd=.0)',
+                'func = ackley(input_dim=5,sd=.0)',
+                'func = ackley(input_dim=10,sd=.0)'
               ]
 
 NR              = 10            # Different initial points.

@@ -13,7 +13,7 @@ class GLASSES:
     Class to run Bayesian Optimization with multiple steps ahead
     '''
 
-    def __init__(self,f,bounds,X,Y,n_ahead = 1,feval_exact=False):
+    def __init__(self,f,bounds,X,Y,n_ahead = 1,exact_feval=False):
         self.input_dim = len(bounds)
         self.bounds = bounds
         self.X = X
@@ -23,10 +23,10 @@ class GLASSES:
         self.kernel = GPy.kern.RBF(self.input_dim, variance=.1, lengthscale=.1)  + GPy.kern.Bias(self.input_dim)
         self.model  = GPy.models.GPRegression(X,Y,kernel= self.kernel)
         
-        if feval_exact==True:
-            self.model.Gaussian_noise.constrain_bounded(1e-2,1e6) #to avoid numerical problems
-        else:
+        if exact_feval==True:
             self.model.Gaussian_noise.constrain_fixed(0.0001)
+        else:
+            self.model.Gaussian_noise.constrain_bounded(1e-2,1e6) #to avoid numerical problems
 
         self.model.optimize_restarts(5)
         
