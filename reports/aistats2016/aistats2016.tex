@@ -166,20 +166,12 @@ There is a limited literature on the multi-step lookahead problem.
 \cite{osborne_gaussian_2009} perform multi-step lookahead by optimising future evaluation locations, and sampling over future function values. 
 This approach scales poorly with the number of future evaluations considered, and the authors present results for no more than two-step lookahead.
 \citep{Marchant*Ramos*Sanner*2014} reframe the multi-step lookahead problem as a partially observed Markov decision process, and adopt a Monte Carlo tree search approach in solving it. 
-Again, the scaling of the approach permits the authors to consider no more than six steps into the future. 
+Again, the scaling of the approach permits the authors to consider no more than six steps into the future. In the past, the multi-step look ahead problem was studied by \cite{StreltsovVakili1999} proposing a utility function that is provably a globally optimal in cases where the model of the function values remains unchanged.
 
-\citep{StreltsovVakili1999}
-
-There exist a link between the multi-step lookahead problem and \emph{batch} Bayesian optimisation, where batches of locations rather than individual obsevations are selected in parallel: the multi-step lookahead problem requires the challenging marginalisation over unknown future evaluation \emph{locations}, in addition to the unknown future evaluation \emph{values} also marginalised by batch approaches. 
-Similarly to the state-of-the-art in multi-step lookahead, the batch literature provides only poor scaling with the number of evaluations.
-\citep{Ginsbourger2009} present results for no more than six simultaneous function evaluations.
-\citep{Azimi2011,Azimi2012} use the surrogate model for $f$ to generate `fake' observations and avoid the marginalization step. 
-This produce a large accumulation of errors that does not allow the use of these techniques for the collection of large batches.
-
-We propose an algorithm, \us, that provides scaling superior to existing alternatives.
+Interestingly, there exists a link between the multi-step lookahead problem and \emph{batch} Bayesian optimisation \citep{Ginsbourger2009,Azimi2011,Azimi2012}. In this later case, batches of locations rather than individual observations are selected in each iteration of the algorithm and evaluated in parallel. When such locations are selected \emph{greedily}, that is, one after the other, the key to selecting good batches relies on the ability of the batch criterion of predicting future steps of the algorithm. In this work we will exploit this parallelism to compute a non-myopic loss for Bayesian optimisation. Our algorithm, \us, provides scaling superior to existing alternatives, which is tested in a variety of experiments. In Section \ref{sec:background} we formalise the problem and describe the contributions of this work. Section \ref{sec:glasses} describe the details of the proposed algorithm. Section \ref{sec:experiments} illustrate the superior performance of \us and we conclude in Section \ref{sec:conclusions} with a discussion about the most interesting results observed in this work.
 
 
-\section{Background and challenge}
+\section{Background and challenge}\label{sec:background}
 \subsection{Bayesian Optimisation with one step look-ahead} % (fold)
 \label{sec:bayesian_optimisation}
 
@@ -344,7 +336,7 @@ The goal of this work is \emph{to propose an efficient approximation to Eq.~(\re
 \begin{itemize}
 \item A new algorithm, \us, to relieve the myopia of Bayesian optimisation that is able to efficiently take into account dozens of steps ahead. The method is based on the prediction of the future steps of the myopic algorithm to efficiently integrate out a long-side loss. 
 \item The key aspect of our approach is to split the recursive optimization marginalization loop in Eq.~(\ref{eq:expected_nonmyopic_loss}) into two independent optimisation-marginalization steps that jointly act on all the future steps. We propose an Expectation-Propagation formulation for the joint marginalisation and we discuss different strategies to carry out the optimisation step.
-\item Together with this work, we deliver a open source Python code framework (link removed for blind review) containing a fully functional  implementation of the method useful to reproduce the results of this work and applicable in general global optimisation problems.
+\item Together with this work, we deliver a \emph{open source Python code framework} (link removed for blind review) containing a fully functional  implementation of the method useful to reproduce the results of this work and applicable in general global optimisation problems.
 \item Simulations: New practical experiments and insights that show that non-myopic methods outperform myopic approaches in a benchmark of optimisation problems.
 \end{itemize}
 
@@ -355,18 +347,27 @@ The goal of this work is \emph{to propose an efficient approximation to Eq.~(\re
       \addheight{\includegraphics[width=54mm]{bo_1step.png}} &
       \addheight{\includegraphics[width=54mm]{bo_2steps.png}}  &
       \addheight{\includegraphics[width=54mm]{bo_3steps.png}}\\
-      \small Myopic loss &  \small 2 steps ahead & \small 3 steps ahead \\
+      \small \textbf{Myopic loss} &  \small \textbf{loss 2 steps ahead} & \small \textbf{loss 3 steps ahead} \\
       \addheight{\includegraphics[width=54mm]{bo_5steps.png}} &
       \addheight{\includegraphics[width=54mm]{bo_10steps.png}}  &
       \addheight{\includegraphics[width=54mm]{bo_20steps.png}}\\
-      \small \small 5 steps ahead' & \small 10 steps ahead & \small 20 steps ahead \\
+      \small \small \textbf{5 steps ahead} & \small \textbf{10 steps ahead} & \small \textbf{20 steps ahead} \\
 \end{tabular}\caption{Estimated expected loss for different number of steps ahead in an example with 10 data points and the Six-hump Camel function. Increasing the steps ahead decreases global optimum of the loss; the algorithm will visit more future locations and therefore expected value of the best potential minimum decreases. Increasing the number of steps ahead flatten down the loss since it is likely for the algorithm to hit a good location irrespective of the initial point (all candidate points look better because of the future chances of the algorithm to be in a good location).}
 \end{table*}
 
 
- \section{The \us  Algorithm}
+ \section{The \us Algorithm}\label{sec:glasses}
 
 This section describes the \us algorithm. 
+
+\begin{itemize}
+\item We don't know where the algorithm will evalute in the future.
+\item We can use a probabiliy distribution to model the epistemic uncertainty over future locations.
+\item For instance, we can use a point process, such a dpp and integrate out over some samples.
+\item This is expensive (need to sample in a continous space  many conditional dpps samples).
+\item Alternatively we can try to predict as accurate as possible future locations: approximate an oracle of the futire steps. 
+\item This reduces a a lot the complexity because reduces the loss muti ahead to an integral over y's
+\end{itemize}
 
 \subsection{Oracle multiple steps look-ahead expected loss}
 Suppose that  we had access to an oracle function $\future_{n}: {\mathcal X}\rightarrow  {\mathcal X}^n$ able to predict the $n$ future  locations that the loss $\Lambda_n(\cdot)$ would suggest if we start evaluating $f$ at $\bx_*$. We assume that $\future_{1}(\bx_*)=\bx_*$, that is, the first visited location is always $\bx_*$ itself. We work here under the assumption that the oracle has perfect information about the future locations, in the same way we have have perfect information about the locations that the algorithm already visited. This is obviously a totally unrealistic assumption in practice, but it will help us to set-up our algorithm. We leave for the next section the details of how to marginalise over the unknown $\future_{n}$. 
@@ -424,6 +425,10 @@ Under the hypothesis of this section, the next evaluation is located where $\Lam
 \item We 
 \end{itemize}
 
+\begin{equation}\label{eq:penalized_acquisition}
+\bx_{k} =\arg \max_{x \in \bx} \left\{g(\Lambda_1(\bx_*| \I_0))\prod_{j=1}^{k-1}\varphi(\bx;\bx_{j})\right\},
+\end{equation}
+where $\varphi(\bx;\bx_{j})$ are local local penalizers centered at $\bx_{j}$ and $g:\bbbr \rightarrow \bbbr^+$  the \emph{soft-plus} transformation $g(z)= \ln(1+e^z)$ elsewhere.
 
 
 \subsection{Algorithm and computational details}
@@ -445,17 +450,17 @@ Under the hypothesis of this section, the next evaluation is located where $\Lam
 \end{algorithmic}
 \end{algorithm*}
 
-\section{Results}
+\section{Results}\label{sec:experiments}
 
 
 \subsection{Testing the validity of the approach}
-To study the validity of our approximation we choose a variety of functions with a variety of dimensions a defined in various domains. See Table \ref{}.
+To study the validity of our approximation we choose a variety of functions with a range  of dimensions and domains domain sizes. See Table \ref{} for details.
 
 \begin{table}[t!]
 \begin{center}
 \begin{tabular}{lcc}
 \toprule
-Name & Domain & $D$ \\
+Name &Function domain & $D$ \\
 \midrule
 \hline
 Cosines & $[0,1]\times[0,1]$ & 2\\
@@ -563,7 +568,7 @@ gSobol-10  & & 10\\
 %\end{tabular}\caption{Results for the median of the replicates}
 %\end{table*}
 
-\section{Conclusions}
+\section{Conclusions}\label{sec:conclusions}
 
 \bibliographystyle{plainnat}
 \bibliography{bib_glasses}
@@ -583,6 +588,7 @@ gSobol-10  & & 10\\
 \textbf{Authors here}
 \end{center}
 
+\vspace{1cm}
 \section{Oracle Multiple Steps loook-ahead Expected Loss }
 Denote by $\eta_n = \min \{\bY_0, y_*, y_2\dots,y_{n-1}\}$ the value of the best visited location when looking at $n$ evaluations in the future. Note that $\eta_n$ reduces to the current best lost $\eta$ in the one step-ahead case. It is straightforward to see that 
 $$ \min (y_n,\eta_n) = \min (\by,\eta ).$$
@@ -601,6 +607,7 @@ where the integrals with respect to $\bx_2\dots \ud\bx_n$ are  $p(\bx_{j}|\I_{j-
 and therefore 
 $$ \Lambda_n(\bx_*|\I_0, \future_{n}(\bx_*)) =\E [\min (\by,\eta)] =\int \min (\by,\eta)p(\by|\I_{0}, \future_{n}(\bx_*))d\by  $$
 
+\vspace{1cm}
 \section{Formulation of the Oracle Multiple Steps loook-ahead Expected Loss to be computed using Expectation Propagation}
 Assume that $\by \sim \N(\by; \mu, \Sigma)$. Then we have that
 \begin{eqnarray}\nonumber
