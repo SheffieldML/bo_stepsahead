@@ -336,8 +336,8 @@ The goal of this work is \emph{to propose an efficient approximation to Eq.~(\re
 \begin{itemize}
 \item A new algorithm, \us, to relieve the myopia of Bayesian optimisation that is able to efficiently take into account dozens of steps ahead. The method is based on the prediction of the future steps of the myopic algorithm to efficiently integrate out a long-side loss. 
 \item The key aspect of our approach is to split the recursive optimization marginalization loop in Eq.~(\ref{eq:expected_nonmyopic_loss}) into two independent optimisation-marginalization steps that jointly act on all the future steps. We propose an Expectation-Propagation formulation for the joint marginalisation and we discuss different strategies to carry out the optimisation step.
-\item Together with this work, we deliver a \emph{open source Python code framework} (link removed for blind review) containing a fully functional  implementation of the method useful to reproduce the results of this work and applicable in general global optimisation problems.
-\item Simulations: New practical experiments and insights that show that non-myopic methods outperform myopic approaches in a benchmark of optimisation problems.
+\item Together with this work, we deliver a \emph{open source Python code framework} (link removed for blind review) containing a fully functional  implementation of the method useful to reproduce the results of this work and applicable in general global optimisation problems. As we mentioned in the introduction of this work, there exist a limited literature in BO non-myopic methods and, to our knowledge, no BO package has any myopic loss functions among the available acquisition functions. 
+\item Simulations: New practical experiments and insights that show that non-myopic methods outperform myopic approaches in a benchmark of optimisation problems. 
 \end{itemize}
 
 
@@ -358,16 +358,14 @@ The goal of this work is \emph{to propose an efficient approximation to Eq.~(\re
 
  \section{The \us Algorithm}\label{sec:glasses}
 
-This section describes the \us algorithm. 
+As detailed in the previous section, a proper multi-step look ahead loss function requires the iterative optimization-marginalization of the future steps, which is computationally intractable. A possible way of dealing with this issue in to jointly modelling our epistemic uncertainty over the future locations $\bx_2,\dots,\bx_n$ with a joint probability distribution  $p(\bx_2,\dots,\bx_n|\I_{0}, \bx_*) $ and to consider the expected loss 
+\begin{equation}\label{eq:eq:expected_nonmyopic_loss2}
+\Gamma_n(\bx_*|\I_0 ) = \int \lambda(y_n) p(\by|\bX,\I_{0},\bx_*) p(\bX|\I_{0},\bx_*) \ud \by \ud\bx \
+\end{equation}
+for $\by=\{y_*,\dots,\dots,y_n\}$ the vector of future evaluations of $f$ and $\textbf{X}$ the $(n-1)\times d$ dimensional matrix whose rows represent the algorithm future locations. Note that $p(\by|\bX,\I_{0},\bx_*)$ is multivariate Gaussian, since it corresponds to the predictive distribution of the GP at $\textbf{X}$. This loss function corresponds the the graphical model in Figure \ref{fig:bayes_net_glasses}. It differs from $\Lambda_n(\bx_*|\I_0)$ in the fact that all future evaluations are modelled jointly rather then sequentially. This distribution, however, may be difficult to obtain. An natural option is to model $p(\textbf{X}|\I_{0}, \bx_*)$ using a continuous determinant point process (DPP) defined on ${\mathcal X}$ \citep{}. DPPs have nice computational properties in discrete sets. However, to integrate Eq.~(\ref{eq:eq:expected_nonmyopic_loss2}) by sampling from a DPP  would require to do it conditioning to $\bx_*$ and the number of steps ahead. Although this is possible in theory, the computational burden of this approach would be still very large. 
 
-\begin{itemize}
-\item We don't know where the algorithm will evalute in the future.
-\item We can use a probabiliy distribution to model the epistemic uncertainty over future locations.
-\item For instance, we can use a point process, such a dpp and integrate out over some samples.
-\item This is expensive (need to sample in a continous space  many conditional dpps samples).
-\item Alternatively we can try to predict as accurate as possible future locations: approximate an oracle of the futire steps. 
-\item This reduces a a lot the complexity because reduces the loss muti ahead to an integral over y's
-\end{itemize}
+An alternative and more efficient approach that we explore here is to work with a fixed set $\textbf{X}$, which we assume it is given by some algorithm. As we show in this section, although this approach omits our epistemic uncertainty on $X$ it drastically reduces the computational burden of approximating $\Lambda_n(\bx_*|\I_0 )$.
+
 
 \subsection{Oracle multiple steps look-ahead expected loss}
 Suppose that  we had access to an oracle function $\future_{n}: {\mathcal X}\rightarrow  {\mathcal X}^n$ able to predict the $n$ future  locations that the loss $\Lambda_n(\cdot)$ would suggest if we start evaluating $f$ at $\bx_*$. We assume that $\future_{1}(\bx_*)=\bx_*$, that is, the first visited location is always $\bx_*$ itself. We work here under the assumption that the oracle has perfect information about the future locations, in the same way we have have perfect information about the locations that the algorithm already visited. This is obviously a totally unrealistic assumption in practice, but it will help us to set-up our algorithm. We leave for the next section the details of how to marginalise over the unknown $\future_{n}$. 
@@ -393,40 +391,51 @@ $$t_{j,i}(\by)= \left\{ \begin{array}{lcl}
  \mathbb{I}\{ 0 \leq y_i-y_j \} &   \mbox{otherwise.} 
 \end{array}
 \right.$$
-See supplementary materials for details. The first term in Eq.~(\ref{eq:expected_loss_oracle}) is a Gaussian probability on unbounded polyhedron in which the limits are aligned with the axis. The second term is the sum of the Gaussian expectations on different non-axis-aligned different polyhedra defined by the indicator functions. Both terms can easily computed with EP using the approach proposed in \citep{Cunningham*Hennig*Lacoste-Julien_2011}. In a nutshell, to compute the integrals one need to replace the indicator functions with univariate Gaussian that play the role of \emph{soft-indicators} in the EP iterations. This method is computationally efficient and scales well for high dimensions. Note that when $n=1$, (\ref{eq:oracle_expected_nonmyopic_loss}) reduces to (\ref{eq:expected_myopic_loss}).
+See supplementary materials for details. The first term in Eq.~(\ref{eq:expected_loss_oracle}) is a Gaussian probability on unbounded polyhedron in which the limits are aligned with the axis. The second term is the sum of the Gaussian expectations on different non-axis-aligned different polyhedra defined by the indicator functions. Both terms can be computed with EP using the approach proposed in \citep{Cunningham*Hennig*Lacoste-Julien_2011}. In a nutshell, to compute the integrals one need to replace the indicator functions with univariate Gaussian that play the role of \emph{soft-indicators} in the EP iterations. This method is computationally efficient and scales well for high dimensions. Note that when $n=1$, (\ref{eq:oracle_expected_nonmyopic_loss}) reduces to (\ref{eq:expected_myopic_loss}).
 
 
 
 
 Under the hypothesis of this section, the next evaluation is located where $\Lambda_n(\bx_*|\I_0, \future_{n}(\bx_*) )$ gives the minimum value. 
 
-\hl{NOTE HERE ON GRADIENTS OF $\Lambda_n(\bx_*|\I_0, \future_{n}(\bx_*) )$: should be possible to derive but, in practice EP will provide and approximation to the integral so it may not be the best thing to do. Using DIRECT sounds to me here like the best option}.
+%\hl{NOTE HERE ON GRADIENTS OF $\Lambda_n(\bx_*|\I_0, \future_{n}(\bx_*) )$: should be possible to derive but, in practice EP will provide and approximation to the integral so it may not be the best thing to do. Using DIRECT sounds to me here like the best option}.
 
-\hl{
-    Good point, and I think using DIRECT should be fine. That said, if you did want gradients, what about autograd: https://github.com/HIPS/autograd/?
-}
+%\hl{
+%    Good point, and I think using DIRECT should be fine. That said, if you did want gradients, what about autograd: https://github.com/HIPS/autograd/?
+%}
 
 
 \subsection{Predicting the future steps of BO}
 
+\begin{itemize}
+\item The goal of this section is to define some $\hat{\future}(\bx_*)$.
+\item One could take the MAP of the dpp! expensive.
+\item One can use a batch bo method.
+\item We use one that is fast, and imitates the optimization-marginalization by a optimizaiton-penalization.
+\item Describe briefly
+\item Example
+\item Repulsion effect, connection with dpp
+\end{itemize}
+
+
 \begin{table*}[t!]
 \begin{tabular}{ccc}
-      \addheight{\includegraphics[width=54mm]{bo_1step.png}} &
-      \addheight{\includegraphics[width=54mm]{predicted_locations1.png}}  &
-      \addheight{\includegraphics[width=54mm]{predicted_locations2.png}}\\
-      \small Myopic loss &  \small 2 steps ahead & \small 3 steps ahead \\
+      \addheight{\includegraphics[width=54mm]{bo_1step.pdf}} &
+      \addheight{\includegraphics[width=54mm]{predicted_locations1.pdf}}  &
+      \addheight{\includegraphics[width=54mm]{predicted_locations2.pdf}}\\
+ %     \small Myopic loss &  \small 2 steps ahead & \small 3 steps ahead \\
 \end{tabular}\caption{}
 \end{table*}
 
-\begin{itemize}
-\item There are two ways of doing this.
-\item Probabilistic approach: use a dpp to encode the uncertainty over the future locations and take the MAP: computationally expensive
-\item Alternative: deterministic/heuristic approach. Use a greedy batch method to solve this problem.
-\item We 
-\end{itemize}
+
+\begin{figure*}[t!]
+\begin{center}
+\includegraphics[width=16cm]{steps.pdf}
+\end{center}\caption{ffff}
+\end{figure*}
 
 \begin{equation}\label{eq:penalized_acquisition}
-\bx_{k} =\arg \max_{x \in \bx} \left\{g(\Lambda_1(\bx_*| \I_0))\prod_{j=1}^{k-1}\varphi(\bx;\bx_{j})\right\},
+ [\future_n(\bx_*)]_k  =\arg \max_{x \in \bx} \left\{g(\Lambda_1(\bx_*| \I_0))\prod_{j=1}^{k-1}\varphi(\bx;\hat{\bx}_{j})\right\},
 \end{equation}
 where $\varphi(\bx;\bx_{j})$ are local local penalizers centered at $\bx_{j}$ and $g:\bbbr \rightarrow \bbbr^+$  the \emph{soft-plus} transformation $g(z)= \ln(1+e^z)$ elsewhere.
 
@@ -516,23 +525,6 @@ gSobol-10  & & 10\\
        Alpine2 (d=5) &&&&&\\
        Alpine2 (d=10) &&&&&\\
        gSobol (d=2) &&&&&\\
-       gSobol (d=5) &&&&&\\
-       gSobol (d=10) &&&&&\\
-\bottomrule
-\toprule
-     $sd.=0.25 $ &        EL &      GL-2 &      GL-3 &      GL-5 &     GL-10 & GL-(n-k) \\
-\midrule
-      Cosines & &&&&&\\
-       Branin & &&&&&\\
- Sixhumpcamel & &&&&&\\
-    McCormick & &&&&&\\
-           Powers & &&&&&\\
-                  Goldstein &&&&&\\
-       Egg-holder &&&&&\\   
-       Alpine2 (d=2) &&&&&\\
-       Alpine2 (d=5) &&&&&\\
-       Alpine2 (d=10) &&&&&\\
-        gSobol (d=2) &&&&&\\
        gSobol (d=5) &&&&&\\
        gSobol (d=10) &&&&&\\
 \bottomrule
