@@ -386,7 +386,7 @@ To compute Eq.~(\ref{eq:oracle_expected_nonmyopic_loss}) we propose to use Expec
 \end{eqnarray}
 where  $h_i(\by) = \mathbb{I}\{y_i>\eta\}$ and
 $$t_{j,i}(\by)= \left\{ \begin{array}{lcl}
-\mathbb{I}\{y_j \leq\eta\} & \mbox{ if } $ i=j$ \\
+\mathbb{I}\{y_j \leq\eta\} & \mbox{ if } $i=j$ \\
   \\
  \mathbb{I}\{ 0 \leq y_i-y_j \} &   \mbox{otherwise.} 
 \end{array}
@@ -406,6 +406,8 @@ Under the hypothesis of this section, the next evaluation is located where $\Lam
 
 
 \subsection{Predicting the future steps of BO}
+
+The goal of this section is to propose a surrogate function for $\future_n(\bx_*)$. An 
 
 \begin{itemize}
 \item The goal of this section is to define some $\hat{\future}(\bx_*)$.
@@ -495,7 +497,7 @@ gSobol-10  & & 10\\
 \begin{center}
 \begin{tabular}{lrrrrrr}
 \toprule
-     noise-free &        EL &      GL-2 &      GL-3 &      GL-5 &     GL-10 & GL-(n-k) \\
+     noise-free &        EL &      GL-2 &      GL-3 &      GL-5 &     GL-10 & GL-$(n-k)$ \\
 \midrule
       Cosines & -1.562084 & -1.577403 & -1.586372 & \textbf{-1.600443} & -1.465383 &\\
        Branin &  \textbf{0.727696} &  1.018735 &  1.865223 &  1.847867 &  1.190992 & \\
@@ -512,7 +514,7 @@ gSobol-10  & & 10\\
        gSobol (d=10) &&&&&\\
 \bottomrule
 \toprule
-     $sd.=0.1 $ &        EL &      GL-2 &      GL-3 &      GL-5 &     GL-10 & GL-(n-k) \\
+     $sd.=0.1 $ &        EL &      GL-2 &      GL-3 &      GL-5 &     GL-10 & GL-$(n-k)$ \\
 \midrule
       Cosines & -1.562084 & -1.577403 & -1.586372 & \textbf{-1.600443} & -1.465383 &\\
        Branin &  \textbf{0.727696} &  1.018735 &  1.865223 &  1.847867 &  1.190992 & \\
@@ -574,7 +576,7 @@ gSobol-10  & & 10\\
 \onecolumn
 \begin{center}
 {\Large  \textbf{Supplementary materials for:\\
-`GLASSES: Relieving The Myopia Of Bayesian Optimisation"}}
+`GLASSES: Relieving The Myopia Of Bayesian Optimisation'}}
 \end{center}
 \begin{center}
 \textbf{Authors here}
