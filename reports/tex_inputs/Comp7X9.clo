@@ -1,0 +1,604 @@
+%%
+%% This is file `Comp7X9.clo',
+%%
+%%    These files are distributed
+%%    WITHOUT ANY WARRANTY; without even the implied warranty of
+%%    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+%% 
+%% \CharacterTable
+%%  {Upper-case    \A\B\C\D\E\F\G\H\I\J\K\L\M\N\O\P\Q\R\S\T\U\V\W\X\Y\Z
+%%   Lower-case    \a\b\c\d\e\f\g\h\i\j\k\l\m\n\o\p\q\r\s\t\u\v\w\x\y\z
+%%   Digits        \0\1\2\3\4\5\6\7\8\9
+%%   Exclamation   \!     Double quote  \"     Hash (number) \#
+%%   Dollar        \$     Percent       \%     Ampersand     \&
+%%   Acute accent  \'     Left paren    \(     Right paren   \)
+%%   Asterisk      \*     Plus          \+     Comma         \,
+%%   Minus         \-     Point         \.     Solidus       \/
+%%   Colon         \:     Semicolon     \;     Less than     \<
+%%   Equals        \=     Greater than  \>     Question mark \?
+%%   Commercial at \@     Left bracket  \[     Backslash     \\
+%%   Right bracket \]     Circumflex    \^     Underscore    \_
+%%   Grave accent  \`     Left brace    \{     Vertical bar  \|
+%%   Right brace   \}     Tilde         \~}%
+%%%  @LaTeX-file{
+%%%     filename        = "Comp6X9.dtx",
+%%%     version         = "1.0",
+%%%     date            = "2001/01/10",
+%%%     time            = "11:23:00 GMT",
+%%%     checksum        = "4427",
+%%%     author          = "Ralf Herbrich (mailto:rherb@microsoft.com)",
+%%%     telephone       = "+44 1223 724861",
+%%%     FAX             = "+44 1223 744777",
+%%%     email           = "rherb@microsoft.com",
+%%%     codetable       = "ISO/ASCII",
+%%%     keywords        = "latex, camera-ready book, MITPress",
+%%%     supported       = "yes",
+%%%     abstract        = "formatter for MIT Press author-prepared CRC",
+%%%  }
+\ProvidesFile{Comp7X9.clo}%
+ [2001/01/10 1.0 MIT Press document class]% \fileversion
+\def\sluglinetokens{MIT Press Comp7X9/}%
+\@ifxundefined\fontrequirements{%
+ \def\fontrequirements{%
+  \RequirePackage[mtbold]{mathtime}%
+  \RequirePackage{times}%
+ }%
+}{}%
+
+%
+% PENALTIES
+%
+
+\clubpenalty 100000
+\widowpenalty 100000
+\displaywidowpenalty 1500
+\predisplaypenalty  150
+\postdisplaypenalty 150
+\interlinepenalty 100
+\brokenpenalty 100
+
+%
+% MACROS FOR EMPTY PAGES
+%
+
+\def\clearopenright{%
+ \clearpage
+ \if@twoside
+  \ifodd\c@page\else
+   \clearblank
+  \fi
+ \fi
+}%
+\def\clearblank{%
+ \hbox{}\thispagestyle{null}\newpage
+ \if@twocolumn\hbox{}\newpage\fi
+}%
+
+%
+% MARGINs
+%
+
+\setlength\@trimheight{9.00in}%
+\setlength\topmargin{30\p@}%
+\setlength\@headmargin{3pc}% "head margin"
+\setlength\headheight{12\p@}%
+\setlength\headsep   {51\p@}%
+\setlength\topskip{10\p@}%
+\setlength\textheight{41pc}% 41 lines of type
+\setlength\footskip{24\p@}%
+\setlength\maxdepth{.5\topskip}%
+\setlength\@trimwidth{8.00in}%
+\setlength\@guttermargin{4.15pc}% "back margin"
+\setlength\textwidth{30pc}%
+\setlength\marginparsep{\z@}%
+\setlength\marginparwidth{4pc}%
+\setlength\marginparpush{6\p@}%
+\marginparleft
+
+%
+% SERIESPAGE
+%
+
+\renewenvironment{seriespage}{%
+ \par
+ \clearpage
+ \fontsize{11}{14}%
+ \usefont\encodingdefault\rmdefault\bfdefault\updefault
+ \noindent
+ \@seriestitle
+ \par
+ \fontsize{9}{11}%
+ \usefont\encodingdefault\rmdefault\mddefault\updefault
+ \noindent
+ \@serieseditor
+ \fontsize{11}{14}%
+ \usefont\encodingdefault\rmdefault\mddefault\updefault
+ \vspace*{1.5em}%
+ \noindent
+}{%
+ \newpage
+}%
+
+%
+% TITLEPAGE
+%
+
+\def\makehalftitle{%
+ \vspace*{-6pt}% 
+ \hbox\@to\textwidth{%
+  \kern-\marginparwidth
+  \leaders\hrule\@height6\p@\hfil
+  }%
+
+ \begingroup
+  \vspace*{8\p@}%
+  \fontsize{18}{22}%
+  \usefont\encodingdefault\rmdefault\bfdefault\updefault
+  \offhyphenation
+  \noindent
+  \@title%
+  \nobreak
+  \par
+ \endgroup
+ \begingroup
+  \fontsize{16}{20}%
+  \usefont\encodingdefault\rmdefault\bfdefault\updefault
+  \offhyphenation
+  \noindent
+  \@subtitle%
+  \nobreak
+  \par
+ \endgroup
+ \begingroup
+  \offhyphenation
+  \fontsize{11}{13}%
+  \usefont\encodingdefault\rmdefault\mddefault\updefault
+  \parindent\z@
+  \parskip47\p@
+  \raggedright
+  \@ifx@empty\@author{%
+   edited by\\
+   \@editor
+  }{%
+   \@author
+   \@ifx@empty\@editor{%
+   }{%
+    \par
+    \parskip5\p@
+    edited by\\
+    \@editor
+   }%
+  }%
+  \par
+ \endgroup
+ \begingroup
+  \vfil
+  \offhyphenation
+  \fontsize{11}{13}%
+  \usefont\encodingdefault\rmdefault\mddefault\updefault
+  \parindent13\p@
+  \parskip\p@
+  \raggedright
+  \@imprint
+  \par
+  \pagebreak
+ \endgroup
+ \newpage
+}%
+\def\maketitle{%
+ \vspace*{-6pt}% 
+ \hbox\@to\textwidth{%
+  \kern-\marginparwidth
+  \leaders\hrule\@height6\p@\hfil
+  }%
+ \begingroup
+  \vspace{8\p@}%
+  \fontsize{18}{22}%
+  \usefont\encodingdefault\rmdefault\bfdefault\updefault
+  \offhyphenation
+  \noindent
+  \@title%
+  \nobreak
+  \par
+ \endgroup
+ \newpage
+}%
+
+%
+% HEADINGS
+%
+
+\def\ps@normalheadings{%
+ \let\@evenfoot\@empty
+ \let\@oddfoot\@empty
+ \def\@evenhead{%
+  \let\\\@gobblebreak
+  \@rhfont
+  \llap{\hbox\@to\marginparwidth{\thepage\hfil}}%
+  {\leftmark}%
+  \hfil
+ }%
+ \def\@oddhead{%
+  \let\\\@gobblebreak
+  \@rhfont
+  \llap{\hbox\@to\marginparwidth{\thepage\hfil}}%
+  {\rightmark}%
+  \hfil
+ }%
+}%
+
+%
+% PART
+%
+
+\def\@makepartheads#1#2{%
+ \vspace*{-6pt}% 
+ \hbox\@to\textwidth{%
+  \kern-\marginparwidth
+  \leaders\hrule\@height6\p@\hfil
+  }%
+ \begingroup
+  \vspace{8\p@}%
+  \fontsize{18}{22}%
+  \usefont\encodingdefault\rmdefault\bfdefault\itdefault
+  \offhyphenation
+  \noindent
+  \llap{\hbox\@to\marginpartotal{#1\hfil}}%
+  \nobreak
+  #2\par
+ \endgroup
+ \vspace*{+1.5in}% 
+ \hbox\@to\textwidth{%
+  \kern-\marginparwidth
+  \leaders\hrule\@height0.5pt\hfil
+  }%
+}%
+\def\@makepartnumber#1#2{%
+ \begingroup
+  \fontsize{18}{22}%
+  \usefont\encodingdefault\rmdefault\bfdefault\itdefault
+  \if@mainmatter#2\fi\vrule\@height24\p@\@width\z@
+  \kern6\p@
+ \endgroup
+}%
+\def\clearpartpage{%
+ \if@openright
+  \clearopenright
+ \else
+  \clearpage
+ \fi
+}%
+\def\partmark#1{
+ \markboth{}{}
+}%
+
+%
+% CHAPTER
+%
+
+\def\chaptermark#1{%
+ \markboth{%
+  \@ifx@empty\@author{%
+   \@ifnum{\c@secnumdepth<\z@}{%
+    #1%
+   }{%
+    \@chapapp\space\thechapter
+   }%
+  }{%
+   \@author
+  }%
+ }{%
+  #1%
+ }%
+}%
+\def\@makeschapterhead#1{%
+ \begingroup 
+  \begingroup
+   \offhyphenation
+   \fontsize{18}{22}%
+   \usefont\encodingdefault\rmdefault\mddefault\updefault
+   \noindent#1\par
+  \endgroup
+ \endgroup 
+ \addvspace{\@pageskip{75}}%
+}%
+\def\@makechapterhead#1#2{%
+ \vspace*{-6pt}% 
+ \hbox\@to\textwidth{%
+  \kern-\marginparwidth
+  \leaders\hrule\@height6\p@\hfil
+  }%
+ \begingroup
+  \vspace{8\p@}%
+  \fontsize{18}{22}%
+  \usefont\encodingdefault\rmdefault\bfdefault\updefault
+  \offhyphenation
+  \noindent
+  \llap{\hbox\@to\marginpartotal{#1\hfil}}%
+  \nobreak
+  #2\par
+ \endgroup
+ \addvspace{\@pageskip{69}}%
+}%
+\def\@makechapternumber#1#2{%
+ \begingroup
+  \fontsize{18}{22}%
+  \usefont\encodingdefault\rmdefault\bfdefault\updefault
+  \if@mainmatter#2\fi\vrule\@height24\p@\@width\z@
+  \kern6\p@
+ \endgroup
+}%
+\def\chaptersinkage{\z@}%
+\def\@chapapp{Chapter}%
+\renewenvironment{chapterintro}{\par}{\par}%
+\def\clearchapterpage{%
+  \if@openright
+   \clearopenright
+  \else
+   \clearpage
+  \fi
+}%
+
+%
+% SECTION
+%
+
+\setcounter{secnumdepth}{3}%
+\let\@hangfrom@latex\@hangfrom
+\def\@seccntformat#1{\csname the#1\endcsname\hspace{12\p@}}%
+\def\section{%
+ \@startsection{section}{1}{-\marginpartotal}{\@pageskip{-24}}{13\p@}{%
+  \fontsize{11}{14}%
+  \usefont\encodingdefault\rmdefault\bfdefault\updefault
+  \offhyphenation
+  \let\@hangfrom\@hangfrom@section
+ }%
+}%
+\long\def\@hangfrom@section#1#2{%
+ \let\\\break
+ \@hangfrom@latex{#1}\noindent\marginpar[%
+  \noindent\ulap{%
+   \hbox\@to\marginpartotal{%
+    \dimen@16\p@\dimen@ii-\dimen@\advance\dimen@.3\p@
+    \leaders\hrule\@height\dimen@\@depth\dimen@ii\hfil
+    \kern-\textwidth
+    }%
+   }%
+  ]{%
+  \noindent\ulap{%
+   \hbox\@to\marginpartotal{%
+    \kern-\textwidth\kern-\marginparsep
+    \dimen@16\p@\dimen@ii-\dimen@\advance\dimen@.3\p@
+    \leaders\hrule\@height\dimen@\@depth\dimen@ii\hfil
+    }%
+   }%
+  }\vrule\@height16\p@\@width\z@\nobreak\hskip\z@skip
+ #2\par
+ }%
+\def\sectionmark#1{}%
+\def\subsection{%
+ \@startsection{subsection}{2}{\z@}{\@pageskip{-13}}{13\p@}{%
+  \fontsize{11}{14}%    
+  \usefont\encodingdefault\rmdefault\bfdefault\updefault
+  \offhyphenation
+  }%
+ }%
+
+%
+% SUBSECTION
+%
+
+\def\subsubsection{%
+ \@startsection{subsubsection}{3}{\z@}{\@pageskip{-13}}{13\p@}{%
+  \fontsize{11}{14}%
+  \usefont\encodingdefault\rmdefault\bfdefault\itdefault
+  \offhyphenation
+  }%
+ }%
+
+%
+% APPENDIX
+%
+
+\def\appendixname{Appendix}%
+\def\appendix@toc{\c@tocdepth\thetocdepth\relax\let\l@chapter\l@chapter@main}%
+
+%
+% LIST
+%
+% {itemize}
+% {description}
+% {enumerate}
+%
+\def\@listI{%
+ \setlength\leftmargin{\z@}%
+ \setlength\rightmargin{\z@}%
+ \setlength\topsep{\@pageskip{7}}%
+ \setlength\partopsep{\z@}%
+ \setlength\itemsep{\@pageskip{3}}%
+ \setlength\parsep{\z@}%
+ \setlength\labelsep{4\p@}%
+ }%
+\let\@listi\@listI
+\def\@listii{%
+ \setlength\leftmargin{20\p@}%
+ \setlength\rightmargin{\z@}%
+ \setlength\topsep{\@pageskip{3}}%
+ \setlength\partopsep{\z@}%
+ \setlength\itemsep{\@pageskip{3}}%
+ \setlength\parsep{\z@}%
+ \setlength\labelsep{4\p@}%
+ }%
+\let\@listiii\@listii
+\let\@listiv\@listii
+\let\@listv\@listii
+\@listi
+\def\@runinlabel#1{#1\enspace}% 
+\def\@fllabel#1{#1\hfil}% 
+\def\@frlabel#1{\hfil#1}% 
+\let\@mklab\@runinlabel % 
+\newcommand\@labelfont{%
+ \usefont\encodingdefault\rmdefault\mddefault\updefault
+ }%
+%
+\renewenvironment{itemize}{%
+ \ifnum\@itemdepth>\thr@@\@toodeep\else
+  \advance\@itemdepth\@ne
+  \edef\@itemitem{labelitem\romannumeral\the\@itemdepth}%
+  \expandafter\list\csname\@itemitem \endcsname{%
+   \labelwidth\z@
+   \labelsep\z@
+   }%
+  \fi
+ }{%
+ \endlist
+ }%
+\def\labelitemi{%
+ \raise1.65\p@\hbox{%
+  \vrule\@height3.5\p@\@width3.5\p@
+  }%
+ }%
+%
+\def\labelitemii{%
+ \raise2.15\p@\hbox\@to2.5\p@{%
+  \vrule\@height2.5\p@\@width.3\p@
+  \leaders\hrule\@height2.5\p@\@depth-2.2\p@\hskip\z@\@plus2.5\p@
+  \hskip\z@\@plus-2.5\p@
+  \leaders\hrule\@height.3\p@\@depth0\p@\hskip\z@\@plus2.5\p@
+  \vrule\@height2.5\p@\@width.3\p@
+  }%
+ }%
+%
+\def\enumerate{%
+ \ifnum\@enumdepth>\thr@@
+  \@toodeep
+  \else
+  \advance\@enumdepth\@ne
+  \fi
+ \edef\@enumctr{enum\romannumeral\the\@enumdepth}%
+ \list{\csname label\@enumctr\endcsname}{%
+  \usecounter{\@enumctr}%
+  \labelwidth\z@
+  \labelsep\z@
+  }%
+ }%
+%
+\def\endenumerate{\endlist}%
+%
+\renewcommand{\labelenumi}{{\@labelfont\theenumi.}}%
+\renewcommand{\labelenumii}{{(\@labelfont\theenumii)}}%
+\renewcommand{\labelenumiii}{{\@labelfont\theenumiii.}}%
+\renewcommand{\labelenumiv}{{\@labelfont\theenumiv.}}%
+%
+\renewcommand{\p@enumii}{\theenumi}%
+\renewcommand{\p@enumiii}{\p@enumii\theenumii}%
+\renewcommand{\p@enumiv}{\p@enumiii\theenumiii}%
+
+%
+% FIGURES
+%
+
+\def\@makecaption{\csname @makecaption@\@captype\endcsname}%
+%
+\def\@floatboxreset{%
+ \fontsize{10}{13}%
+ \usefont\encodingdefault\rmdefault\mddefault\updefault
+ }%
+%
+\setlength\abovecaptionskip{5\p@}%
+\setlength\belowcaptionskip{\z@}%
+%
+\long\def\@makecaption@figure#1#2{%
+ \vskip\abovecaptionskip
+ \nointerlineskip
+ {\fontsize{10}{13}{\bfseries#1}\quad{\mdseries#2}\par}%
+ \vskip\belowcaptionskip
+ }%
+
+%
+% FIGURE CAPTION
+%
+
+\newcounter{subfigure}[figure]
+\renewcommand\thesubfigure{\alph{subfigure}}%
+\renewcommand\p@subfigure{\thefigure}%
+\newcommand\subcaption[1]{%
+ \refstepcounter{subfigure}%
+ \leavevmode{\bfseries(\thesubfigure)}\space
+ #1\vrule \@height\z@ \@depth8\p@ \@width\z@
+ }%
+
+%
+% TABLES
+%
+
+\long\def\@makecaption@table#1#2{%
+ \vskip\belowcaptionskip
+ \nointerlineskip
+ {\fontsize{10}{13}{\bfseries#1}\quad{\mdseries#2}\par}%
+ \vskip\abovecaptionskip
+ }%
+
+%
+% BIBLIOGRAPHY
+%
+
+\renewenvironment{thebibliography@chapter}[1]{%
+  \chapter*{References}
+  \fontsize{10}{13}%
+  \usefont\encodingdefault\rmdefault\mddefault\updefault
+  \list{\@biblabel{\arabic{enumiv}}}{%
+    \settowidth\labelwidth{\@biblabel{#1}}%
+    \setlength\itemsep{\@pageskip{4}}%
+    \setlength\labelsep{4\p@}%
+    \leftmargin\labelwidth
+    \advance\leftmargin\labelsep
+    \advance\leftmargin\bibindent
+    \itemindent -\bibindent
+    \listparindent \itemindent
+    \parsep \z@
+    \usecounter{enumiv}%
+    \let\p@enumiv\@empty
+    \renewcommand{\theenumiv}{\arabic{enumiv}}}%
+    \renewcommand{\newblock}{\par}%
+    \renewcommand{\newblock}{\space}%
+}{%
+  \def\@noitemerr{\@latex@warning{Empty `thebibliography' environment}}% 
+  \endlist
+}%
+%
+\renewcommand*\@biblabel[1]{\hfill#1.}%
+
+%
+% INDEX
+%
+\renewenvironment{theindex}{
+ \if@openright
+  \clearopenright
+ \else
+  \clearpage
+ \fi
+ \if@twocolumn
+  \@restonecolfalse
+ \else
+  \@restonecoltrue
+ \fi
+ \columnseprule \z@
+ \columnsep 35\p@
+ \pagestyle{normalheadings} 
+ \@mkboth{\indexname}{\indexname}%
+ \addcontentsline{toc}{chapter}{\protect\nonumberline\indexname}%
+ \twocolumn[\@makeschapterhead{\indexname}]
+ \thispagestyle{null}\parindent\z@
+ \parskip\z@ \@plus .3\p@\relax
+ \let\item\idxitem
+ \@setfontsize\scriptsize\@viiipt{9.5}%   %%% TINY index
+}
+
+\newcommand{\idxitem}{\par \hangindent 1em}
+\renewcommand\subitem{\par\hangindent 1.5em \hspace*{0.5em}}
+\renewcommand\subsubitem{\par\hangindent 2em \hspace*{1em}}
+
+\endinput
+%%
+%% End of file `Comp7X9.clo'.

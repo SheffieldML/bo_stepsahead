@@ -1,0 +1,14 @@
+% This is smallcaptions.sty as of 4/3/90w%
+% Written by Brian Lovell.
+% Produces indented captions with a small font.
+% Usage: documentstyle[12pt,smallcaptions]{article}
+
+\long\def\@caption#1[#2]#3{\par\addcontentsline{\csname
+  ext@#1\endcsname}{#1}{\protect\numberline{\csname 
+  the#1\endcsname}{\ignorespaces #2}}\begingroup
+    \@parboxrestore
+    \small
+    \centerline{\parbox{0.9999\textwidth}
+    {\@makecaption{\csname fnum@#1\endcsname}{\ignorespaces #3}}}
+    \par
+  \endgroup}
