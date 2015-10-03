@@ -1,1 +1,0 @@
-../bib/pdf_abbrvnat.bst
