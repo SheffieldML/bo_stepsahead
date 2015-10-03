@@ -1,0 +1,3428 @@
+#LyX file created by tex2lyx 1.6.4
+\lyxformat 264
+\begin_document
+\begin_header
+\textclass article
+\language english
+\inputencoding auto
+\font_roman default
+\font_sans default
+\font_typewriter default
+\font_default_family default
+\font_sc false
+\font_osf false
+\font_sf_scale 100
+\font_tt_scale 100
+\graphics default
+\paperfontsize default
+\spacing single
+\papersize default
+\use_geometry false
+\use_amsmath 1
+\use_esint 1
+\cite_engine basic
+\use_bibtopic false
+\paperorientation portrait
+\secnumdepth 3
+\tocdepth 3
+\paragraph_separation indent
+\defskip medskip
+\quotes_language english
+\papercolumns 1
+\papersides 1
+\paperpagestyle default
+\tracking_changes false
+\output_changes false
+\end_header
+
+\begin_body
+
+\begin_layout Standard
+
+
+\begin_inset ERT
+status collapsed
+
+\begin_layout Standard
+
+
+\backslash
+global
+\end_layout
+
+\end_inset
+
+
+\begin_inset ERT
+status collapsed
+
+\begin_layout Standard
+
+
+\backslash
+long
+\end_layout
+
+\end_inset
+
+
+\begin_inset FormulaMacro
+\def\newsection #1#2{\section{#1} \begin{frame}
+  \frametitle{Outline}
+  \tableofcontents[currentsection,hideallsubsections] 
+\end{frame}
+\input{#2}}
+\end_inset
+
+ 
+\begin_inset ERT
+status collapsed
+
+\begin_layout Standard
+
+
+\backslash
+global
+\end_layout
+
+\end_inset
+
+
+\begin_inset ERT
+status collapsed
+
+\begin_layout Standard
+
+
+\backslash
+long
+\end_layout
+
+\end_inset
+
+
+\begin_inset FormulaMacro
+\def\newsubsection #1#2{\subsection{#1} 
+\input{#2}}
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+
+
+\begin_inset ERT
+status collapsed
+
+\begin_layout Standard
+
+
+\backslash
+global
+\end_layout
+
+\end_inset
+
+
+\begin_inset ERT
+status collapsed
+
+\begin_layout Standard
+
+
+\backslash
+long
+\end_layout
+
+\end_inset
+
+
+\begin_inset FormulaMacro
+\def\todo #1{\textbf{#1}}
+\end_inset
+
+ 
+\begin_inset ERT
+status collapsed
+
+\begin_layout Standard
+
+
+\backslash
+global
+\end_layout
+
+\end_inset
+
+
+\begin_inset ERT
+status collapsed
+
+\begin_layout Standard
+
+
+\backslash
+long
+\end_layout
+
+\end_inset
+
+
+\begin_inset FormulaMacro
+\def\twonorm #1{\left\Vert #1 \right\Vert}
+\end_inset
+
+ 
+\begin_inset ERT
+status collapsed
+
+\begin_layout Standard
+
+
+\backslash
+global
+\end_layout
+
+\end_inset
+
+
+\begin_inset ERT
+status collapsed
+
+\begin_layout Standard
+
+
+\backslash
+long
+\end_layout
+
+\end_inset
+
+
+\begin_inset FormulaMacro
+\def\norm #1#2{\left\Vert #1 \right\Vert_{#2}}
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+
+
+\begin_inset ERT
+status collapsed
+
+\begin_layout Standard
+
+
+\backslash
+global
+\end_layout
+
+\end_inset
+
+
+\begin_inset ERT
+status collapsed
+
+\begin_layout Standard
+
+
+\backslash
+long
+\end_layout
+
+\end_inset
+
+
+\begin_inset FormulaMacro
+\def\dataStd {\sigma}
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+
+
+\begin_inset ERT
+status collapsed
+
+\begin_layout Standard
+
+
+\backslash
+global
+\end_layout
+
+\end_inset
+
+
+\begin_inset ERT
+status collapsed
+
+\begin_layout Standard
+
+
+\backslash
+long
+\end_layout
+
+\end_inset
+
+
+\begin_inset FormulaMacro
+\def\dataMatrix {\mathbf{Y}}
+\end_inset
+
+ 
+\begin_inset ERT
+status collapsed
+
+\begin_layout Standard
+
+
+\backslash
+global
+\end_layout
+
+\end_inset
+
+
+\begin_inset ERT
+status collapsed
+
+\begin_layout Standard
+
+
+\backslash
+long
+\end_layout
+
+\end_inset
+
+
+\begin_inset FormulaMacro
+\def\dataVector {\mathbf{y}}
+\end_inset
+
+ 
+\begin_inset ERT
+status collapsed
+
+\begin_layout Standard
+
+
+\backslash
+global
+\end_layout
+
+\end_inset
+
+
+\begin_inset ERT
+status collapsed
+
+\begin_layout Standard
+
+
+\backslash
+long
+\end_layout
+
+\end_inset
+
+
+\begin_inset FormulaMacro
+\def\dataScalar {y}
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+
+
+\begin_inset ERT
+status collapsed
+
+\begin_layout Standard
+
+
+\backslash
+global
+\end_layout
+
+\end_inset
+
+
+\begin_inset ERT
+status collapsed
+
+\begin_layout Standard
+
+
+\backslash
+long
+\end_layout
+
+\end_inset
+
+
+\begin_inset FormulaMacro
+\def\switchMatrix {\mathbf{S}}
+\end_inset
+
+ 
+\begin_inset ERT
+status collapsed
+
+\begin_layout Standard
+
+
+\backslash
+global
+\end_layout
+
+\end_inset
+
+
+\begin_inset ERT
+status collapsed
+
+\begin_layout Standard
+
+
+\backslash
+long
+\end_layout
+
+\end_inset
+
+
+\begin_inset FormulaMacro
+\def\switchVector {\mathbf{s}}
+\end_inset
+
+ 
+\begin_inset ERT
+status collapsed
+
+\begin_layout Standard
+
+
+\backslash
+global
+\end_layout
+
+\end_inset
+
+
+\begin_inset ERT
+status collapsed
+
+\begin_layout Standard
+
+
+\backslash
+long
+\end_layout
+
+\end_inset
+
+
+\begin_inset FormulaMacro
+\def\switchScalar {s}
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+
+
+\begin_inset ERT
+status collapsed
+
+\begin_layout Standard
+
+
+\backslash
+global
+\end_layout
+
+\end_inset
+
+
+\begin_inset ERT
+status collapsed
+
+\begin_layout Standard
+
+
+\backslash
+long
+\end_layout
+
+\end_inset
+
+
+\begin_inset FormulaMacro
+\def\cdataMatrix {\hat{\dataMatrix}}
+\end_inset
+
+ 
+\begin_inset ERT
+status collapsed
+
+\begin_layout Standard
+
+
+\backslash
+global
+\end_layout
+
+\end_inset
+
+
+\begin_inset ERT
+status collapsed
+
+\begin_layout Standard
+
+
+\backslash
+long
+\end_layout
+
+\end_inset
+
+
+\begin_inset FormulaMacro
+\def\cdataVector {\hat{\dataVector}}
+\end_inset
+
+ 
+\begin_inset ERT
+status collapsed
+
+\begin_layout Standard
+
+
+\backslash
+global
+\end_layout
+
+\end_inset
+
+
+\begin_inset ERT
+status collapsed
+
+\begin_layout Standard
+
+
+\backslash
+long
+\end_layout
+
+\end_inset
+
+
+\begin_inset FormulaMacro
+\def\cdataScalar {\hat{\dataScalar}}
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+
+
+\begin_inset ERT
+status collapsed
+
+\begin_layout Standard
+
+
+\backslash
+global
+\end_layout
+
+\end_inset
+
+
+\begin_inset ERT
+status collapsed
+
+\begin_layout Standard
+
+
+\backslash
+long
+\end_layout
+
+\end_inset
+
+
+\begin_inset FormulaMacro
+\def\switchMatrix {\mathbf{S}}
+\end_inset
+
+ 
+\begin_inset ERT
+status collapsed
+
+\begin_layout Standard
+
+
+\backslash
+global
+\end_layout
+
+\end_inset
+
+
+\begin_inset ERT
+status collapsed
+
+\begin_layout Standard
+
+
+\backslash
+long
+\end_layout
+
+\end_inset
+
+
+\begin_inset FormulaMacro
+\def\switchVector {\mathbf{s}}
+\end_inset
+
+ 
+\begin_inset ERT
+status collapsed
+
+\begin_layout Standard
+
+
+\backslash
+global
+\end_layout
+
+\end_inset
+
+
+\begin_inset ERT
+status collapsed
+
+\begin_layout Standard
+
+
+\backslash
+long
+\end_layout
+
+\end_inset
+
+
+\begin_inset FormulaMacro
+\def\switchScalar {s}
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+
+
+\begin_inset ERT
+status collapsed
+
+\begin_layout Standard
+
+
+\backslash
+global
+\end_layout
+
+\end_inset
+
+
+\begin_inset ERT
+status collapsed
+
+\begin_layout Standard
+
+
+\backslash
+long
+\end_layout
+
+\end_inset
+
+
+\begin_inset FormulaMacro
+\def\latentMatrix {\mathbf{X}}
+\end_inset
+
+ 
+\begin_inset ERT
+status collapsed
+
+\begin_layout Standard
+
+
+\backslash
+global
+\end_layout
+
+\end_inset
+
+
+\begin_inset ERT
+status collapsed
+
+\begin_layout Standard
+
+
+\backslash
+long
+\end_layout
+
+\end_inset
+
+
+\begin_inset FormulaMacro
+\def\latentVector {\mathbf{x}}
+\end_inset
+
+ 
+\begin_inset ERT
+status collapsed
+
+\begin_layout Standard
+
+
+\backslash
+global
+\end_layout
+
+\end_inset
+
+
+\begin_inset ERT
+status collapsed
+
+\begin_layout Standard
+
+
+\backslash
+long
+\end_layout
+
+\end_inset
+
+
+\begin_inset FormulaMacro
+\def\latentScalar {x}
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+
+
+\begin_inset ERT
+status collapsed
+
+\begin_layout Standard
+
+
+\backslash
+global
+\end_layout
+
+\end_inset
+
+
+\begin_inset ERT
+status collapsed
+
+\begin_layout Standard
+
+
+\backslash
+long
+\end_layout
+
+\end_inset
+
+
+\begin_inset FormulaMacro
+\def\noiseMatrix {\boldsymbol{\Epsilon}}
+\end_inset
+
+ 
+\begin_inset ERT
+status collapsed
+
+\begin_layout Standard
+
+
+\backslash
+global
+\end_layout
+
+\end_inset
+
+
+\begin_inset ERT
+status collapsed
+
+\begin_layout Standard
+
+
+\backslash
+long
+\end_layout
+
+\end_inset
+
+
+\begin_inset FormulaMacro
+\def\noiseVector {\boldsymbol{\epsilon}}
+\end_inset
+
+ 
+\begin_inset ERT
+status collapsed
+
+\begin_layout Standard
+
+
+\backslash
+global
+\end_layout
+
+\end_inset
+
+
+\begin_inset ERT
+status collapsed
+
+\begin_layout Standard
+
+
+\backslash
+long
+\end_layout
+
+\end_inset
+
+
+\begin_inset FormulaMacro
+\def\noiseScalar {\epsilon}
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+
+
+\begin_inset ERT
+status collapsed
+
+\begin_layout Standard
+
+
+\backslash
+global
+\end_layout
+
+\end_inset
+
+
+\begin_inset ERT
+status collapsed
+
+\begin_layout Standard
+
+
+\backslash
+long
+\end_layout
+
+\end_inset
+
+
+\begin_inset FormulaMacro
+\def\fantasyMatrix {\mathbf{Z}}
+\end_inset
+
+ 
+\begin_inset ERT
+status collapsed
+
+\begin_layout Standard
+
+
+\backslash
+global
+\end_layout
+
+\end_inset
+
+
+\begin_inset ERT
+status collapsed
+
+\begin_layout Standard
+
+
+\backslash
+long
+\end_layout
+
+\end_inset
+
+
+\begin_inset FormulaMacro
+\def\fantasyVector {\mathbf{z}}
+\end_inset
+
+ 
+\begin_inset ERT
+status collapsed
+
+\begin_layout Standard
+
+
+\backslash
+global
+\end_layout
+
+\end_inset
+
+
+\begin_inset ERT
+status collapsed
+
+\begin_layout Standard
+
+
+\backslash
+long
+\end_layout
+
+\end_inset
+
+
+\begin_inset FormulaMacro
+\def\fantasyScalar {z}
+\end_inset
+
+ 
+\begin_inset ERT
+status collapsed
+
+\begin_layout Standard
+
+
+\backslash
+global
+\end_layout
+
+\end_inset
+
+
+\begin_inset ERT
+status collapsed
+
+\begin_layout Standard
+
+
+\backslash
+long
+\end_layout
+
+\end_inset
+
+
+\begin_inset FormulaMacro
+\def\fantasyDim {r}
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+
+
+\begin_inset ERT
+status collapsed
+
+\begin_layout Standard
+
+
+\backslash
+global
+\end_layout
+
+\end_inset
+
+
+\begin_inset ERT
+status collapsed
+
+\begin_layout Standard
+
+
+\backslash
+long
+\end_layout
+
+\end_inset
+
+
+\begin_inset FormulaMacro
+\def\kernelMatrix {\mathbf{K}}
+\end_inset
+
+ 
+\begin_inset ERT
+status collapsed
+
+\begin_layout Standard
+
+
+\backslash
+global
+\end_layout
+
+\end_inset
+
+
+\begin_inset ERT
+status collapsed
+
+\begin_layout Standard
+
+
+\backslash
+long
+\end_layout
+
+\end_inset
+
+
+\begin_inset FormulaMacro
+\def\kernelVector {\mathbf{k}}
+\end_inset
+
+ 
+\begin_inset ERT
+status collapsed
+
+\begin_layout Standard
+
+
+\backslash
+global
+\end_layout
+
+\end_inset
+
+
+\begin_inset ERT
+status collapsed
+
+\begin_layout Standard
+
+
+\backslash
+long
+\end_layout
+
+\end_inset
+
+
+\begin_inset FormulaMacro
+\def\kernelScalar {k}
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+
+
+\begin_inset ERT
+status collapsed
+
+\begin_layout Standard
+
+
+\backslash
+global
+\end_layout
+
+\end_inset
+
+
+\begin_inset ERT
+status collapsed
+
+\begin_layout Standard
+
+
+\backslash
+long
+\end_layout
+
+\end_inset
+
+
+\begin_inset FormulaMacro
+\def\lengthScale {\ell}
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+
+
+\begin_inset ERT
+status collapsed
+
+\begin_layout Standard
+
+
+\backslash
+global
+\end_layout
+
+\end_inset
+
+
+\begin_inset ERT
+status collapsed
+
+\begin_layout Standard
+
+
+\backslash
+long
+\end_layout
+
+\end_inset
+
+
+\begin_inset FormulaMacro
+\def\covarianceMatrix {\mathbf{C}}
+\end_inset
+
+ 
+\begin_inset ERT
+status collapsed
+
+\begin_layout Standard
+
+
+\backslash
+global
+\end_layout
+
+\end_inset
+
+
+\begin_inset ERT
+status collapsed
+
+\begin_layout Standard
+
+
+\backslash
+long
+\end_layout
+
+\end_inset
+
+
+\begin_inset FormulaMacro
+\def\covarianceVector {\mathbf{c}}
+\end_inset
+
+ 
+\begin_inset ERT
+status collapsed
+
+\begin_layout Standard
+
+
+\backslash
+global
+\end_layout
+
+\end_inset
+
+
+\begin_inset ERT
+status collapsed
+
+\begin_layout Standard
+
+
+\backslash
+long
+\end_layout
+
+\end_inset
+
+
+\begin_inset FormulaMacro
+\def\covarianceScalar {c}
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+
+
+\begin_inset ERT
+status collapsed
+
+\begin_layout Standard
+
+
+\backslash
+global
+\end_layout
+
+\end_inset
+
+
+\begin_inset ERT
+status collapsed
+
+\begin_layout Standard
+
+
+\backslash
+long
+\end_layout
+
+\end_inset
+
+
+\begin_inset FormulaMacro
+\def\meanMatrix {\mathbf{M}}
+\end_inset
+
+ 
+\begin_inset ERT
+status collapsed
+
+\begin_layout Standard
+
+
+\backslash
+global
+\end_layout
+
+\end_inset
+
+
+\begin_inset ERT
+status collapsed
+
+\begin_layout Standard
+
+
+\backslash
+long
+\end_layout
+
+\end_inset
+
+
+\begin_inset FormulaMacro
+\def\meanVector {\boldsymbol{\mu}}
+\end_inset
+
+ 
+\begin_inset ERT
+status collapsed
+
+\begin_layout Standard
+
+
+\backslash
+global
+\end_layout
+
+\end_inset
+
+
+\begin_inset ERT
+status collapsed
+
+\begin_layout Standard
+
+
+\backslash
+long
+\end_layout
+
+\end_inset
+
+
+\begin_inset FormulaMacro
+\def\meanScalar {\mu}
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+
+
+\begin_inset ERT
+status collapsed
+
+\begin_layout Standard
+
+
+\backslash
+global
+\end_layout
+
+\end_inset
+
+
+\begin_inset ERT
+status collapsed
+
+\begin_layout Standard
+
+
+\backslash
+long
+\end_layout
+
+\end_inset
+
+
+\begin_inset FormulaMacro
+\def\eigenvectorMatrix {\mathbf{U}}
+\end_inset
+
+ 
+\begin_inset ERT
+status collapsed
+
+\begin_layout Standard
+
+
+\backslash
+global
+\end_layout
+
+\end_inset
+
+
+\begin_inset ERT
+status collapsed
+
+\begin_layout Standard
+
+
+\backslash
+long
+\end_layout
+
+\end_inset
+
+
+\begin_inset FormulaMacro
+\def\eigenvector {\mathbf{u}}
+\end_inset
+
+ 
+\begin_inset ERT
+status collapsed
+
+\begin_layout Standard
+
+
+\backslash
+global
+\end_layout
+
+\end_inset
+
+
+\begin_inset ERT
+status collapsed
+
+\begin_layout Standard
+
+
+\backslash
+long
+\end_layout
+
+\end_inset
+
+
+\begin_inset FormulaMacro
+\def\eigenvectorScalar {u}
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+
+
+\begin_inset ERT
+status collapsed
+
+\begin_layout Standard
+
+
+\backslash
+global
+\end_layout
+
+\end_inset
+
+
+\begin_inset ERT
+status collapsed
+
+\begin_layout Standard
+
+
+\backslash
+long
+\end_layout
+
+\end_inset
+
+
+\begin_inset FormulaMacro
+\def\eigenvalueMatrix {\boldsymbol{\Lambda}}
+\end_inset
+
+ 
+\begin_inset ERT
+status collapsed
+
+\begin_layout Standard
+
+
+\backslash
+global
+\end_layout
+
+\end_inset
+
+
+\begin_inset ERT
+status collapsed
+
+\begin_layout Standard
+
+
+\backslash
+long
+\end_layout
+
+\end_inset
+
+
+\begin_inset FormulaMacro
+\def\eigenvalueVector {\boldsymbol{\lambda}}
+\end_inset
+
+ 
+\begin_inset ERT
+status collapsed
+
+\begin_layout Standard
+
+
+\backslash
+global
+\end_layout
+
+\end_inset
+
+
+\begin_inset ERT
+status collapsed
+
+\begin_layout Standard
+
+
+\backslash
+long
+\end_layout
+
+\end_inset
+
+
+\begin_inset FormulaMacro
+\def\eigenvalue {\lambda}
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+
+
+\begin_inset ERT
+status collapsed
+
+\begin_layout Standard
+
+
+\backslash
+global
+\end_layout
+
+\end_inset
+
+
+\begin_inset ERT
+status collapsed
+
+\begin_layout Standard
+
+
+\backslash
+long
+\end_layout
+
+\end_inset
+
+
+\begin_inset FormulaMacro
+\def\eigenvectwoMatrix {\mathbf{V}}
+\end_inset
+
+ 
+\begin_inset ERT
+status collapsed
+
+\begin_layout Standard
+
+
+\backslash
+global
+\end_layout
+
+\end_inset
+
+
+\begin_inset ERT
+status collapsed
+
+\begin_layout Standard
+
+
+\backslash
+long
+\end_layout
+
+\end_inset
+
+
+\begin_inset FormulaMacro
+\def\eigenvectwo {\mathbf{v}}
+\end_inset
+
+ 
+\begin_inset ERT
+status collapsed
+
+\begin_layout Standard
+
+
+\backslash
+global
+\end_layout
+
+\end_inset
+
+
+\begin_inset ERT
+status collapsed
+
+\begin_layout Standard
+
+
+\backslash
+long
+\end_layout
+
+\end_inset
+
+
+\begin_inset FormulaMacro
+\def\eigenvectwoScalar {v}
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+
+
+\begin_inset ERT
+status collapsed
+
+\begin_layout Standard
+
+
+\backslash
+global
+\end_layout
+
+\end_inset
+
+
+\begin_inset ERT
+status collapsed
+
+\begin_layout Standard
+
+
+\backslash
+long
+\end_layout
+
+\end_inset
+
+
+\begin_inset FormulaMacro
+\def\eigenvaltwoMatrix {\mathbf{L}}
+\end_inset
+
+ 
+\begin_inset ERT
+status collapsed
+
+\begin_layout Standard
+
+
+\backslash
+global
+\end_layout
+
+\end_inset
+
+
+\begin_inset ERT
+status collapsed
+
+\begin_layout Standard
+
+
+\backslash
+long
+\end_layout
+
+\end_inset
+
+
+\begin_inset FormulaMacro
+\def\eigenvaltwoVector {\mathbf{l}}
+\end_inset
+
+ 
+\begin_inset ERT
+status collapsed
+
+\begin_layout Standard
+
+
+\backslash
+global
+\end_layout
+
+\end_inset
+
+
+\begin_inset ERT
+status collapsed
+
+\begin_layout Standard
+
+
+\backslash
+long
+\end_layout
+
+\end_inset
+
+
+\begin_inset FormulaMacro
+\def\eigenvaltwo {\ell}
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+
+
+\begin_inset ERT
+status collapsed
+
+\begin_layout Standard
+
+
+\backslash
+global
+\end_layout
+
+\end_inset
+
+
+\begin_inset ERT
+status collapsed
+
+\begin_layout Standard
+
+
+\backslash
+long
+\end_layout
+
+\end_inset
+
+
+\begin_inset FormulaMacro
+\def\laplacianMatrix {\mathbf{L}}
+\end_inset
+
+ 
+\begin_inset ERT
+status collapsed
+
+\begin_layout Standard
+
+
+\backslash
+global
+\end_layout
+
+\end_inset
+
+
+\begin_inset ERT
+status collapsed
+
+\begin_layout Standard
+
+
+\backslash
+long
+\end_layout
+
+\end_inset
+
+
+\begin_inset FormulaMacro
+\def\laplacianVector {\mathbf{\ell}}
+\end_inset
+
+ 
+\begin_inset ERT
+status collapsed
+
+\begin_layout Standard
+
+
+\backslash
+global
+\end_layout
+
+\end_inset
+
+
+\begin_inset ERT
+status collapsed
+
+\begin_layout Standard
+
+
+\backslash
+long
+\end_layout
+
+\end_inset
+
+
+\begin_inset FormulaMacro
+\def\laplacianScalar {\ell}
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+
+
+\begin_inset ERT
+status collapsed
+
+\begin_layout Standard
+
+
+\backslash
+global
+\end_layout
+
+\end_inset
+
+
+\begin_inset ERT
+status collapsed
+
+\begin_layout Standard
+
+
+\backslash
+long
+\end_layout
+
+\end_inset
+
+
+\begin_inset FormulaMacro
+\def\mappingMatrix {\mathbf{W}}
+\end_inset
+
+ 
+\begin_inset ERT
+status collapsed
+
+\begin_layout Standard
+
+
+\backslash
+global
+\end_layout
+
+\end_inset
+
+
+\begin_inset ERT
+status collapsed
+
+\begin_layout Standard
+
+
+\backslash
+long
+\end_layout
+
+\end_inset
+
+
+\begin_inset FormulaMacro
+\def\mappingVector {\mathbf{w}}
+\end_inset
+
+ 
+\begin_inset ERT
+status collapsed
+
+\begin_layout Standard
+
+
+\backslash
+global
+\end_layout
+
+\end_inset
+
+
+\begin_inset ERT
+status collapsed
+
+\begin_layout Standard
+
+
+\backslash
+long
+\end_layout
+
+\end_inset
+
+
+\begin_inset FormulaMacro
+\def\mappingScalar {w}
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+
+
+\begin_inset ERT
+status collapsed
+
+\begin_layout Standard
+
+
+\backslash
+global
+\end_layout
+
+\end_inset
+
+
+\begin_inset ERT
+status collapsed
+
+\begin_layout Standard
+
+
+\backslash
+long
+\end_layout
+
+\end_inset
+
+
+\begin_inset FormulaMacro
+\def\paramVector {\boldsymbol{\theta}}
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+
+
+\begin_inset ERT
+status collapsed
+
+\begin_layout Standard
+
+
+\backslash
+global
+\end_layout
+
+\end_inset
+
+
+\begin_inset ERT
+status collapsed
+
+\begin_layout Standard
+
+
+\backslash
+long
+\end_layout
+
+\end_inset
+
+
+\begin_inset FormulaMacro
+\def\latentDistanceMatrix {\boldsymbol{\Delta}}
+\end_inset
+
+ 
+\begin_inset ERT
+status collapsed
+
+\begin_layout Standard
+
+
+\backslash
+global
+\end_layout
+
+\end_inset
+
+
+\begin_inset ERT
+status collapsed
+
+\begin_layout Standard
+
+
+\backslash
+long
+\end_layout
+
+\end_inset
+
+
+\begin_inset FormulaMacro
+\def\latentDistanceVector {\boldsymbol{\delta}}
+\end_inset
+
+ 
+\begin_inset ERT
+status collapsed
+
+\begin_layout Standard
+
+
+\backslash
+global
+\end_layout
+
+\end_inset
+
+
+\begin_inset ERT
+status collapsed
+
+\begin_layout Standard
+
+
+\backslash
+long
+\end_layout
+
+\end_inset
+
+
+\begin_inset FormulaMacro
+\def\latentDistanceScalar {\delta}
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+
+
+\begin_inset ERT
+status collapsed
+
+\begin_layout Standard
+
+
+\backslash
+global
+\end_layout
+
+\end_inset
+
+
+\begin_inset ERT
+status collapsed
+
+\begin_layout Standard
+
+
+\backslash
+long
+\end_layout
+
+\end_inset
+
+
+\begin_inset FormulaMacro
+\def\springMatrix {\boldsymbol{\mathcal{K}}}
+\end_inset
+
+ 
+\begin_inset ERT
+status collapsed
+
+\begin_layout Standard
+
+
+\backslash
+global
+\end_layout
+
+\end_inset
+
+
+\begin_inset ERT
+status collapsed
+
+\begin_layout Standard
+
+
+\backslash
+long
+\end_layout
+
+\end_inset
+
+
+\begin_inset FormulaMacro
+\def\springVector {\boldsymbol{\kappa}}
+\end_inset
+
+ 
+\begin_inset ERT
+status collapsed
+
+\begin_layout Standard
+
+
+\backslash
+global
+\end_layout
+
+\end_inset
+
+
+\begin_inset ERT
+status collapsed
+
+\begin_layout Standard
+
+
+\backslash
+long
+\end_layout
+
+\end_inset
+
+
+\begin_inset FormulaMacro
+\def\springScalar {\kappa}
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+
+
+\begin_inset ERT
+status collapsed
+
+\begin_layout Standard
+
+
+\backslash
+global
+\end_layout
+
+\end_inset
+
+
+\begin_inset ERT
+status collapsed
+
+\begin_layout Standard
+
+
+\backslash
+long
+\end_layout
+
+\end_inset
+
+
+\begin_inset FormulaMacro
+\def\distanceMatrix {\mathbf{D}}
+\end_inset
+
+ 
+\begin_inset ERT
+status collapsed
+
+\begin_layout Standard
+
+
+\backslash
+global
+\end_layout
+
+\end_inset
+
+
+\begin_inset ERT
+status collapsed
+
+\begin_layout Standard
+
+
+\backslash
+long
+\end_layout
+
+\end_inset
+
+
+\begin_inset FormulaMacro
+\def\distanceVector {\mathbf{d}}
+\end_inset
+
+ 
+\begin_inset ERT
+status collapsed
+
+\begin_layout Standard
+
+
+\backslash
+global
+\end_layout
+
+\end_inset
+
+
+\begin_inset ERT
+status collapsed
+
+\begin_layout Standard
+
+
+\backslash
+long
+\end_layout
+
+\end_inset
+
+
+\begin_inset FormulaMacro
+\def\distanceScalar {d}
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+
+
+\begin_inset ERT
+status collapsed
+
+\begin_layout Standard
+
+
+\backslash
+global
+\end_layout
+
+\end_inset
+
+
+\begin_inset ERT
+status collapsed
+
+\begin_layout Standard
+
+
+\backslash
+long
+\end_layout
+
+\end_inset
+
+
+\begin_inset FormulaMacro
+\def\centeringMatrix {\mathbf{H}}
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+
+
+\begin_inset ERT
+status collapsed
+
+\begin_layout Standard
+
+
+\backslash
+global
+\end_layout
+
+\end_inset
+
+
+\begin_inset ERT
+status collapsed
+
+\begin_layout Standard
+
+
+\backslash
+long
+\end_layout
+
+\end_inset
+
+
+\begin_inset FormulaMacro
+\def\eye {\mathbf{I}}
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+
+
+\begin_inset ERT
+status collapsed
+
+\begin_layout Standard
+
+
+\backslash
+global
+\end_layout
+
+\end_inset
+
+
+\begin_inset ERT
+status collapsed
+
+\begin_layout Standard
+
+
+\backslash
+long
+\end_layout
+
+\end_inset
+
+
+\begin_inset FormulaMacro
+\def\onesVector {\mathbf{1}}
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+
+
+\begin_inset ERT
+status collapsed
+
+\begin_layout Standard
+
+
+\backslash
+global
+\end_layout
+
+\end_inset
+
+
+\begin_inset ERT
+status collapsed
+
+\begin_layout Standard
+
+
+\backslash
+long
+\end_layout
+
+\end_inset
+
+
+\begin_inset FormulaMacro
+\def\zerosVector {\mathbf{0}}
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+
+
+\begin_inset ERT
+status collapsed
+
+\begin_layout Standard
+
+
+\backslash
+global
+\end_layout
+
+\end_inset
+
+
+\begin_inset ERT
+status collapsed
+
+\begin_layout Standard
+
+
+\backslash
+long
+\end_layout
+
+\end_inset
+
+
+\begin_inset FormulaMacro
+\def\numData {n}
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+
+
+\begin_inset ERT
+status collapsed
+
+\begin_layout Standard
+
+
+\backslash
+global
+\end_layout
+
+\end_inset
+
+
+\begin_inset ERT
+status collapsed
+
+\begin_layout Standard
+
+
+\backslash
+long
+\end_layout
+
+\end_inset
+
+
+\begin_inset FormulaMacro
+\def\numComponents {m}
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+
+
+\begin_inset ERT
+status collapsed
+
+\begin_layout Standard
+
+
+\backslash
+global
+\end_layout
+
+\end_inset
+
+
+\begin_inset ERT
+status collapsed
+
+\begin_layout Standard
+
+
+\backslash
+long
+\end_layout
+
+\end_inset
+
+
+\begin_inset FormulaMacro
+\def\numHidden {h}
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+
+
+\begin_inset ERT
+status collapsed
+
+\begin_layout Standard
+
+
+\backslash
+global
+\end_layout
+
+\end_inset
+
+
+\begin_inset ERT
+status collapsed
+
+\begin_layout Standard
+
+
+\backslash
+long
+\end_layout
+
+\end_inset
+
+
+\begin_inset FormulaMacro
+\def\rbfWidth {\ell}
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+
+
+\begin_inset ERT
+status collapsed
+
+\begin_layout Standard
+
+
+\backslash
+global
+\end_layout
+
+\end_inset
+
+
+\begin_inset ERT
+status collapsed
+
+\begin_layout Standard
+
+
+\backslash
+long
+\end_layout
+
+\end_inset
+
+
+\begin_inset FormulaMacro
+\def\dataDim {p}
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+
+
+\begin_inset ERT
+status collapsed
+
+\begin_layout Standard
+
+
+\backslash
+global
+\end_layout
+
+\end_inset
+
+
+\begin_inset ERT
+status collapsed
+
+\begin_layout Standard
+
+
+\backslash
+long
+\end_layout
+
+\end_inset
+
+
+\begin_inset FormulaMacro
+\def\latentDim {q}
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+
+
+\begin_inset ERT
+status collapsed
+
+\begin_layout Standard
+
+
+\backslash
+global
+\end_layout
+
+\end_inset
+
+
+\begin_inset ERT
+status collapsed
+
+\begin_layout Standard
+
+
+\backslash
+long
+\end_layout
+
+\end_inset
+
+
+\begin_inset FormulaMacro
+\def\sampleCovMatrix {\mathbf{S}}
+\end_inset
+
+ 
+\begin_inset ERT
+status collapsed
+
+\begin_layout Standard
+
+
+\backslash
+global
+\end_layout
+
+\end_inset
+
+
+\begin_inset ERT
+status collapsed
+
+\begin_layout Standard
+
+
+\backslash
+long
+\end_layout
+
+\end_inset
+
+
+\begin_inset FormulaMacro
+\def\sampleCovVector {\mathbf{s}}
+\end_inset
+
+ 
+\begin_inset ERT
+status collapsed
+
+\begin_layout Standard
+
+
+\backslash
+global
+\end_layout
+
+\end_inset
+
+
+\begin_inset ERT
+status collapsed
+
+\begin_layout Standard
+
+
+\backslash
+long
+\end_layout
+
+\end_inset
+
+
+\begin_inset FormulaMacro
+\def\sampleCovScalar {\mathbf{s}}
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+
+
+\begin_inset ERT
+status collapsed
+
+\begin_layout Standard
+
+
+\backslash
+global
+\end_layout
+
+\end_inset
+
+
+\begin_inset ERT
+status collapsed
+
+\begin_layout Standard
+
+
+\backslash
+long
+\end_layout
+
+\end_inset
+
+
+\begin_inset FormulaMacro
+\def\rotationMatrix {\mathbf{R}}
+\end_inset
+
+ 
+\begin_inset ERT
+status collapsed
+
+\begin_layout Standard
+
+
+\backslash
+global
+\end_layout
+
+\end_inset
+
+
+\begin_inset ERT
+status collapsed
+
+\begin_layout Standard
+
+
+\backslash
+long
+\end_layout
+
+\end_inset
+
+
+\begin_inset FormulaMacro
+\def\rotationVector {\mathbf{r}}
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+
+
+\begin_inset ERT
+status collapsed
+
+\begin_layout Standard
+
+
+\backslash
+global
+\end_layout
+
+\end_inset
+
+
+\begin_inset ERT
+status collapsed
+
+\begin_layout Standard
+
+
+\backslash
+long
+\end_layout
+
+\end_inset
+
+
+\begin_inset FormulaMacro
+\def\gaussianSamp #1#2{\mathcal{N}\left(#1,#2\right)}
+\end_inset
+
+ 
+\begin_inset ERT
+status collapsed
+
+\begin_layout Standard
+
+
+\backslash
+global
+\end_layout
+
+\end_inset
+
+
+\begin_inset ERT
+status collapsed
+
+\begin_layout Standard
+
+
+\backslash
+long
+\end_layout
+
+\end_inset
+
+
+\begin_inset FormulaMacro
+\def\gaussianDist #1#2#3{\mathcal{N}\left(#1|#2,#3\right)}
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+
+
+\begin_inset ERT
+status collapsed
+
+\begin_layout Standard
+
+
+\backslash
+global
+\end_layout
+
+\end_inset
+
+
+\begin_inset ERT
+status collapsed
+
+\begin_layout Standard
+
+
+\backslash
+long
+\end_layout
+
+\end_inset
+
+
+\begin_inset FormulaMacro
+\def\gammaSamp #1#2{\mathcal{G}\left(#1,#2\right)}
+\end_inset
+
+ 
+\begin_inset ERT
+status collapsed
+
+\begin_layout Standard
+
+
+\backslash
+global
+\end_layout
+
+\end_inset
+
+
+\begin_inset ERT
+status collapsed
+
+\begin_layout Standard
+
+
+\backslash
+long
+\end_layout
+
+\end_inset
+
+
+\begin_inset FormulaMacro
+\def\gammaDist #1#2#3{\mathcal{G}\left(#1|#2,#3\right)}
+\end_inset
+
+ 
+\begin_inset ERT
+status collapsed
+
+\begin_layout Standard
+
+
+\backslash
+global
+\end_layout
+
+\end_inset
+
+
+\begin_inset ERT
+status collapsed
+
+\begin_layout Standard
+
+
+\backslash
+long
+\end_layout
+
+\end_inset
+
+
+\begin_inset FormulaMacro
+\def\gammaCdf #1#2#3{\mathcal{GAMMA CDF}\left(#1|#2,#3\right)}
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+
+
+\begin_inset ERT
+status collapsed
+
+\begin_layout Standard
+
+
+\backslash
+global
+\end_layout
+
+\end_inset
+
+
+\begin_inset ERT
+status collapsed
+
+\begin_layout Standard
+
+
+\backslash
+long
+\end_layout
+
+\end_inset
+
+
+\begin_inset FormulaMacro
+\def\expSamp #1{\left<#1\right>}
+\end_inset
+
+ 
+\begin_inset ERT
+status collapsed
+
+\begin_layout Standard
+
+
+\backslash
+global
+\end_layout
+
+\end_inset
+
+
+\begin_inset ERT
+status collapsed
+
+\begin_layout Standard
+
+
+\backslash
+long
+\end_layout
+
+\end_inset
+
+
+\begin_inset FormulaMacro
+\def\expDist #1#2{\left<#1\right>_{#2}}
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+
+
+\begin_inset ERT
+status collapsed
+
+\begin_layout Standard
+
+
+\backslash
+global
+\end_layout
+
+\end_inset
+
+
+\begin_inset ERT
+status collapsed
+
+\begin_layout Standard
+
+
+\backslash
+long
+\end_layout
+
+\end_inset
+
+
+\begin_inset FormulaMacro
+\def\chiSquaredSamp #1{\chi_{#1}^{2}}
+\end_inset
+
+ 
+\begin_inset ERT
+status collapsed
+
+\begin_layout Standard
+
+
+\backslash
+global
+\end_layout
+
+\end_inset
+
+
+\begin_inset ERT
+status collapsed
+
+\begin_layout Standard
+
+
+\backslash
+long
+\end_layout
+
+\end_inset
+
+
+\begin_inset FormulaMacro
+\def\chiSquaredDist #1#2{\chi_{#1}^{2}\left(#2\right)}
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+
+
+\begin_inset ERT
+status collapsed
+
+\begin_layout Standard
+
+
+\backslash
+global
+\end_layout
+
+\end_inset
+
+
+\begin_inset ERT
+status collapsed
+
+\begin_layout Standard
+
+
+\backslash
+long
+\end_layout
+
+\end_inset
+
+
+\begin_inset FormulaMacro
+\def\diagonalMatrix {\mathbf{D}}
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+
+
+\begin_inset ERT
+status collapsed
+
+\begin_layout Standard
+
+
+\backslash
+global
+\end_layout
+
+\end_inset
+
+
+\begin_inset ERT
+status collapsed
+
+\begin_layout Standard
+
+
+\backslash
+long
+\end_layout
+
+\end_inset
+
+
+\begin_inset FormulaMacro
+\def\variance #1{\mathrm{var}\left( #1 \right)}
+\end_inset
+
+ 
+\begin_inset ERT
+status collapsed
+
+\begin_layout Standard
+
+
+\backslash
+global
+\end_layout
+
+\end_inset
+
+
+\begin_inset ERT
+status collapsed
+
+\begin_layout Standard
+
+
+\backslash
+long
+\end_layout
+
+\end_inset
+
+
+\begin_inset FormulaMacro
+\def\varianceDist #1#2{\mathrm{var}_{#2}\left( #1 \right)}
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+
+
+\begin_inset ERT
+status collapsed
+
+\begin_layout Standard
+
+
+\backslash
+global
+\end_layout
+
+\end_inset
+
+
+\begin_inset ERT
+status collapsed
+
+\begin_layout Standard
+
+
+\backslash
+long
+\end_layout
+
+\end_inset
+
+
+\begin_inset FormulaMacro
+\def\expectation #1{\left\langle #1 \right\rangle }
+\end_inset
+
+ 
+\begin_inset ERT
+status collapsed
+
+\begin_layout Standard
+
+
+\backslash
+global
+\end_layout
+
+\end_inset
+
+
+\begin_inset ERT
+status collapsed
+
+\begin_layout Standard
+
+
+\backslash
+long
+\end_layout
+
+\end_inset
+
+
+\begin_inset FormulaMacro
+\def\expectationDist #1#2{\left\langle #1 \right\rangle _{#2}}
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+
+
+\begin_inset ERT
+status collapsed
+
+\begin_layout Standard
+
+
+\backslash
+global
+\end_layout
+
+\end_inset
+
+
+\begin_inset ERT
+status collapsed
+
+\begin_layout Standard
+
+
+\backslash
+long
+\end_layout
+
+\end_inset
+
+
+\begin_inset FormulaMacro
+\def\det #1{\left|#1\right|}
+\end_inset
+
+ 
+\begin_inset ERT
+status collapsed
+
+\begin_layout Standard
+
+
+\backslash
+global
+\end_layout
+
+\end_inset
+
+
+\begin_inset ERT
+status collapsed
+
+\begin_layout Standard
+
+
+\backslash
+long
+\end_layout
+
+\end_inset
+
+
+\begin_inset FormulaMacro
+\def\rank #1{\mathrm{rank}\left(#1\right)}
+\end_inset
+
+ 
+\begin_inset ERT
+status collapsed
+
+\begin_layout Standard
+
+
+\backslash
+global
+\end_layout
+
+\end_inset
+
+
+\begin_inset ERT
+status collapsed
+
+\begin_layout Standard
+
+
+\backslash
+long
+\end_layout
+
+\end_inset
+
+
+\begin_inset FormulaMacro
+\def\vec #1{#1:}
+\end_inset
+
+ 
+\begin_inset ERT
+status collapsed
+
+\begin_layout Standard
+
+
+\backslash
+global
+\end_layout
+
+\end_inset
+
+
+\begin_inset ERT
+status collapsed
+
+\begin_layout Standard
+
+
+\backslash
+long
+\end_layout
+
+\end_inset
+
+
+\begin_inset FormulaMacro
+\def\vecb #1{\left(#1\right):}
+\end_inset
+
+ 
+\begin_inset ERT
+status collapsed
+
+\begin_layout Standard
+
+
+\backslash
+global
+\end_layout
+
+\end_inset
+
+
+\begin_inset ERT
+status collapsed
+
+\begin_layout Standard
+
+
+\backslash
+long
+\end_layout
+
+\end_inset
+
+
+\begin_inset FormulaMacro
+\def\tr #1{\mathrm{tr}\left(#1\right)}
+\end_inset
+
+ 
+\begin_inset ERT
+status collapsed
+
+\begin_layout Standard
+
+
+\backslash
+global
+\end_layout
+
+\end_inset
+
+
+\begin_inset ERT
+status collapsed
+
+\begin_layout Standard
+
+
+\backslash
+long
+\end_layout
+
+\end_inset
+
+
+\begin_inset FormulaMacro
+\def\diag #1{\mathrm{diag}\left(#1\right)}
+\end_inset
+
+ 
+\begin_inset ERT
+status collapsed
+
+\begin_layout Standard
+
+
+\backslash
+global
+\end_layout
+
+\end_inset
+
+
+\begin_inset ERT
+status collapsed
+
+\begin_layout Standard
+
+
+\backslash
+long
+\end_layout
+
+\end_inset
+
+
+\begin_inset FormulaMacro
+\def\twonorm #1{\left\vert#1\right\vert_2}
+\end_inset
+
+
+\end_layout
+
+\end_body
+\end_document
