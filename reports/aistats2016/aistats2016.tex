@@ -462,12 +462,15 @@ To illustrate how $\hat{\future}_n$ computes the steps ahead we include Figure~(
  
 
 \subsection{Algorithm and computational details}
+The full \us algorithm is detailed in ... \hl{say something here about the computational complexity}
 
 
 
 \section{Experiments}\label{sec:experiments}
 
-To study the validity of our approximation we choose a variety of functions with a range of dimensions and domain sizes. See Table~\ref{table:test_functions} for details. We tested the \us algorithm using 2, 3, 5, and 10 steps look-ahead to compute the loss function. Also we included the full \us approach in which the number of remaining iterations is used as the number of steps-ahead that we use to compute the expected loss. Each problem is solved using 5 different initialisation, with a number of data points that is fixed to be 5 times the dimension of the problem. This points are generated uniformly random in the domains of the function are are kept the same across the replicates for the different method to ensure a fair comparison. This allows us to compare the average performance of each method on each problem. As baseline we used the myopic expected loss. for comparison purposes, all expected losses were optimised using the dividing rectangles algorithm \direct \citep{Jones1993}.
+\subsection{Testing the effect of considering multiple steps ahead}
+
+To study the validity of our approximation we choose a variety of functions with a range of dimensions and domain sizes. See Table~\ref{table:test_functions} for details. We test the \us algorithm using 2, 3, 5, and 10 steps look-ahead to compute the loss function. Also we included the full \us approach in which the number of remaining iterations is used as the number of steps-ahead that we use to compute the expected loss. Each problem is solved using 5 different initialisation, with a number of data points equal to 5. This points are generated uniformly random in the domains of the function are kept the same across the replicates for the different method to ensure a fair comparison. This allows us to compare the average performance of each method on each problem. As baseline we used the myopic expected loss. for comparison purposes, all expected losses were optimised using the dividing rectangles algorithm \direct \citep{Jones1993}.
 
 As surrogate model for the functions we used a \gp with a squared exponential kernel plus a bias kernel \citep{Rasmussen:2005:GPM:1162254}. The hyper-parameters of the model were optimized by the standard method of maximising the marginal likelihood, using \lbfgs \citep{Nocedal1980} for 1,000 iterations and selected the best of 5 random restarts.
 To compare the methods we used the `gap' measure of performance \citep{Huang:2006}, which is defined as
@@ -475,6 +478,8 @@ To compare the methods we used the `gap' measure of performance \citep{Huang:200
 G \triangleq \frac{y(\latentVector_{first})-y(\latentVector_{best})}{y(\latentVector_{first})-y(\latentVector_{opt})} ,
 \end{equation}
 where $y(\cdot)$ represents the evaluation of the objective function, $y(\latentVector_{opt})$ is the global minimum, and $\latentVector_{first}$ and $\latentVector_{best}$ are the first and best evaluated point, respectively. For every method tested, the initial point $\latentVector_{first}$ was chosen to be the the best of the generated points used to initialise the model. 
+
+Table \ref{table:comparision} shows the comparative across different functions and methods. None of the methods is universally optimal and the full \us algorithm is the best in XX of the XX cases. The myopic shows the best performance in some of the experiments, but when this happen the full \us method typically shows a very similar performance. 
 
 
 \begin{table}[t!]
@@ -488,7 +493,6 @@ Cosines & $[0,1]\times[0,1]$ & 2\\
 Branin &$[-5,10]\times[-5,10]$ & 2\\
  Sixhumpcamel  &$[-2,2]\times[-1,1]$ & 2\\
 McCormick  & $[-1.5,4]\times[-3,4]$& 2\\
-Goldstein &$[-2,2]\times[-2,2]$& 2\\
 Egg-holder   &$[-512,512]\times[-512,512]$ & 2\\
 Powers  & $[-1,1]\times[-1,1]$& 2\\ %\hline
 Alpine2-2  &  & 2\\
@@ -496,7 +500,7 @@ Alpine2-5  & $[-10,10]^{\inputDim}$& 5\\
 Alpine2-10  & & 10\\ %\hline
 Ackely-2  & & 2\\
 Ackely-5  &$[-5,5]^{\inputDim}$ & 5\\
-Ackelyl-10  & & 10\\
+Ackely-10  & & 10\\
 \bottomrule
 \end{tabular}\caption{Details of the functions used in the experiments}
 \end{center}
@@ -505,43 +509,25 @@ Ackelyl-10  & & 10\\
 
 \begin{table*}[t!]
 \begin{center}
-\begin{tabular}{lrrrrrr}
+\begin{tabular}{lcccccc}
 \toprule
      sdev.=0.1 &        EL &      GL-2 &      GL-3 &      GL-5 &     GL-10 & GL-full \\
 \midrule
-      Cosines & -1.562084 & -1.577403 & -1.586372 & \textbf{-1.600443} & -1.465383 &\\
-       Branin &  \textbf{0.727696} &  1.018735 &  1.865223 &  1.847867 &  1.190992 & \\
- Sixhumpcamel & \textbf{-1.111226} & -1.099144 & -1.085236 & -1.091393 & -1.104145 & \\
-    McCormick & -1.939604 & -1.936456 & -1.916778 & -1.950658 & \textbf{-2.003377} & \\
-       Goldstein &&&&&\\
-       Egg-holder &&&&&\\   
-       Powers & -0.125614 & \textbf{-0.185978} & -0.149429 & -0.158541 & -0.180303 & \\
-       Alpine2-2 &&&&&\\
+      Cosines & 0.8161 &  \textbf{0.8423} &  0.8118 &  0.7946 &  0.7477 &  \textbf{0.8722}\\
+       Branin & \textbf{0.9973} &  0.9928 &  0.9743 &  0.9896 &  \textbf{0.9959} &  0.9883\\
+ Sixhumpcamel & \textbf{0.9721} &  0.9529 &  0.9479 &  0.9378 &  0.9538 &  0.9284\\
+    McCormick & 0.9055 &  0.9139 &  0.9189 &  0.9283 &  0.9389 &  \textbf{0.9424}\\
+       Egg-holder & &&&&&\\   
+       Powers   & 0.2238 &  0.2449 &  0.2393 &  0.2411 &  0.2360 &  \textbf{0.3688}\\
+       Alpine2-2 & \textbf{0.8010} &  0.7570 &  0.6070 &  0.6791 &  0.6480 &  0.7914 \\
        Alpine2-5 &&&&&\\
        Alpine2-10 &&&&&\\
-       Ackley-2 &&&&&\\
+       Ackley-2 & \textbf{0.7333} &  0.6382 &  0.5864 &  0.6864 &  0.6293 &  0.7001 \\
        Ackley-5 &&&&&\\
        Ackley-10 &&&&&\\
 \bottomrule
-\toprule
-     sdev.=0.2 &        EL &      GL-2 &      GL-3 &      GL-5 &     GL-10 & GL-full\\
-\midrule
-      Cosines & -1.562084 & -1.577403 & -1.586372 & \textbf{-1.600443} & -1.465383 &\\
-       Branin &  \textbf{0.727696} &  1.018735 &  1.865223 &  1.847867 &  1.190992 & \\
- Sixhumpcamel & \textbf{-1.111226} & -1.099144 & -1.085236 & -1.091393 & -1.104145 & \\
-    McCormick & -1.939604 & -1.936456 & -1.916778 & -1.950658 & \textbf{-2.003377} & \\
-       Powers & -0.125614 & \textbf{-0.185978} & -0.149429 & -0.158541 & -0.180303 & \\
-              Goldstein &&&&&\\
-       Egg-holder &&&&&\\   
-       Alpine2 (d=2) &&&&&\\
-       Alpine2 (d=5) &&&&&\\
-       Alpine2 (d=10) &&&&&\\
-       Ackley-2 &&&&&\\
-       Ackley-5 &&&&&\\
-       Ackley-10 &&&&&\\
-\bottomrule
-\end{tabular}\caption{Results for the mean of the replicates}
-\end{center}
+\end{tabular}\caption{Results for the average 'gap' measure of the 5 replicates. For each function the best result is bolded. }
+\end{center}\label{table:comparision}
 \end{table*}
 
 %\begin{table*}
@@ -571,6 +557,10 @@ Ackelyl-10  & & 10\\
 %\bottomrule
 %\end{tabular}\caption{Results for the median of the replicates}
 %\end{table*}
+
+\subsection{GLASSES vs. other myopic acquisition functions}
+We use the Cosines function to compare the performance of \us with respect to the most popular acquisition functions. We use the Expected Improvement (EI), the Maximum probability of Improvement (MPI) and the GP Upper confidence bound (GP-UCB) in which we set to 2 the parameter to balance between exploration and exploitation. See \citep{} for details. 
+
 
 \section{Conclusions}\label{sec:conclusions}
 
