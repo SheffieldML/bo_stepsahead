@@ -346,7 +346,7 @@ The goal of this work is \emph{to propose a computationally efficient approximat
 \end{table*}
 
 
- \section{The \us Algorithm}\label{sec:glasses}
+ \section{The GLASSES Algorithm}\label{sec:glasses}
 
 As detailed in the previous section, a proper multi-step look ahead loss function requires the iterative optimization-marginalization of the future steps, which is computationally intractable. A possible way of dealing with this issue in to jointly modelling our epistemic uncertainty over the future locations $\latentVector_2,\dots,\latentVector_n$ with a joint probability distribution  $p(\latentVector_2,\dots,\latentVector_n|\I_{0}, \latentVector_*) $ and to consider the expected loss 
 \begin{equation}\label{eq:eq:expected_nonmyopic_loss2}
@@ -433,7 +433,7 @@ Under the hypothesis of this section, the next evaluation is located where $\Lam
 
 
 
-This section proposes an empirical surrogate $\hat{\future}_n(\latentVector_*)$ for $\future_n(\latentVector_*)$. A sensible option would be to use the \emph{maximum a posteriori probability} (\map) of the above-mentioned \dpp. However, as it is the generation of \dpp samples, to compute the \map of a \dpp is an expensive operation \citep{NIPS2012_4577}. Alternatively, here we use some ideas that have been recently developed in the batch Bayesian optimisation literature. In a nutshell, batch \bo methods aim to define sets of points in $\mathcal{X}$ where $f$ should be evaluated in parallel, rather than sequentially. In essence, key aspect to building a `good' batch is the same as to computing a good approximation for $\Lambda_n(\latentVector_*|\I_0)$: to predict properly the steps ahead of the algorithm. 
+This section proposes an empirical surrogate $\hat{\future}_n(\latentVector_*)$ for $\future_n(\latentVector_*)$. A sensible option would be to use the \emph{maximum a posteriori probability}, \map, of the above-mentioned \dpp. However, as it is the generation of \dpp samples, to compute the \map of a \dpp is an expensive operation \citep{NIPS2012_4577}. Alternatively, here we use some ideas that have been recently developed in the batch Bayesian optimisation literature. In a nutshell, batch \bo methods aim to define sets of points in $\mathcal{X}$ where $f$ should be evaluated in parallel, rather than sequentially. In essence, key aspect to building a `good' batch is the same as to computing a good approximation for $\Lambda_n(\latentVector_*|\I_0)$: to predict properly the steps ahead of the algorithm. 
 
 In this work we adapt to our context the batch \bo idea proposed by \cite{gonzalez2015batch}. Inspired by the repulsion properties of \dpp , \cite{gonzalez2015batch} propose to build each batch by iteratively optimising and penalising the acquisition function in a neighbourhood of the   already collected points by means of some local penalisers $\varphi(\latentVector;\latentVector_j)$. Note that any other batch method could be used here, but we consider this approach since it is computationally tractable and scales well with the size of the batches (steps ahead in our context) and the dimensionality of the problem.
 
@@ -441,13 +441,13 @@ More formally, assume that the objective function $f$ is $L$-Lipschitz continuou
 \begin{equation}\label{eq:lipschitz}
 |\latentForce(\latentVector_1) - \latentForce(\latentVector_2) | \leq L \|\latentVector_1 -\latentVector_2 \|,\qquad\forall\; \latentVector_1,\latentVector_2\in\mathcal{X}
 \end{equation} 
-and we take $M = \min_{\latentVector \in {\inputSpace}} \latentForce(\latentVector)$ and valid Lipschitz constant $L$. It is possible to show that  the ball
+Take $M = \min_{\latentVector \in {\inputSpace}} \latentForce(\latentVector)$ and valid Lipschitz constant $L$. It is possible to show that  the ball
 \begin{equation}\label{eq:radious}
 B_{r_j}(\latentVector_j)= \{\latentVector\in \inputSpace : \|\latentVector_j-\latentVector \| \leq r_j \}
 \end{equation}
 where
-$$r_j = \frac{\latentForce(\latentVector_j)-M}{L}.$$
-doesn't contain the minimum of $f$. Probabilist versions of these balls play are used to define the above mentioned penalisers by noting that $\latentForce(\latentVector) \sim \GP(\mu(\latentVector),k(\latentVector,\latentVector'))$. In particular, $\varphi(\latentVector;\latentVector_j)$ is chosen as the probability that $\latentVector$, any point in $\inputSpace$ that is a potential candidate to be a minimum, does not belong to $B_{r_j}(\latentVector_j)$:
+$$r_j = \frac{\latentForce(\latentVector_j)-M}{L}$$
+doesn't contain the minimum of $f$. Probabilist versions of these balls are used to define the above mentioned penalisers by noting that $\latentForce(\latentVector) \sim \GP(\mu(\latentVector),k(\latentVector,\latentVector'))$. In particular, $\varphi(\latentVector;\latentVector_j)$ is chosen as the probability that $\latentVector$, any point in $\inputSpace$ that is a potential candidate to be a minimum, does not belong to $B_{r_j}(\latentVector_j)$:
 \begin{equation}\label{eq:penalizer}
 \varphi(\latentVector;\latentVector_j)  = 1- p (\latentVector  \in B_{r_j}(\latentVector_j) ).
 %& = & p\left(Z< \frac{L \|x-x_1\|_2-M+ m(r_{x_1})}{\sigma(r_{x_1})} \right) \nonumber
@@ -467,13 +467,14 @@ To illustrate how $\hat{\future}_n$ computes the steps ahead we include Figure~(
 
 \section{Experiments}\label{sec:experiments}
 
-To study the validity of our approximation we choose a variety of functions with a range of dimensions and domain sizes. See Table~\ref{table:test_functions} for details. We tested the \us algorithm using 2, 3, 5, and 10 steps look-ahead to compute the loss function. Also we included the full \us approach in which the number of remaining iterations is used as the number of steps-ahead that we use to compute the expected loss. Each problem is solved using 5 different initialisation, with a number of data points that is fixed to be 5 times the dimension of the problem. This points are generated uniformly random in the domains of the function are are kept the same across the replicates for the different method to ensure a fair comparison. This allows us to compare the average performance of each method on each problem. As baseline we used the myopic expected loss. for comparison purposes, all expected losses were optimised using the dividing rectangles algorithm \direct  \citep{Jones1993}.
+To study the validity of our approximation we choose a variety of functions with a range of dimensions and domain sizes. See Table~\ref{table:test_functions} for details. We tested the \us algorithm using 2, 3, 5, and 10 steps look-ahead to compute the loss function. Also we included the full \us approach in which the number of remaining iterations is used as the number of steps-ahead that we use to compute the expected loss. Each problem is solved using 5 different initialisation, with a number of data points that is fixed to be 5 times the dimension of the problem. This points are generated uniformly random in the domains of the function are are kept the same across the replicates for the different method to ensure a fair comparison. This allows us to compare the average performance of each method on each problem. As baseline we used the myopic expected loss. for comparison purposes, all expected losses were optimised using the dividing rectangles algorithm \direct \citep{Jones1993}.
 
-As surrogate model for the functions we used a \gp with a squared exponential kernel plus a bias kernel. The hyper-parameters of the model were optimized by the standard method of maximising the marginal likelihood, using \lbfgs \citep{Nocedal1980} for 1,000 iterations and selected the best of 5 random restarts.
+As surrogate model for the functions we used a \gp with a squared exponential kernel plus a bias kernel \citep{Rasmussen:2005:GPM:1162254}. The hyper-parameters of the model were optimized by the standard method of maximising the marginal likelihood, using \lbfgs \citep{Nocedal1980} for 1,000 iterations and selected the best of 5 random restarts.
 To compare the methods we used the `gap' measure of performance \citep{Huang:2006}, which is defined as
 \begin{equation}\nonumber
 G \triangleq \frac{y(\latentVector_{first})-y(\latentVector_{best})}{y(\latentVector_{first})-y(\latentVector_{opt})} ,
-\end{equation}where $y(\cdot)$ represents the evaluation of the objective function, $y(\latentVector_{opt})$ is the global minimum, and $\latentVector_{first}$ and $\latentVector_{best}$ are the first and best evaluated point, respectively. For every method tested, the initial point $\latentVector_{first}$ was chosen to be the the best of the generated points used to initialise the model.
+\end{equation}
+where $y(\cdot)$ represents the evaluation of the objective function, $y(\latentVector_{opt})$ is the global minimum, and $\latentVector_{first}$ and $\latentVector_{best}$ are the first and best evaluated point, respectively. For every method tested, the initial point $\latentVector_{first}$ was chosen to be the the best of the generated points used to initialise the model. 
 
 
 \begin{table}[t!]
@@ -489,13 +490,13 @@ Branin &$[-5,10]\times[-5,10]$ & 2\\
 McCormick  & $[-1.5,4]\times[-3,4]$& 2\\
 Goldstein &$[-2,2]\times[-2,2]$& 2\\
 Egg-holder   &$[-512,512]\times[-512,512]$ & 2\\
-Powers  & $[-1,1]\times[-1,1]$& 2\\ \hline
+Powers  & $[-1,1]\times[-1,1]$& 2\\ %\hline
 Alpine2-2  &  & 2\\
 Alpine2-5  & $[-10,10]^{\inputDim}$& 5\\
-Alpine2-10  & & 10\\\hline
-gSobol-2  & & 2\\
-gSobol-5  &$[-5,5]^{\inputDim}$ & 5\\
-gSobol-10  & & 10\\
+Alpine2-10  & & 10\\ %\hline
+Ackely-2  & & 2\\
+Ackely-5  &$[-5,5]^{\inputDim}$ & 5\\
+Ackelyl-10  & & 10\\
 \bottomrule
 \end{tabular}\caption{Details of the functions used in the experiments}
 \end{center}
