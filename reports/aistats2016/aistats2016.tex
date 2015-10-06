@@ -211,7 +211,7 @@ Interestingly, there exists a link between the multi-step lookahead problem and 
 
 %Our algorithm, \us, provides scaling superior to existing alternatives, which is tested in a variety of experiments. 
 
-This paper is organised as follows. In Section \ref{sec:background} we formalise the problem and describe the contributions of this work. Section \ref{sec:glasses} describe the details of the proposed algorithm. Section \ref{sec:experiments} illustrate the superior performance of \us in a variety of test functions and we conclude in Section \ref{sec:conclusions} with a discussion about the most interesting results observed in this work.
+This paper is organised as follows. In Section \ref{sec:background} we formalise the problem and describe the contributions of this work. Section \ref{sec:glasses} describe the details of the proposed algorithm. Section \ref{sec:experiments} illustrates the superior performance of \us in a variety of test functions and we conclude in Section \ref{sec:conclusions} with a discussion about the most interesting results observed in this work.
 
 
 \section{Background and challenge}\label{sec:background}
@@ -238,7 +238,7 @@ y_*;             & \mbox{if}  &  y_* \leq \eta \\
 \right.$$
 Therefore the loss corresponds is the new observed minimum, $\min (\eta,y_*)$. Its expectation is 
 $$\ \Lambda_1(\latentVector_*| \I_0) \triangleq \E[ \min (y_*,\eta)]= \int \lambda(y_*)p(y_* |\latentVector_*,\I_0)\ud y_*$$
-where the subscript in $\Lambda$ refers to the fact that we are considering one future evaluations.  Giving the properties of the \gp, $\Lambda_1(\latentVector_*| \I_0)$ can be computed in closed form for any $\latentVector_* \in \mathcal{X}$. In particular, for $\Phi$ the usual Gaussian cumulative distribution function, we have that
+where the subscript in $\Lambda$ refers to the fact that we are considering one future evaluation.  Giving the properties of the \gp, $\Lambda_1(\latentVector_*| \I_0)$ can be computed in closed form for any $\latentVector_* \in \mathcal{X}$. In particular, for $\Phi$ the usual Gaussian cumulative distribution function, we have that
 \begin{eqnarray}\label{eq:expected_myopic_loss}
 \Lambda_1(\latentVector_*| \I_0) &  \triangleq & \eta \int_{\eta}^{\infty} \mathcal{N}(y_*;\mu,\sigma^2) \ud y_* \\ \nonumber
 & +  & \int_{-\infty}^{\eta} y_* \mathcal{N}(y_*;\mu,\sigma^2) \ud y_*  \\ \nonumber
@@ -307,7 +307,7 @@ where we have abbreviated $\sigma^2(y_*|\I_0)$ as $\sigma^2$ and $\mu(y_{*}|\I_0
 \subsection{Looking many steps ahead}
 Expression~(\ref{eq:expected_myopic_loss}) can also be used as a myopic approximation to the optimal decision when $n$ evaluations of $f$ remain available. Indeed, most \bo methods are myopic and ignore the future decisions that will be made by the algorithm in the future steps. 
 
-Denote by $\{(\latentVector_j,\dataScalar_j)\}$ for $j=1,\dots,n$ the remaining $n$ available evaluations and by $\I_j$ the available information after the data set $\dataSet_0$ has been augmented with $(\latentVector_j,\dataScalar_j),\dots,(\latentVector_j,\dataScalar_j)$ and the parameters $\parameterVector$ of the model updated. We use $\Lambda_n(\latentVector_*|\I_0 )$ to denote the expected loss of selecting $\latentVector_*$ given $\I_0$ and  considering $n$ future evaluations.  A Proper Bayesian formulation allows us to define this \emph{long-sight} loss  \citep{osborne_bayesian_2010}  as\footnote{We assume that $p(\latentVector_*|\I_0)=1$}
+Denote by $\{(\latentVector_j,\dataScalar_j)\}$ for $j=1,\dots,n$ the remaining $n$ available evaluations and by $\I_j$ the available information after the data set $\dataSet_0$ has been augmented with $(\latentVector_j,\dataScalar_j),\dots,(\latentVector_j,\dataScalar_j)$ and the parameters $\parameterVector$ of the model updated. We use $\Lambda_n(\latentVector_*|\I_0 )$ to denote the expected loss of selecting $\latentVector_*$ given $\I_0$ and  considering $n$ future evaluations.  A proper Bayesian formulation allows us to define this \emph{long-sight} loss  \citep{osborne_bayesian_2010}  as\footnote{We assume that $p(\latentVector_*|\I_0)=1$.}
 \begin{eqnarray}\nonumber
 \Lambda_n(\latentVector_*|\I_0 ) &= & \int \lambda(y_n) \prod_{j=1}^{n}p(y_{j}|\latentVector_{j},\I_{j-1}) p(\latentVector_{j}|\I_{j-1})\\\label{eq:expected_nonmyopic_loss}
 & & \ud y_*\dots \ud y_n \ud\latentVector_2\dots \ud\latentVector_n
