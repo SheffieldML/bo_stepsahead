@@ -315,7 +315,7 @@ Denote by $\{(\latentVector_j,\dataScalar_j)\}$ for $j=1,\dots,n$ the remaining 
 where 
 $$p(y_{j}|\latentVector_{j},\I_{j-1})= \mathcal{N} \left(y_{j};\mu(\latentVector_{j};\I_{j-1}),\sigma^2(\latentVector_{j}|\I_{j-1} ) \right)$$ 
 is the predictive distribution of the GP at $\latentVector_{j}$  and 
-$$p(\latentVector_{j}|\I_{j-1}) = \delta (\latentVector_{j} - \arg \min_{\latentVector_* \in {\mathcal X}} \Lambda_{n-j+1}(\latentVector_*|\I_{j-1}))$$ 
+$$p(\latentVector_{j}|\I_{j-1}) = \delta \bigr(\latentVector_{j} - \arg \min_{\latentVector_* \in {\mathcal X}} \Lambda_{n-j+1}(\latentVector_*|\I_{j-1})\bigl)$$ 
 reflects the optimization step required to obtain $\latentVector_{j}$ after all previous the evaluations $f$ have been iteratively optimized and marginalized.  The graphical probabilistic model underlying (\ref{eq:expected_nonmyopic_loss}) is illustrated in Figure \ref{fig:bayes_net}.
 
 To evaluate Eq.~(\ref{eq:expected_nonmyopic_loss}) we can successively sample from $y_1$ to $y_{j-1}$ and optimize for the appropriate $\Lambda_{n-j+1}(\latentVector_*|\I_{j-1})$. This is in done in \citep{osborne_bayesian_2010} for only two steps look ahead. The reason why further horizons remain unexplored is the  computational burden required to compute this loss for many steps ahead. Note that analytical expression are only available in the myopic case $\Lambda_1(\latentVector_*| \I_0)$.
@@ -326,7 +326,7 @@ The goal of this work is \emph{to propose a computationally efficient approximat
 \begin{itemize}
 \item A new algorithm, \us, to relieve the myopia of Bayesian optimisation that is able to efficiently take into account dozens of steps ahead. The method is based on the prediction of the future steps of the myopic algorithm to efficiently integrate out a long-side loss. 
 \item The key aspect of our approach is to split the recursive optimization marginalization loop in Eq.~(\ref{eq:expected_nonmyopic_loss}) into two independent optimisation-marginalization steps that jointly act on all the future steps. We propose an Expectation-Propagation formulation for the joint marginalisation and we discuss different strategies to carry out the optimisation step.
-\item Together with this work, we deliver a \emph{open source Python code framework}\footnote{Link removed for blind review} containing a fully functional  implementation of the method useful to reproduce the results of this work and applicable in general global optimisation problems. As we mentioned in the introduction of this work, there exist a limited literature in \bo non-myopic methods and, to our knowledge, none available generic \bo package can be used with myopic loss functions. 
+\item Together with this work, we deliver a \emph{open source Python code framework}\footnote{Link removed for blind review.} containing a fully functional  implementation of the method useful to reproduce the results of this work and applicable in general global optimisation problems. As we mentioned in the introduction of this work, there exist a limited literature in \bo non-myopic methods and, to our knowledge, none available generic \bo package can be used with myopic loss functions. 
 \item Simulations: New practical experiments and insights that show that non-myopic methods outperform myopic approaches in a benchmark of optimisation problems. 
 \end{itemize}
 
@@ -342,7 +342,7 @@ The goal of this work is \emph{to propose a computationally efficient approximat
       \addheight{\includegraphics[width=54mm]{bo_10steps.png}}  &
       \addheight{\includegraphics[width=54mm]{bo_20steps.png}}\\
       \small \small \textbf{5 steps ahead} & \small \textbf{10 steps ahead} & \small \textbf{20 steps ahead} \\
-\end{tabular}\caption{Expected loss for different number of steps ahead in an example with 10 data points and the Six-hump Camel function. Increasing the number of steps ahead flatten down the loss since it is likely for the algorithm to hit a good location irrespective of the initial point (all candidate points look better because of the future chances of the algorithm to be in a good location).}
+\end{tabular}\caption{Expected loss for different number of steps ahead in an example with 10 data points and the Six-hump Camel function. Increasing the number of steps-ahead flattens down the loss since it is likely for the algorithm to hit a good location irrespective of the initial point (all candidate points look better because of the future chances of the algorithm to be in a good location).}
 \end{table*}
 
 
