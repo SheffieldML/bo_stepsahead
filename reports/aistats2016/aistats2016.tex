@@ -432,25 +432,25 @@ B_{r_j}(\latentVector_j)= \{\latentVector\in \inputSpace : \|\latentVector_j-\la
 \end{equation}
 where
 $$r_j = \frac{\latentForce(\latentVector_j)-M}{L}$$
-doesn't contain the minimum of $f$. Probabilist versions of these balls are used to define the above mentioned penalisers by noting that $\latentForce(\latentVector) \sim \GP(\mu(\latentVector),k(\latentVector,\latentVector'))$. In particular, $\varphi(\latentVector;\latentVector_j)$ is chosen as the probability that $\latentVector$, any point in $\inputSpace$ that is a potential candidate to be a minimum, does not belong to $B_{r_j}(\latentVector_j)$:
-\begin{equation}\label{eq:penalizer}
-\varphi(\latentVector;\latentVector_j)  = 1- p (\latentVector  \in B_{r_j}(\latentVector_j) ).
+doesn't contain the minimum of $f$. Probabilist versions of these balls are used to define the above mentioned penalisers by noting that $\latentForce(\latentVector) \sim \GP(\mu(\latentVector),k(\latentVector,\latentVector'))$. In particular, $\varphi(\latentVector;\latentVector_j)$ is chosen as the probability that $\latentVector$, any point in $\inputSpace$ that is a potential candidate to be a minimum, does not belong to $B_{r_j}(\latentVector_j)$: $\varphi(\latentVector;\latentVector_j)  = 1- p (\latentVector  \in B_{r_j}(\latentVector_j)).$
+%\begin{equation}\label{eq:penalizer}
+%\varphi(\latentVector;\latentVector_j)  = 1- p (\latentVector  \in B_{r_j}(\latentVector_j) ).
 %& = & p\left(Z< \frac{L \|x-x_1\|_2-M+ m(r_{x_1})}{\sigma(r_{x_1})} \right) \nonumber
-\end{equation}
+%\end{equation}
 As detailed in \cite{gonzalez2015batch}, these functions have close form and create an exclusion zone around the point $\latentVector_j$. The predicted k-th location when looking at $n$ step ahead and using $\latentVector_*$ as putative point is defined as
 \begin{equation}\label{eq:penalized_acquisition}
  [\hat{\future}_n(\latentVector_*)]_k  =\arg \min_{x \in \inputSpace} \left\{g(\Lambda_1(\latentVector_*| \I_0))\prod_{j=1}^{k-1}\varphi(\latentVector;\hat{\latentVector}_{j})\right\},
 \end{equation}
 for $k=2,\dots,n$ and where $\varphi(\latentVector;\latentVector_{j})$ are local local penalizers centered at $\latentVector_{j}$ and $g:\Re \rightarrow \Re^+$ is the \emph{soft-plus} transformation $g(z)= \ln(1+e^z)$.
 
-To illustrate how $\hat{\future}_n$ computes the steps ahead we include Figure~(\ref{fig:steps_ahead}). We show the myopic loss in a \bo experiment together with predicted locations by $\hat{\future}_n$ for two different putative points. In case 1, the putative point $\latentVector_*$ (grey star) is close to the location of the minimum of the myopic loss (blue region). In case 2, $\latentVector_*$ is located in an uninteresting region. In both cases the future locations explore the interesting region determined for the myopic loss while the locations of the points are conditioned to the first location. In the bottom row of the figure we show how the points are selected in case 1. The fist putative point creates an exclusion zone that shifts the minimum of the acquisition, where the next location is selected. Iterative, new locations are found by balancing diversity (due to the effect of the exclusion areas) and quality (exploring locations where the loss is low), similarly to the way samples the probabilities over subsets can be characterised in a \dpp \citep{MAL-044}.
+To illustrate how $\hat{\future}_n$ computes the steps ahead we include Figure~(\ref{fig:steps_ahead}). We show the myopic loss in a \bo experiment together with predicted locations by $\hat{\future}_n$ for two different putative points. In case 1, the putative point $\latentVector_*$ (grey star) is close to the location of the minimum of the myopic loss (blue region). In case 2, $\latentVector_*$ is located in an uninteresting region. In both cases the future locations explore the interesting region determined for the myopic loss while the locations of the points are conditioned to the first location. In the bottom row of the figure we show how the points are selected in Case 1. The fist putative point creates an exclusion zone that shifts the minimum of the acquisition, where the next location is selected. Iterative, new locations are found by balancing diversity (due to the effect of the exclusion areas) and quality (exploring locations where the loss is low), similarly to the way samples the probabilities over subsets can be characterised in a \dpp \citep{MAL-044}.
  
 
 \subsection{Algorithm and computational costs}
-All the steps of \us are detailed in Algorithm \ref{alg:glasses}. The main computational cost are the calculation of the steps ahead, which is done using a sequence of \lbfgs optimizers at $\mathcal{O}(Mq^2)$ complexity (\hl{check this}) for $M$ the maximum number of \lbfgs updates. The use of \ep to compute the value of the expected loss at each location requires a  quadratic run  time  factor  update in the dimensionality of each Gaussian factor.
+All the steps of \us are detailed in Algorithm \ref{alg:glasses}. The main computational cost are the calculation of the steps ahead, which is done using a sequence of \lbfgs optimizers at $\mathcal{O}(Pq^2)$ complexity for $P$ the maximum number of \lbfgs updates. The use of \ep to compute the value of the expected loss at each location requires a  quadratic run  time  factor  update in the dimensionality of each Gaussian factor.
 
 \section{Experiments}\label{sec:experiments}
-We present two experiment to illustrate the utility of using a non-myopic loss functions in global optimisation problems. The first one illustrates the exploraion-exploitataion balance of the non myopic loss for a different number of steps ahead. In the second experiment, we illustrate the utility in a benchmark of global optimisation problems.
+%We present two experiment to illustrate the utility of using a non-myopic loss functions in global optimisation problems. The first one illustrates the exploraion-exploitataion balance of the non myopic loss for a different number of steps ahead. In the second experiment, we illustrate the utility in a benchmark of global optimisation problems.
 
 \subsection{Interpreting the non-myopic loss in practice}
 The goal of this experiment is to visualise the effect that has in the expected loss to consider multiple steps ahead. To this end we use Six-hump camel function  (see Table~\ref{table:n_ahead} for details). We fit a \gp with and Square Exponential kernel and we plot the myopic expected loss together with 5 variants that consider 2, 3, 5, 10 and 20 steps ahead. 
@@ -459,15 +459,13 @@ We observe that as soon as the increasing the steps ahead decreases the optimum 
 
 \begin{table*}[t!]
 \begin{tabular}{ccc}
-      \addheight{\includegraphics[width=54mm]{bo_1step.png}} &
-      \addheight{\includegraphics[width=54mm]{bo_2steps.png}}  &
-      \addheight{\includegraphics[width=54mm]{bo_3steps.png}}\\
-      \small \textbf{Myopic loss} &  \small \textbf{loss 2 steps ahead} & \small \textbf{loss 3 steps ahead} \\
-      \addheight{\includegraphics[width=54mm]{bo_5steps.png}} &
-      \addheight{\includegraphics[width=54mm]{bo_10steps.png}}  &
-      \addheight{\includegraphics[width=54mm]{bo_20steps.png}}\\
-      \small \small \textbf{5 steps ahead} & \small \textbf{10 steps ahead} & \small \textbf{20 steps ahead} \\
-\end{tabular}\caption{\hl{change this plots and make the matrix to be a figure} Expected loss for different number of steps ahead in an example with 10 data points and the Six-hump Camel function. Increasing the number of steps-ahead flattens down the loss since it is likely for the algorithm to hit a good location irrespective of the initial point (all candidate points look better because of the future chances of the algorithm to be in a good location).}\label{table:n_ahead}
+      \addheight{\includegraphics[width=54mm]{1_ahead.pdf}} &
+      \addheight{\includegraphics[width=54mm]{2_ahead.pdf}}  &
+      \addheight{\includegraphics[width=54mm]{3_ahead.pdf}}\\
+      \addheight{\includegraphics[width=54mm]{5_ahead.pdf}} &
+      \addheight{\includegraphics[width=54mm]{10_ahead.pdf}}  &
+      \addheight{\includegraphics[width=54mm]{20_ahead.pdf}}\\
+\end{tabular}\caption{Expected loss for different number of steps ahead in an example with 10 data points and the Six-hump Camel function. Increasing the number of steps-ahead flattens down the loss since it is likely for the algorithm to hit a good location irrespective of the initial point (all candidate points look better because of the future chances of the algorithm to be in a good location).}\label{table:n_ahead}
 \end{table*}
 
 \subsection{Testing the effect of considering multiple steps ahead}
@@ -482,47 +480,44 @@ Name &Function domain & $\inputDim$ \\
 SinCos & $[0,10]$ & 1 \\
 Cosines & $[0,1]\times[0,1]$ & 2\\
 Branin &$[-5,10]\times[-5,10]$ & 2\\
- Sixhumpcamel  &$[-2,2]\times[-1,1]$ & 2\\
+Sixhumpcamel  &$[-2,2]\times[-1,1]$ & 2\\
 McCormick  & $[-1.5,4]\times[-3,4]$& 2\\
 Dropwave   &$[-1,1]\times[-1,1]$ & 2\\
 Beale   &$[-1,1]\times[-1,1]$ & 2\\
 Powers  & $[-1,1]\times[-1,1]$& 2\\ %\hline
-Alpine2-2  &  & 2\\
-Alpine2-5  & $[-10,10]^{\inputDim}$& 5\\
-Alpine2-10  & & 10\\ %\hline
-Ackely-2  & & 2\\
-Ackely-5  &$[-5,5]^{\inputDim}$ & 5\\
+Alpine2-$q$  & $[-10,10]^{\inputDim}$& 5\\
+Ackely-$q$  &$[-5,5]^{\inputDim}$ & 5\\
 \bottomrule
-\end{tabular}\caption{Details of the functions used in the experiments}
+\end{tabular}\caption{Details of the functions used in the experiments}\label{table:test_functions}
 \end{center}
-\end{table}\label{table:test_functions}
+\end{table}
 
 
-To study the validity of our approximation we choose a variety of functions with a range of dimensions and domain sizes. See Table~\ref{table:test_functions} for details. We test the \us algorithm using 2, 3, 5, and 10 steps look-ahead to compute the loss function. We also include the full \us approach in which the number of remaining iterations is used as the number of steps-ahead that we use to compute the expected loss. Each problem is solved a unique initilization with a number of data points equal to 5. This allows us to compare the average performance of each method on each problem. As baseline we used the myopic expected loss. for comparison purposes, all expected losses were optimised using the dividing rectangles algorithm \direct \citep{Jones1993}.
+To study the validity of our approximation we choose a variety of functions with a range of dimensions and domain sizes. See Table~\ref{table:test_functions} for details. We use the full \us algorithm (in which at each iteration the number of remaining iterations is used as the number of steps-ahead) and we show the results when 2, 3, 5, and 10 steps look-ahead are used to compute the loss function. Each problem is solved a unique using 5 different random initialisation with 5 inital data points. This allows us to compare the average performance of each method on each problem. As baseline we use the myopic expected loss (EL). For comparative purposes we used other two loss functions are commonly used in the literature. In particular, we use the Maximum probability of Improvement (MPI) and the GP Upper confidence bound (GP-UCB). In this later case we set the parameter that balances exploration and exploitation to 1. See \citep{Snoek*Larochelle*Adams_2012} for details on these loss functions. All acquisition functions as optimised using the dividing rectangles algorithm \direct \citep{Jones1993}.
 
 \begin{table*}[t!]
 \begin{center}
-
-\begin{tabular}{l|cc|cccccc}
+\begin{tabular}{l|ccc|cccc|c}
 \toprule
-{} &     MPI &     LCB &      EL &    GL-2 &    GL-3 &    GL-5 &   GL-10 &    GL-H \\
+{} &     MPI &     GP-LCB &      EL &    EL-2 &    EL-3 &    EL-5 &  EL-10 &    GLASSES \\
 \midrule
 SinCos &&& &&&&&\\ 
-Cosines           &  0.8637 &  0.8704 &  0.8161 &  0.8423 &  0.8118 &  0.7946 &  0.7477 &  \textbf{0.8722} \\
+Cosines           &  0.8637 &  0.8704 &  0.8161 &  \emph{0.8423} &  \emph{0.8118} &  0.7946 &  0.7477 &  \emph{\textbf{0.8722}} \\
 Branin              &  0.9854 &  0.9616 &  \textbf{0.9900} &  0.9856 &  0.9673 &  0.9824 &  0.9887 &  0.9811 \\
-Sixhumpcamel        &  0.8983 &  0.9346 &  0.9299 &  0.9115 &  0.9067 &  0.8970 &  0.9123 &  0.8880 \\
-Mccormick           &  0.9514 &  0.9326 &  0.9055 &  0.9139 &  0.9189 &  0.9283 &  0.9389 &  \textbf{0.9424} \\
-Dropwave            &  0.7308 &  0.7413 &  0.7667 &  0.7237 &  0.7555 &  0.7293 &  0.6860 &  \textbf{0.7740} \\
+Sixhumpcamel        &  0.8983 &  \textbf{0.9346} &  0.9299 &  0.9115 &  0.9067 &  0.8970 &  0.9123 &  0.8880 \\
+Mccormick           &  0.9514 &  0.9326 &  0.9055 &  \emph{0.9139} &  \emph{0.9189} &  \emph{0.9283} &  \emph{0.9389} &  \emph{\textbf{0.9424}} \\
+Dropwave            &  0.7308 &  0.7413 &  0.7667 &  0.7237 &  0.7555 &  0.7293 &  0.6860 &  \emph{\textbf{0.7740}} \\
 Beale &&& &&&&&\\ 
-Powers              &  0.2177 &  0.2167 &  0.2216 &  0.2428 &  0.2372 &  0.2390 &  0.2339 &  \textbf{0.3670} \\
-Ackley-2 &  0.8230 &  0.8975 &  0.7333 &  0.6382 &  0.5864 &  0.6864 &  0.6293 &  0.7001 \\
-Ackley-5  &&& &&&&&\\ 
-Alpine2-2 &  0.8628 &  0.8482 &  \textbf{0.7902} &  0.7467 &  0.5988 &  0.6699 &  0.6393 &  0.7807 \\
-Alpine2-5 &  0.5221 &  0.6151 &  \textbf{0.7797} &  0.6740 &  0.6431 &  0.6592 &  0.6747 &  0.7123 \\
+Powers              &  0.2177 &  0.2167 &  0.2216 &  \emph{0.2428} &  \emph{0.2372} &  \emph{0.2390} &  \emph{0.2339} &  \emph{\textbf{0.3670}} \\
+Ackley-2 &  0.8230 &  \textbf{0.8975} &  0.7333 &  0.6382 &  0.5864 &  0.6864 &  0.6293 &  0.7001 \\
+Ackley-5  & 0.1832&   0.2082&   0.5473&   \emph{0.6694}&  0.3582&   0.3744&   \emph{\textbf{0.6700}} &  0.4348\\ 
+Ackley-10  &&& &&&&&\\ 
+Alpine2-2 &  \textbf{0.8628} &  0.8482 &  0.7902 &  0.7467 &  0.5988 &  0.6699 &  0.6393 &  0.7807 \\
+Alpine2-5  &  0.5221 &  0.6151 &  \textbf{0.7797} &  0.6740 &  0.6431 &  0.6592 &  0.6747 &  0.7123 \\
+Alpine2-10 &&& &&&&&\\ 
 \bottomrule
-\end{tabular}\caption{Results for the average `gap' measure across different functions and methods in 5 replicates.  GL-k represents that the expect loss function has been computed k steps ahead at each iteration. GL-full represents the full \us algorithm with a number of steps ahead in each iteration equal to the number of remaining evaluations. The best result when comparing the myopic expected loss with the \us method with different number of steps ahead is bolded. The  MPI and GP-LCB are included for reference.}
-% \end{center}
-\end{center}\label{table:comparision}
+\end{tabular}\caption{\hl{waiting for the last results} Results for the average `gap' measure (5 replicates) across different functions and methods in 5 replicates.  GL-k represents that the expect loss function computed for k steps ahead at each iteration. GLASSES represents the full \us algorithm with a number of steps ahead in each iteration equal to the number of remaining evaluations. The best result for each function is bolded. The cases in which a non-myopic loss outperforms the myopic expected loss are highlighted in italic.}\label{table:comparision}
+\end{center}
 \end{table*}
 
 %\begin{table*}[t!]
@@ -548,18 +543,14 @@ Alpine2-5 &  0.5221 &  0.6151 &  \textbf{0.7797} &  0.6740 &  0.6431 &  0.6592 &
 % \end{center}
 % \end{table*}\label{table:comparision}
 
-As surrogate model for the functions we used a \gp with a squared exponential kernel plus a bias kernel \citep{Rasmussen:2005:GPM:1162254}. The hyper-parameters of the model were optimized by the standard method of maximising the marginal likelihood, using \lbfgs \citep{Nocedal1980} for 1,000 iterations and selected the best of 5 random restarts.
+As surrogate model for the functions we used a \gp with a squared exponential kernel plus a bias kernel \citep{Rasmussen:2005:GPM:1162254}. The hyper-parameters of the model were optimised by the standard method of maximising the marginal likelihood, using \lbfgs \citep{Nocedal1980} for 1,000 iterations and selected the best of 5 random restarts.
 To compare the methods we used the `gap' measure of performance \citep{Huang:2006}, which is defined as
 \begin{equation}\nonumber
 G \triangleq \frac{y(\latentVector_{first})-y(\latentVector_{best})}{y(\latentVector_{first})-y(\latentVector_{opt})} ,
 \end{equation}
-where $y(\cdot)$ represents the evaluation of the objective function, $y(\latentVector_{opt})$ is the global minimum, and $\latentVector_{first}$ and $\latentVector_{best}$ are the first and best evaluated point, respectively. For every method tested, the initial point $\latentVector_{first}$ was chosen to be the the best of the generated points used to initialise the model. Also, since the evaluations of $f$ are perturbed by Gaussian noise in the experiments some evaluations can be lower than the local optimum and the gap become larger than one. To compensate this effect, we normalise the gaps measures across each problem by dividing all of them by the best found gap. This way, the best technique has always a normalised gap that is equal to one.
+where $y(\cdot)$ represents the evaluation of the objective function, $y(\latentVector_{opt})$ is the global minimum, and $\latentVector_{first}$ and $\latentVector_{best}$ are the first and best evaluated point, respectively. For every each tested, the initial point $\latentVector_{first}$ was chosen to be the the best of the generated points used to initialise the model. 
 
-For comparative purposes we used other two loss functions are commonly used in the literature. In particular we used   the Maximum probability of Improvement (MPI) and the GP Upper confidence bound (GP-UCB). In this later case we set the parameter that balances exploration and exploitation to 1. See \citep{Snoek*Larochelle*Adams_2012} for details on these loss functions.  
-
-Table \ref{table:comparision} shows the comparative across different functions and methods. None of the methods is universally but the \us algorithm is the best in XX of the XX cases. In xx cases the full glasses approach is the best of all methods. Specially interesting is the case of the McCormick and the Powers function. In these two cases, to increase the number of steps ahead used to compute the loss consistently improve the obtained results.
-
-The myopic shows the best performance in some of the experiments. However, when this happens, the full \us method typically shows a very similar performance. 
+Table \ref{table:comparision} shows the comparative across different functions and methods. None of the methods used is universally the best but a non myopic loss is the best in XX of the XX cases. In xx cases the full \us approach is the best of all methods. Specially interesting is the case of the McCormick and the Powers function. In these two cases, to increase the number of steps ahead used to compute the loss consistently improve the obtained results. Note as well that when the \us algorithm is not the best gobal method it typically perform be closely to the best alternative which makes it to be a good 'default' choice if the function to optimise is expensive to evaluate.
 
 
 
@@ -601,7 +592,7 @@ In this paper we have explored the myopia in Bayesian optimisation methods. By f
 
 As previously suggested in \cite{osborne_gaussian_2009}, our results confirm that using a non-myopic loss helps, in practice, to solve global optimisation problems. Interestingly, and as happens with any comparison of loss functions across many objective functions, there is not a universal best method. However, in cases in which \us is not the superior, it performs very closely to the myopic loss, which makes it an interesting default choice in most scenarios. 
 
-Some interesting issues will be addressed in the future. Perhaps the most relevant is the way the non-myopic loss function is optimised.  Although in this work we have used \direct to address this step, specific and more efficient gradient-based methods will be considered. Also, the use of non-stationary kernels, and extensions of the methods to high dimensional problems and efficient was of sampling many steps ahead will also be analysed in the near future.
+Some interesting issues will be addressed in the future such us to speed up the optimisation of the loss.  Although in this work we have used \direct to address this step, specific and more efficient methods will be considered. Also, the use of non-stationary kernels, extensions to deal with to high dimensional problems and finding efficient was of sampling many steps ahead will also be analysed.
   
 \newpage
 %$\mbox{ }$
