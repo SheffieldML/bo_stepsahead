@@ -321,7 +321,7 @@ To evaluate Eq.~(\ref{eq:expected_nonmyopic_loss}) we can successively sample fr
 
 \subsection{Contributions of this work}
 
-The goal of this work is \emph{to propose a computationally efficient approximation to Eq.~(\ref{eq:expected_nonmyopic_loss}) for many steps ahead able to relieve the myopia of classical Bayesian optimization}. The precise contributions of this paper are:
+The goal of this work is \emph{to propose a computationally efficient approximation to Eq.~(\ref{eq:expected_nonmyopic_loss}) for many steps ahead able to relieve the myopia of classical Bayesian optimization}. The contributions of this paper are:
 \begin{itemize}
 \item A new algorithm, \us, to relieve the myopia of Bayesian optimisation that is able to efficiently take into account dozens of steps ahead. The method is based on the prediction of the future steps of the myopic algorithm to efficiently integrate out a long-side loss. 
 \item The key aspect of our approach is to split the recursive optimization marginalization loop in Eq.~(\ref{eq:expected_nonmyopic_loss}) into two independent optimisation-marginalization steps that jointly act on all the future steps. We propose an Expectation-Propagation formulation for the joint marginalisation and we discuss different strategies to carry out the optimisation step.
@@ -360,7 +360,7 @@ An alternative, and more efficient approach that we explore here is to work with
 
 
 
-Suppose that  we had access to an oracle function $\future_{n}: {\mathcal X}\rightarrow  {\mathcal X}\cdots^{n} {\mathcal X}$ able to predict the $n$ future  locations that the loss $\Lambda_n(\cdot)$ would suggest if we started evaluating $f$ at $\latentVector_*$. In other words, $\future_{n}$ takes the putative location $\latentVector_*$ as input and it returns $\latentVector_*$ and the predicted future locations  $\latentVector_2,\dots, \latentVector_n$. We work here under the assumption that the oracle has perfect information about the future locations, in the same way we have have perfect information about the locations that the algorithm already visited. This is an unrealistic assumption in practice, but it will help us to set-up our algorithm. We leave for the next section the details of how to marginalise over $\future_{n}$. 
+Suppose that  we had access to an oracle function $\future_{n}: {\mathcal X}\rightarrow  {\mathcal X}\times \overset{n}{\cdots}\times {\mathcal X}$ able to predict the $n$ future  locations that the loss $\Lambda_n(\cdot)$ would suggest if we started evaluating $f$ at $\latentVector_*$. In other words, $\future_{n}$ takes the putative location $\latentVector_*$ as input and it returns $\latentVector_*$ and the predicted future locations  $\latentVector_2,\dots, \latentVector_n$. We work here under the assumption that the oracle has perfect information about the future locations, in the same way we have have perfect information about the locations that the algorithm already visited. This is an unrealistic assumption in practice, but it will help us to set-up our algorithm. We leave for the next section the details of how to marginalise over $\future_{n}$. 
 
 Assume, for now, that $\future_{n}$ exists and that we have access to it. We it and denote by $\dataVector=(y_*,\dots,\dots,y_n)^T$ the vector of future locations evaluations of $f$ at $\future_n(\latentVector_*)$. Assuming that $\dataVector$ is known, it is possible to rewrite the expected loss in Eq.~(\ref{eq:expected_nonmyopic_loss}) as
 \begin{equation}\label{eq:oracle_expected_nonmyopic_loss}
@@ -467,7 +467,7 @@ We observe that as soon as the increasing the steps ahead decreases the optimum 
       \addheight{\includegraphics[width=54mm]{bo_10steps.png}}  &
       \addheight{\includegraphics[width=54mm]{bo_20steps.png}}\\
       \small \small \textbf{5 steps ahead} & \small \textbf{10 steps ahead} & \small \textbf{20 steps ahead} \\
-\end{tabular}\caption{Expected loss for different number of steps ahead in an example with 10 data points and the Six-hump Camel function. Increasing the number of steps-ahead flattens down the loss since it is likely for the algorithm to hit a good location irrespective of the initial point (all candidate points look better because of the future chances of the algorithm to be in a good location).}\label{table:n_ahead}
+\end{tabular}\caption{\hl{change this plots and make the matrix to be a figure} Expected loss for different number of steps ahead in an example with 10 data points and the Six-hump Camel function. Increasing the number of steps-ahead flattens down the loss since it is likely for the algorithm to hit a good location irrespective of the initial point (all candidate points look better because of the future chances of the algorithm to be in a good location).}\label{table:n_ahead}
 \end{table*}
 
 \subsection{Testing the effect of considering multiple steps ahead}
