@@ -429,7 +429,7 @@ $$t_{j,i}(\dataVector)= \left\{ \begin{array}{lcl}
  \mathbb{I}\{ 0 \leq \dataScalar_i-\dataScalar_j \} &   \mbox{otherwise.} 
 \end{array}
 \right.$$
-See supplementary materials for details. The first term in Eq.~(\ref{eq:expected_loss_oracle}) is a Gaussian probability on an unbounded polyhedron in which the limits are aligned with the axis. The second term is the sum of the Gaussian expectations on different non-axis-aligned different polyhedra defined by the indicator functions. Both terms can be computed with \ep using the approach proposed in \citep{Cunningham*Hennig*Lacoste-Julien_2011}. In a nutshell, to compute the integrals it is possible to replace the indicator functions with univariate Gaussian that play the role of \emph{soft-indicators} in the \ep iterations. This method is computationally efficient and scales well for high dimensions. Note that when $n=1$, Eq.~(\ref{eq:oracle_expected_nonmyopic_loss}) reduces to Eq.~(\ref{eq:expected_myopic_loss}).
+See supplementary materials for details. The first term in Eq.~(\ref{eq:expected_loss_oracle}) is a Gaussian probability on an unbounded polyhedron in which the limits are aligned with the axis. The second term is the sum of the Gaussian expectations on different non-axis-aligned different polyhedra defined by the indicator functions. Both terms can be computed with \ep using the approach proposed in \citep{Cunningham*Hennig*Lacoste-Julien_2011}. In a nutshell, to compute the integrals it is possible to replace the indicator functions with univariate Gaussians that play the role of \emph{soft-indicators} in the \ep iterations. This method is computationally efficient and scales well for high dimensions. Note that when $n=1$, Eq.~(\ref{eq:oracle_expected_nonmyopic_loss}) reduces to Eq.~(\ref{eq:expected_myopic_loss}).
 
 Under the hypothesis of this section, the next evaluation is located where $\Lambda_n(\latentVector_*|\I_0, \future_{n}(\latentVector_*) )$ gives the minimum value. We still need, however, to propose a way to approximate the oracle $\hat{\future}_n(\latentVector_*)$. We do in next section.
 
@@ -503,10 +503,10 @@ McCormick  & $[-1.5,4]\times[-3,4]$& 2\\
 Dropwave   &$[-1,1]\times[-1,1]$ & 2\\
 Beale   &$[-1,1]\times[-1,1]$ & 2\\
 Powers  & $[-1,1]\times[-1,1]$& 2\\ %\hline
-Alpine2-$q$  & $[-10,10]^{\inputDim}$& 2,5,10\\
-Ackely-$q$  &$[-5,5]^{\inputDim}$ & 2,5\\
+Alpine2-$q$  & $[-10,10]^{\inputDim}$& 2, 5, 10\\
+Ackley-$q$  &$[-5,5]^{\inputDim}$ & 2, 5\\
 \bottomrule
-\end{tabular}\caption{Details of the functions used in the experiments. Explicit form of these functions can be found at http://www.sfu.ca/~ssurjano/optimization.html, \citep{Molga1995} and the supplementary materials of this work. }\label{table:test_functions}
+\end{tabular}\caption{Details of the functions used in the experiments. The explicit form of these functions can be found at \url{http://www.sfu.ca/~ssurjano/optimization.html}, \citep{Molga1995} and the supplementary materials of this work. }\label{table:test_functions}
 \end{center}
 \end{table}
 
@@ -514,7 +514,7 @@ Ackely-$q$  &$[-5,5]^{\inputDim}$ & 2,5\\
 
 \begin{table*}[t!]
 \begin{center}
-\begin{tabular}{l|ccc|cccc|c}
+\begin{tabular}{lcccccccc}
 \toprule
 {} &     MPI &     GP-LCB &      EL &    EL-2 &    EL-3 &    EL-5 &  EL-10 &    GLASSES \\
 \midrule
@@ -532,7 +532,7 @@ Ackley-10 &  0.9893 &  0.9864 &  0.8178 &   \emph{0.9900} &   \emph{0.9912} &   
 Alpine2-2 &  \textbf{0.8628} &  0.8482 &  0.7902 &  0.7467 &  0.5988 &  0.6699 &  0.6393 &  0.7807 \\
 Alpine2-5  &  0.5221 &  0.6151 &  \textbf{0.7797} &  0.6740 &  0.6431 &  0.6592 &  0.6747 &  0.7123 \\
 \bottomrule
-\end{tabular}\caption{Results for the average `gap' measure (5 replicates) across different functions.  \el-k represents the expect loss function computed for k steps ahead at each iteration. \us represents the full \us algorithm, \mpi is the maximum probability of improvement and \lcb is the lower confidence bound criterion. The best result for each function is bolded. The cases in which a non-myopic loss outperforms the myopic expected loss are highlighted in italic.}\label{table:comparision}
+\end{tabular}\caption{Results for the average `gap' measure (5 replicates) across different functions.  \el-k represents the expected loss function computed for k steps ahead at each iteration. \us represents the full \us algorithm, \mpi is the maximum probability of improvement and \lcb is the lower confidence bound criterion. The best result for each function is bolded. The cases in which a non-myopic loss outperforms the myopic expected loss are highlighted in italic.}\label{table:comparision}
 \end{center}
 \end{table*}
 
@@ -555,7 +555,7 @@ Alpine2-5  &  0.5221 &  0.6151 &  \textbf{0.7797} &  0.6740 &  0.6431 &  0.6592 
 %        Ackley-2 &&& \textbf{0.7333} &  0.6382 &  0.5864 &  0.6864 &  0.6293 &  0.7001 \\
 %        Ackley-5&& &&&&&\\
 % \bottomrule
-% \end{tabular}\caption{Results for the average `gap' measure of the 5 replicates.  GL-k represents that the expect loss function has been computed k steps ahead at each iteration. GL-full represents the full \us algorithm with a number of steps ahead in each iteration equal to the number of remaining evaluations. The best result when comparing the myopic expected loss with the \us method with different number of steps ahead is bolded. The  MPI and GP-LCB are included for reference.}
+% \end{tabular}\caption{Results for the average `gap' measure of the 5 replicates.  GL-k represents that the expected loss function has been computed k steps ahead at each iteration. GL-full represents the full \us algorithm with a number of steps ahead in each iteration equal to the number of remaining evaluations. The best result when comparing the myopic expected loss with the \us method with different number of steps ahead is bolded. The  MPI and GP-LCB are included for reference.}
 % \end{center}
 % \end{table*}\label{table:comparision}
 
@@ -632,7 +632,7 @@ Some interesting issues will be addressed in the future such as making the optim
 \end{center}
 
 \vspace{1cm}
-\section{Oracle Multiple Steps loook-ahead Expected Loss }
+\section{Oracle Multiple Steps look-ahead Expected Loss }
 Denote by $\eta_n = \min \{\dataVector_0, y_*, y_2\dots,y_{n-1}\}$ the value of the best visited location when looking at $n$ evaluations in the future. Note that $\eta_n$ reduces to the current best lost $\eta$ in the one step-ahead case. It is straightforward to see that 
 $$ \min (y_n,\eta_n) = \min (\dataVector,\eta ).$$
 It holds hat
@@ -676,7 +676,7 @@ where $h_i(\dataVector) = \mathbb{I}\{\dataScalar_i>\eta\}$.  Merge (\ref{eq:ter
  
 \subsection{Synthetic functions}
 
-In this section we include the formulation of the objective functions used in the experiments that are not available in
+In this section we include the formulation of the objective functions used in the experiments that are not available in the references provided. 
 
 
 \begin{table}[h!]
