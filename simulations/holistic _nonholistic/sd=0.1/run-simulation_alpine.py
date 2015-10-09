@@ -20,18 +20,18 @@ experiments = [ #'func = cosines(sd=.1)',
                 #'func = mccormick(sd=.1)',
                 #'func = powers(sd=.1)',
                 #'func = eggholder(sd=.1)',
-                #'func = goldstein(sd=.1)',
-                'func = alpine2(input_dim=2,sd=.1)',
+                #'func = alpine2(input_dim=2,sd=.1)',
                 'func = alpine2(input_dim=5,sd=.1)',
                 'func = alpine2(input_dim=10,sd=.1)'
                 #'func = ackley(input_dim=2,sd=.1)',
                 #'func = ackley(input_dim=5,sd=.1)',
                 #'func = ackley(input_dim=10,sd=.1)'
+                #'fuc = func(goldstein=.sd)',
               ]
 
-NR              = 10            # Different initial points.
+NR              = 5            # Different initial points.
 n_init          = 5             # number of initial points (per dimension).
-max_iter_dim    = 10            # Number of iterations (per dimension).
+max_iter        = 20            # Number of iterations (per dimension).
 
 for experiment in experiments:
     # --- problem setup
@@ -66,15 +66,15 @@ for experiment in experiments:
         print experiment
         print k
         print 'res_GLASSES_02'
-        GLASSES_02.run_optimization(max_iter=max_iter_dim*input_dim)
+        GLASSES_02.run_optimization(max_iter=max_iter)
         rep_col     = [k]*GLASSES_02.Y_best.shape[0]
         res_GLASSES_02 = np.vstack((res_GLASSES_02,np.vstack((rep_col,GLASSES_02.Y_best)).T))
-        np.savetxt('res_GLASSES_02'+experiment[7:]+'.txt', res_GLASSES_02)
+        np.savetxt('res_GLASSES_02_'+experiment[7:]+'.txt', res_GLASSES_02)
 
         print experiment
         print k
         print 'GLASSES_03'
-        GLASSES_03.run_optimization(max_iter=max_iter_dim*input_dim) 
+        GLASSES_03.run_optimization(max_iter=max_iter) 
         rep_col     = [k]*GLASSES_03.Y_best.shape[0]
         res_GLASSES_03    = np.vstack((res_GLASSES_03,np.vstack((rep_col,GLASSES_03.Y_best)).T))
         np.savetxt('res_GLASSES_03_'+experiment[7:]+'.txt', res_GLASSES_03)
@@ -82,7 +82,7 @@ for experiment in experiments:
         print experiment
         print k
         print 'GLASSES_05'
-        GLASSES_05.run_optimization(max_iter=max_iter_dim*input_dim)  
+        GLASSES_05.run_optimization(max_iter=max_iter)  
         rep_col     = [k]*GLASSES_05.Y_best.shape[0]
         res_GLASSES_05    = np.vstack((res_GLASSES_05,np.vstack((rep_col,GLASSES_05.Y_best)).T))
         np.savetxt('res_GLASSES_05_'+experiment[7:]+'.txt', res_GLASSES_05)
@@ -90,7 +90,7 @@ for experiment in experiments:
         print experiment
         print k
         print 'GLASSES_10'
-        GLASSES_10.run_optimization(max_iter=max_iter_dim*input_dim)  
+        GLASSES_10.run_optimization(max_iter=max_iter)  
         rep_col     = [k]*GLASSES_10.Y_best.shape[0]
         res_GLASSES_10    = np.vstack((res_GLASSES_10,np.vstack((rep_col,GLASSES_10.Y_best)).T))
         np.savetxt('res_GLASSES_10_'+experiment[7:]+'.txt', res_GLASSES_10)
@@ -98,7 +98,7 @@ for experiment in experiments:
         print experiment
         print k
         print 'GLASSES_H'
-        GLASSES_H.run_optimization(max_iter=max_iter_dim*input_dim,ahead_remaining = True)  
+        GLASSES_H.run_optimization(max_iter=max_iter,ahead_remaining = True)  
         rep_col     = [k]*GLASSES_H.Y_best.shape[0]
         res_GLASSES_H    = np.vstack((res_GLASSES_H,np.vstack((rep_col,GLASSES_H.Y_best)).T))
         np.savetxt('res_GLASSES_H_'+experiment[7:]+'.txt', res_GLASSES_H)
@@ -106,7 +106,7 @@ for experiment in experiments:
         print experiment
         print k
         print 'EL'
-        EL.run_optimization(max_iter=max_iter_dim*input_dim, acqu_optimize_method='DIRECT')  
+        EL.run_optimization(max_iter=max_iter, acqu_optimize_method='DIRECT')  
         rep_col     = [k]*EL.Y_best.shape[0]
         res_EL    = np.vstack((res_EL,np.vstack((rep_col,EL.Y_best)).T))
         np.savetxt('res_EL_'+experiment[7:]+'.txt', res_EL)

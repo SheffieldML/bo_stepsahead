@@ -18,13 +18,13 @@ experiments = [ #'func = cosines(sd=.0)',
                 #'func = branin(sd=.0)',
                 #'func = sixhumpcamel(sd=.0)',
                 #'func = mccormick(sd=.0)',
-                'func = powers(sd=.0)',
-                'func = eggholder(sd=.0)'
+                #'func = powers(sd=.0)',
+                #'func = eggholder(sd=.0)'
                 #'func = goldstein(sd=.0)'
                 #'func = alpine2(input_dim=2,sd=.0)',
-                #'func = alpine2(input_dim=5,sd=.0)',
-                #'func = alpine2(input_dim=10,sd=.0)'
-                #'func = ackley(input_dim=2,sd=.0)',
+                'func = alpine2(input_dim=5,sd=.0)',
+                'func = alpine2(input_dim=10,sd=.0)',
+                'func = ackley(input_dim=2,sd=.0)'
                 #'func = ackley(input_dim=5,sd=.0)',
                 #'func = ackley(input_dim=10,sd=.0)'
               ]
@@ -59,7 +59,7 @@ for experiment in experiments:
         GLASSES_03   = GPyOptmsa.msa.GLASSES(f,bounds, X,Y,n_ahead=3,exact_feval=True) 
         GLASSES_05   = GPyOptmsa.msa.GLASSES(f,bounds, X,Y,n_ahead=5,exact_feval=True)
         GLASSES_10   = GPyOptmsa.msa.GLASSES(f,bounds, X,Y,n_ahead=10,exact_feval=True)
-        GLASSES_H    = GPyOptmsa.msa.GLASSES(f,bounds, X,Y)
+        GLASSES_H    = GPyOptmsa.msa.GLASSES(f,bounds, X,Y,exact_feval=True)
         EL           = GPyOpt.methods.BayesianOptimization(f=f,bounds=bounds, X=X, Y=Y ,acquisition='EL',exact_feval=True) 
 
         # --- Run the optimizations
