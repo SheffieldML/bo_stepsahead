@@ -345,7 +345,7 @@ defined on ${\mathcal X}$ \citep{Affandi:NIPS2013} and integrate Eq.~(\ref{eq:eq
 DPPs provide a density over sample locations that induces them to be dissimilar to each other (as well-spaced samples should), but that can be concentrated in chosen regions (such as regions of low myopic expected loss).
 However, although DPPs have nice computational properties in discrete sets, here we would need to take samples from the \dpp by conditioning on $\latentVector_*$ and the number of steps ahead. Although this is possible in theory, the computational burden of generating this samples will make this strategy impractical. 
 
-An alternative, and more efficient approach that we explore here is to work with a fixed $\textbf{X}$, which we assume it is computed beforehand. As we show in this section, although this approach does not make use of our epistemic uncertainty on the future steps, it drastically reduces the computational burden of approximating $\Lambda_n(\latentVector_*|\I_0 )$. 
+An alternative and more efficient approach, that we explore here, is to work with a fixed $\textbf{X}$, which we assume it is computed beforehand. As we show in this section, although this approach does not make use of our epistemic uncertainty on the future steps, it drastically reduces the computational burden of approximating $\Lambda_n(\latentVector_*|\I_0 )$. 
 
 \begin{table*}[t!]
 \begin{tabular}{ccc}
@@ -370,11 +370,17 @@ Suppose that  we had access to an oracle function $\future_{n}: {\mathcal X}\rig
 
 Assume, for now, that $\future_{n}$ exists and that we have access to it. We it and denote by $\dataVector=(y_*,\dots,\dots,y_n)^T$ the vector of future locations evaluations of $f$ at $\future_n(\latentVector_*)$. Assuming that $\dataVector$ is known, it is possible to rewrite the expected loss in Eq.~(\ref{eq:expected_nonmyopic_loss}) as
 \begin{equation}\label{eq:oracle_expected_nonmyopic_loss}
-\Lambda_n \bigl(\latentVector_*|\I_0, \future_{n}(\latentVector_*) \bigr) = \E \bigl[\min (\dataVector,\eta) \bigr], 
+\Lambda_n \bigl(\latentVector_* \mid \I_0, \future_{n}(\latentVector_*) \bigr) = \E \bigl[\min (\dataVector,\eta) \bigr], 
 \end{equation}
-where the expectation is taken over the multivariate Gaussian distribution, with mean vector $\mu$ and covariance matrix $\Sigma$, that gives rise after marginalizing the posterior distribution of the GP at $\future_{n}(\latentVector_*)$. Note that under a fixed $\future_{n}(\latentVector_*)$, it also holds that $\Lambda_n(\latentVector_*|\I_0, \future_{n}(\latentVector_*)) = \Gamma_n(\latentVector_*|\I_0,\future_{n}(\latentVector_*))$. See supplementary materials for details.
+where the expectation is taken over the multivariate Gaussian distribution, with mean vector $\mu$ and covariance matrix $\Sigma$, that gives rise after marginalizing the posterior distribution of the GP at $\future_{n}(\latentVector_*)$. Note that under a fixed $\future_{n}(\latentVector_*)$, it also holds that 
+$
+\Lambda_n \bigl(\latentVector_* \mid \I_0, \future_{n}(\latentVector_*) \bigr) 
+= 
+\Gamma_n \bigl(\latentVector_* \mid \I_0,\future_{n}(\latentVector_*) \bigr)
+$. 
+See supplementary materials for details.
 
-The intuition behind Eq.~(\ref{eq:oracle_expected_nonmyopic_loss}) is as follows: the expected loss at $\latentVector_*$ is the best possible function value that we expect to find in the next $n$ steps, conditional on the first evaluation being made at $\latentVector_*$. Rather than merely quantify the benefit provided by the next evaluation, this loss function accounts for the expected gain in the whole future sequence of evaluations of $f$. As we analyse in the experimental section of this work, the effect of this is an adaptive loss that tends to be more explorative the more remaining evaluations are available and more explorative as soon as we approach to the final evaluations of $f$.
+The intuition behind Eq.~(\ref{eq:oracle_expected_nonmyopic_loss}) is as follows: the expected loss at $\latentVector_*$ is the best possible function value that we expect to find in the next $n$ steps, conditional on the first evaluation being made at $\latentVector_*$. Rather than merely quantifying the benefit provided by the next evaluation, this loss function accounts for the expected gain in the whole future sequence of evaluations of $f$. As we analyse in the experimental section of this work, the effect of this is an adaptive loss that tends to be more explorative when more remaining evaluations are available and more exploitative as soon as we approach the final evaluations of $f$.
 
 \begin{algorithm*}[t!]
    \caption{Decision process of the full \us algorithm.}
@@ -424,13 +430,13 @@ Under the hypothesis of this section, the next evaluation is located where $\Lam
 
 
 
-This section proposes an empirical surrogate $\hat{\future}_n(\latentVector_*)$ for $\future_n(\latentVector_*)$. A sensible option would be to use the \emph{maximum a posteriori probability}, \map, of the above-mentioned \dpp. However, as it is the generation of \dpp samples, to compute the \map of a \dpp is an expensive operation \citep{NIPS2012_4577}. Alternatively, here we use some ideas that have been recently developed in the batch Bayesian optimisation literature. In a nutshell, batch \bo methods aim to define sets of points in $\mathcal{X}$ where $f$ should be evaluated in parallel, rather than sequentially. In essence, key aspect to building a `good' batch is the same as to computing a good approximation for $\Lambda_n(\latentVector_*|\I_0)$: to predict properly the steps ahead of the algorithm. 
+This section proposes an empirical surrogate $\hat{\future}_n(\latentVector_*)$ for $\future_n(\latentVector_*)$. A sensible option would be to use the \emph{maximum a posteriori probability}, \map, of the above-mentioned \dpp. However, as it is the generation of \dpp samples, to compute the \map of a \dpp is an expensive operation \citep{NIPS2012_4577}. Alternatively, here we use some ideas that have been recently developed in the batch Bayesian optimisation literature. In a nutshell, batch \bo methods aim to define sets of points in $\mathcal{X}$ where $f$ should be evaluated in parallel, rather than sequentially. In essence, a key aspect to building a `good' batch is the same as to computing a good approximation for $\Lambda_n(\latentVector_*|\I_0)$: to find a set of good locations at which to evaluate the objective. 
 
 In this work we adapt to our context the batch \bo idea proposed by \cite{gonzalez2015batch}. Inspired by the repulsion properties of \dpp , \cite{gonzalez2015batch} propose to build each batch by iteratively optimising and penalising the acquisition function in a neighbourhood of the   already collected points by means of some local penalisers $\varphi(\latentVector;\latentVector_j)$. Note that any other batch method could be used here, but we consider this approach since it is computationally tractable and scales well with the size of the batches (steps ahead in our context) and the dimensionality of the problem.
 
 More formally, assume that the objective function $f$ is $L$-Lipschitz continuous, that is, it satisfies that
 \begin{equation}\label{eq:lipschitz}
-|\latentForce(\latentVector_1) - \latentForce(\latentVector_2) | \leq L \|\latentVector_1 -\latentVector_2 \|,\qquad\forall\; \latentVector_1,\latentVector_2\in\mathcal{X}
+|\latentForce(\latentVector_1) - \latentForce(\latentVector_2) | \leq L \|\latentVector_1 -\latentVector_2 \|,\qquad\forall\; \latentVector_1,\latentVector_2\in\mathcal{X}.
 \end{equation} 
 Take $M = \min_{\latentVector \in {\inputSpace}} \latentForce(\latentVector)$ and valid Lipschitz constant $L$. It is possible to show that  the ball
 \begin{equation}\label{eq:radious}
@@ -438,22 +444,23 @@ B_{r_j}(\latentVector_j)= \{\latentVector\in \inputSpace : \|\latentVector_j-\la
 \end{equation}
 where
 $$r_j = \frac{\latentForce(\latentVector_j)-M}{L}$$
-doesn't contain the minimum of $f$. Probabilist versions of these balls are used to define the above mentioned penalisers by noting that $\latentForce(\latentVector) \sim \GP(\mu(\latentVector),k(\latentVector,\latentVector'))$. In particular, $\varphi(\latentVector;\latentVector_j)$ is chosen as the probability that $\latentVector$, any point in $\inputSpace$ that is a potential candidate to be a minimum, does not belong to $B_{r_j}(\latentVector_j)$: $\varphi(\latentVector;\latentVector_j)  = 1- p (\latentVector  \in B_{r_j}(\latentVector_j)).$
+doesn't contain the minimum of $f$. Probabilistic versions of these balls are used to define the above mentioned penalisers by noting that $\latentForce(\latentVector) \sim \GP(\mu(\latentVector),k(\latentVector,\latentVector'))$. In particular, $\varphi(\latentVector;\latentVector_j)$ is chosen as the probability that $\latentVector$, any point in $\inputSpace$ that is a potential candidate to be a minimum, does not belong to $B_{r_j}(\latentVector_j)$: $\varphi(\latentVector;\latentVector_j)  = 1- p (\latentVector  \in B_{r_j}(\latentVector_j)).$
 %\begin{equation}\label{eq:penalizer}
 %\varphi(\latentVector;\latentVector_j)  = 1- p (\latentVector  \in B_{r_j}(\latentVector_j) ).
 %& = & p\left(Z< \frac{L \|x-x_1\|_2-M+ m(r_{x_1})}{\sigma(r_{x_1})} \right) \nonumber
 %\end{equation}
 As detailed in \cite{gonzalez2015batch}, these functions have close form and create an exclusion zone around the point $\latentVector_j$. The predicted k-th location when looking at $n$ step ahead and using $\latentVector_*$ as putative point is defined as
 \begin{equation}\label{eq:penalized_acquisition}
- [\hat{\future}_n(\latentVector_*)]_k  =\arg \min_{x \in \inputSpace} \left\{g(\Lambda_1(\latentVector_*| \I_0))\prod_{j=1}^{k-1}\varphi(\latentVector;\hat{\latentVector}_{j})\right\},
+ [\hat{\future}_n(\latentVector_*)]_k  =
+ \arg \min_{x \in \inputSpace}\, \biggl\{g \bigl(\Lambda_1(\latentVector_* \mid \I_0) \bigr)\prod_{j=1}^{k-1}\varphi(\latentVector;\hat{\latentVector}_{j})\biggr\},
 \end{equation}
 for $k=2,\dots,n$ and where $\varphi(\latentVector;\latentVector_{j})$ are local local penalizers centered at $\latentVector_{j}$ and $g:\Re \rightarrow \Re^+$ is the \emph{soft-plus} transformation $g(z)= \ln(1+e^z)$.
 
-To illustrate how $\hat{\future}_n$ computes the steps ahead we include Figure~(\ref{fig:steps_ahead}). We show the myopic loss in a \bo experiment together with predicted locations by $\hat{\future}_n$ for two different putative points. In case 1, the putative point $\latentVector_*$ (grey star) is close to the location of the minimum of the myopic loss (blue region). In case 2, $\latentVector_*$ is located in an uninteresting region. In both cases the future locations explore the interesting region determined for the myopic loss while the locations of the points are conditioned to the first location. In the bottom row of the figure we show how the points are selected in Case 1. The fist putative point creates an exclusion zone that shifts the minimum of the acquisition, where the next location is selected. Iterative, new locations are found by balancing diversity (due to the effect of the exclusion areas) and quality (exploring locations where the loss is low), similarly to the way samples the probabilities over subsets can be characterised in a \dpp \citep{MAL-044}.
+To illustrate how $\hat{\future}_n$ computes the steps ahead we include Figure~(\ref{fig:steps_ahead}). We show the myopic loss in a \bo experiment together with predicted locations by $\hat{\future}_n$ for two different putative points. In case 1, the putative point $\latentVector_*$ (grey star) is close to the location of the minimum of the myopic loss (blue region). In case 2, $\latentVector_*$ is located in an uninteresting region. In both cases the future locations explore the interesting region determined for the myopic loss while the locations of the points are conditioned to the first location. In the bottom row of the figure we show how the points are selected in Case 1. The first putative point creates an exclusion zone that shifts the minimum of the acquisition, where the next location is selected. Iteratively, new locations are found by balancing diversity (due to the effect of the exclusion areas) and quality (exploring locations where the loss is low), similarly to the way samples the probabilities over subsets can be characterised in a \dpp \citep{MAL-044}.
  
 
 \subsection{Algorithm and computational costs}
-All the steps of \us are detailed in Algorithm \ref{alg:glasses}. The main computational cost are the calculation of the steps ahead, which is done using a sequence of \lbfgs optimizers at $\mathcal{O}(Pq^2)$ complexity for $P$ the maximum number of \lbfgs updates. The use of \ep to compute the value of the expected loss at each location requires a  quadratic run  time  factor  update in the dimensionality of each Gaussian factor.
+All the steps of \us are detailed in Algorithm \ref{alg:glasses}. The main computational cost is the calculation of the steps ahead, which is done using a sequence of \lbfgs optimizers at $\mathcal{O}(Pq^2)$ complexity for $P$, the maximum number of \lbfgs updates. The use of \ep to compute the value of the expected loss at each location requires a  quadratic run  time  factor  update in the dimensionality of each Gaussian factor.
 
 \section{Experiments}\label{sec:experiments}
 %We present two experiment to illustrate the utility of using a non-myopic loss functions in global optimisation problems. The first one illustrates the exploraion-exploitataion balance of the non myopic loss for a different number of steps ahead. In the second experiment, we illustrate the utility in a benchmark of global optimisation problems.
