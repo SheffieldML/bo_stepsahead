@@ -182,7 +182,7 @@
         ;
 \end{tikzpicture}
 \caption{
-    A Bayesian network describing the $n$-step lookahead problem. The shaded node ($\dataSet_0$) is known, and the diamond node ($\xst$) is the current decision variable. All $y$ nodes are correlated with one another under the \gp model.
+    A Bayesian network describing the $n$-step lookahead problem. The shaded node ($\dataSet_0$) is known, and the diamond node ($\xst$) is the current decision variable. All $y$ nodes are correlated with one another under the \gp model. Note that the nested maximisation problems required for $x_i$ and integration problems required for $y_*$ and $y_i$ (in either case for $i=2,\ldots, n$) render inference in this model prohibitively computationally expensive.
 }
 \label{fig:bayes_net}
 \end{figure*}
@@ -297,7 +297,7 @@ where we have abbreviated $\sigma^2(y_*|\I_0)$ as $\sigma^2$ and $\mu(y_{*}|\I_0
         ;
 \end{tikzpicture}
 \caption{
-    A Bayesian network describing our approximation to the $n$-step lookahead problem. The shaded node ($\dataSet_0$) is known, and the diamond node ($\xst$) is the current decision variable, which is now directly connected with all future steps of the algorithm.
+    A Bayesian network describing our approximation to the $n$-step lookahead problem. The shaded node ($\dataSet_0$) is known, and the diamond node ($\xst$) is the current decision variable, which is now directly connected with all future steps of the algorithm. Compare with Figure \ref{fig:bayes_net}: the sparser structure renders our approximation computationally tractable. 
 }
 \label{fig:bayes_net_glasses}
 \end{figure*}
@@ -453,7 +453,7 @@ All the steps of \us are detailed in Algorithm \ref{alg:glasses}. The main compu
 %We present two experiment to illustrate the utility of using a non-myopic loss functions in global optimisation problems. The first one illustrates the exploraion-exploitataion balance of the non myopic loss for a different number of steps ahead. In the second experiment, we illustrate the utility in a benchmark of global optimisation problems.
 
 \subsection{Interpreting the non-myopic loss in practice}
-The goal of this experiment is to visualise the effect that has in the expected loss to consider multiple steps ahead. To this end we use Six-hump camel function  (see Table~\ref{table:n_ahead} for details). We fit a \gp with and Square Exponential kernel and we plot the myopic expected loss together with 5 variants that consider 2, 3, 5, 10 and 20 steps ahead. 
+The goal of this experiment is to visualise the effect that has in the expected loss to consider multiple steps ahead. To this end we use Six-hump camel function  (see Table~\ref{table:n_ahead} for details). We fit a \gp with a Square Exponential kernel and we plot the myopic expected loss together with 5 variants that consider 2, 3, 5, 10 and 20 steps ahead. 
 
 We observe that as soon as the increasing the steps ahead decreases the optimum value of the loss since the algorithm can visit more locations and the expected minimum is lower. Also, increasing the steps ahead flattens down the loss: it is likely to hit a good location irrespective of the initial point so all candidate looks better because of the future chances of the algorithm to be in a good location. In practice this behaviour translates into an acquisition function that is more explorative with more looks ahead and more exploitative otherwise. 
 
@@ -515,7 +515,7 @@ Ackley &  0.9893 &  0.9864 &  0.8178 &   \emph{0.9900} &   \emph{0.9912} &   \em
 Alpine2-2 &  \textbf{0.8628} &  0.8482 &  0.7902 &  0.7467 &  0.5988 &  0.6699 &  0.6393 &  0.7807 \\
 Alpine2-5  &  0.5221 &  0.6151 &  \textbf{0.7797} &  0.6740 &  0.6431 &  0.6592 &  0.6747 &  0.7123 \\
 \bottomrule
-\end{tabular}\caption{\hl{waiting for the last results} Results for the average `gap' measure (5 replicates) across different functions and methods in 5 replicates.  GL-k represents that the expect loss function computed for k steps ahead at each iteration. GLASSES represents the full \us algorithm with a number of steps ahead in each iteration equal to the number of remaining evaluations. The best result for each function is bolded. The cases in which a non-myopic loss outperforms the myopic expected loss are highlighted in italic.}\label{table:comparision}
+\end{tabular}\caption{\hl{waiting for the last results} Results for the average `gap' measure (5 replicates) across different functions and methods in 5 replicates.  EL-k represents that the expect loss function computed for k steps ahead at each iteration. GLASSES represents the full \us algorithm with a number of steps ahead in each iteration equal to the number of remaining evaluations. The best result for each function is bolded. The cases in which a non-myopic loss outperforms the myopic expected loss are highlighted in italic.}\label{table:comparision}
 \end{center}
 \end{table*}
 
