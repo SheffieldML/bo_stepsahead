@@ -516,7 +516,7 @@ Ackley-$q$  &$[-5,5]^{\inputDim}$ & 2, 5\\
 \toprule
 {} &     MPI &     GP-LCB &      EL &    EL-2 &    EL-3 &    EL-5 &  EL-10 &    GLASSES \\
 \midrule
-SinCos &&& &&&&&\\ 
+SinCos  &  0.7147 &  0.6058 &  0.7645 &  \emph{0.8656} &  0.6027 &  0.4881 &  \emph{0.8274} &  \emph{\textbf{0.9000}} \\ 
 Cosines           &  0.8637 &  0.8704 &  0.8161 &  \emph{0.8423} &  \emph{0.8118} &  0.7946 &  0.7477 &  \emph{\textbf{0.8722}} \\
 Branin              &  0.9854 &  0.9616 &  \textbf{0.9900} &  0.9856 &  0.9673 &  0.9824 &  0.9887 &  0.9811 \\
 Sixhumpcamel        &  0.8983 &  \textbf{0.9346} &  0.9299 &  0.9115 &  0.9067 &  0.8970 &  0.9123 &  0.8880 \\
@@ -682,7 +682,7 @@ In this section we include the formulation of the objective functions used in th
 \toprule
 Name & Function     \\
 \midrule
-CosSin & $f(\latentScalar) = \latentScalar \sin(\latentScalar) + \latentScalar \cos(2\latentScalar)$  \\
+SinCos & $f(\latentScalar) = \latentScalar \sin(\latentScalar) + \latentScalar \cos(2\latentScalar)$  \\
 Alpine2-$\inputDim$ & $f(\latentVector) =\prod_{i=1}^{\inputDim} \sqrt{\latentScalar_i}\sin(\latentScalar_i)$  \\
 Cosines &  $f(\latentVector) = 1- \sum_{i=1}^2 (g(\latentScalar_i) - r(\latentScalar_i) )  \mbox{ with } g(\latentScalar_i) = (1.6\latentScalar_i - 0.5)^2 \mbox{ and } r(\latentScalar_i) = 0.3 \cos (3\pi (1.6 \latentScalar_i -0.5))$. \\
 \bottomrule
