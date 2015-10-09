@@ -75,6 +75,10 @@
 \newcommand{\map}{\acr{map}}
 \newcommand{\ep}{\acr{ep}}
 \newcommand{\bo}{\acr{bo}}
+\newcommand{\mpi}{\acr{mpi}}
+\newcommand{\el}{\acr{el}}
+\newcommand{\lcb}{\acr{gp-lcb}}
+
 
 \newcommand*{\addheight}[2][.5ex]{%
   \raisebox{0pt}[\dimexpr\height+(#1)\relax]{#2}%
@@ -383,7 +387,7 @@ See supplementary materials for details.
 The intuition behind Eq.~(\ref{eq:oracle_expected_nonmyopic_loss}) is as follows: the expected loss at $\latentVector_*$ is the best possible function value that we expect to find in the next $n$ steps, conditional on the first evaluation being made at $\latentVector_*$. Rather than merely quantifying the benefit provided by the next evaluation, this loss function accounts for the expected gain in the whole future sequence of evaluations of $f$. As we analyse in the experimental section of this work, the effect of this is an adaptive loss that tends to be more explorative when more remaining evaluations are available and more exploitative as soon as we approach the final evaluations of $f$.
 
 \begin{algorithm*}[t!]
-   \caption{Decision process of the full \us algorithm.}
+   \caption{Decision process of the \us algorithm.}
    \label{alg:glasses}
 \begin{algorithmic}
    \STATE {\bfseries Input:} dataset $\dataSet_{0} = \{(\textbf{x}_0, y_0)\}$, number of remaining evaluations ($n$), look-ahead predictor $\future$.
@@ -463,12 +467,6 @@ To illustrate how $\hat{\future}_n$ computes the steps ahead we include Figure~(
 All the steps of \us are detailed in Algorithm \ref{alg:glasses}. The main computational cost is the calculation of the steps ahead, which is done using a sequence of \lbfgs optimizers at $\mathcal{O}(Pq^2)$ complexity for $P$, the maximum number of \lbfgs updates. The use of \ep to compute the value of the expected loss at each location requires a  quadratic run  time  factor  update in the dimensionality of each Gaussian factor.
 
 \section{Experiments}\label{sec:experiments}
-%We present two experiment to illustrate the utility of using a non-myopic loss functions in global optimisation problems. The first one illustrates the exploraion-exploitataion balance of the non myopic loss for a different number of steps ahead. In the second experiment, we illustrate the utility in a benchmark of global optimisation problems.
-
-\subsection{Interpreting the non-myopic loss in practice}
-the goal of this experiment is to visualise the effect on the expected loss of considering multiple steps ahead. to this end, we use six-hump camel function (see table~\ref{table:n_ahead} for details). we fit a \gp with a square exponential kernel and we plot the myopic expected loss together with 5 variants that consider 2, 3, 5, 10 and 20 steps ahead. 
-
-We observe that increasing the steps ahead decreases the optimum value of the loss, since the algorithm can visit more locations, and the expected minimum is lower. Also, increasing the steps ahead flattens down the loss: it is likely to hit a good location irrespective of the initial point so all candidate looks better because of the future chances of the algorithm to be in a good location. In practice this behaviour translates into an acquisition function that is more explorative with more look ahead and more exploitative otherwise. 
 
 \begin{table*}[t!]
 \begin{tabular}{ccc}
@@ -480,6 +478,14 @@ We observe that increasing the steps ahead decreases the optimum value of the lo
       \addheight{\includegraphics[width=54mm]{20_ahead.pdf}}\\
 \end{tabular}\caption{Expected loss for different number of steps ahead in an example with 10 data points and the Six-hump Camel function. Increasing the number of steps-ahead flattens down the loss since it is likely for the algorithm to hit a good location irrespective of the initial point (all candidate points look better because of the future chances of the algorithm to be in a good location).}\label{table:n_ahead}
 \end{table*}
+%We present two experiment to illustrate the utility of using a non-myopic loss functions in global optimisation problems. The first one illustrates the exploraion-exploitataion balance of the non myopic loss for a different number of steps ahead. In the second experiment, we illustrate the utility in a benchmark of global optimisation problems.
+
+\subsection{Interpreting the non-myopic loss in practice}
+the goal of this experiment is to visualise the effect on the expected loss of considering multiple steps ahead. to this end, we use six-hump camel function (see table~\ref{table:n_ahead} for details). we fit a \gp with a square exponential kernel and we plot the myopic expected loss together with 5 variants that consider 2, 3, 5, 10 and 20 steps ahead. 
+
+We observe that increasing the steps ahead decreases the optimum value of the loss, since the algorithm can visit more locations, and the expected minimum is lower. Also, increasing the steps ahead flattens down the loss: it is likely to hit a good location irrespective of the initial point so all candidate looks better because of the future chances of the algorithm to be in a good location. In practice this behaviour translates into an acquisition function that is more explorative with more look ahead and more exploitative otherwise. 
+
+
 
 \subsection{Testing the effect of considering multiple steps ahead}
 
@@ -490,7 +496,7 @@ We observe that increasing the steps ahead decreases the optimum value of the lo
 Name &Function domain & $\inputDim$ \\
 \midrule
 \hline
-SinCos & $[0,10]$ & 1 \\
+%SinCos & $[0,10]$ & 1 \\
 Cosines & $[0,1]\times[0,1]$ & 2\\
 Branin &$[-5,10]\times[-5,10]$ & 2\\
 Sixhumpcamel  &$[-2,2]\times[-1,1]$ & 2\\
@@ -498,15 +504,15 @@ McCormick  & $[-1.5,4]\times[-3,4]$& 2\\
 Dropwave   &$[-1,1]\times[-1,1]$ & 2\\
 Beale   &$[-1,1]\times[-1,1]$ & 2\\
 Powers  & $[-1,1]\times[-1,1]$& 2\\ %\hline
-Alpine2-$q$  & $[-10,10]^{\inputDim}$& 5\\
-Ackely-$q$  &$[-5,5]^{\inputDim}$ & 5\\
+Alpine2-$q$  & $[-10,10]^{\inputDim}$& 2,5,10\\
+Ackely-$q$  &$[-5,5]^{\inputDim}$ & 2,5\\
 \bottomrule
-\end{tabular}\caption{Details of the functions used in the experiments}\label{table:test_functions}
+\end{tabular}\caption{Details of the functions used in the experiments. Explicit form of these functions can be found at http://www.sfu.ca/~ssurjano/optimization.html, \citep{Molga1995} and the supplementary materials of this work. }\label{table:test_functions}
 \end{center}
 \end{table}
 
 
-To study the validity of our approximation we choose a variety of functions with a range of dimensions and domain sizes. See Table~\ref{table:test_functions} for details. We use the full \us algorithm (in which at each iteration the number of remaining iterations is used as the number of steps-ahead) and we show the results when 2, 3, 5, and 10 steps look-ahead are used to compute the loss function. Each problem is solved a unique using 5 different random initialisation with 5 inital data points. This allows us to compare the average performance of each method on each problem. As baseline we use the myopic expected loss (EL). For comparative purposes we used other two loss functions are commonly used in the literature. In particular, we use the Maximum Probability of Improvement (MPI) and the GP lower confidence bound (GP-LCB). In this later case we set the parameter that balances exploration and exploitation to 1. See \citep{Snoek*Larochelle*Adams_2012} for details on these loss functions. All acquisition functions are optimised using the dividing rectangles algorithm \direct \citep{Jones1993}.
+To study the validity of our approximation we choose a variety of functions with a range of dimensions and domain sizes. See Table~\ref{table:test_functions} for details. We use the full \us algorithm (in which at each iteration the number of remaining iterations is used as the number of steps-ahead) and we show the results when 2, 3, 5, and 10 steps look-ahead are used to compute the loss function. Each problem is solved a unique using 5 different random initialisation with 5 inital data points. This allows us to compare the average performance of each method on each problem. As baseline we use the myopic expected loss, \el. For comparative purposes we used other two loss functions are commonly used in the literature. In particular, we use the Maximum Probability of Improvement, \mpi, and the \gp lower confidence bound, \lcb. In this later case we set the parameter that balances exploration and exploitation to 1. See \citep{Snoek*Larochelle*Adams_2012} for details on these loss functions. All acquisition functions are optimised using the dividing rectangles algorithm \direct \citep{Jones1993}.
 
 \begin{table*}[t!]
 \begin{center}
@@ -514,21 +520,21 @@ To study the validity of our approximation we choose a variety of functions with
 \toprule
 {} &     MPI &     GP-LCB &      EL &    EL-2 &    EL-3 &    EL-5 &  EL-10 &    GLASSES \\
 \midrule
-SinCos &&& &&&&&\\ 
+%SinCos &&& &&&&&\\ 
 Cosines           &  0.8637 &  0.8704 &  0.8161 &  \emph{0.8423} &  \emph{0.8118} &  0.7946 &  0.7477 &  \emph{\textbf{0.8722}} \\
 Branin              &  0.9854 &  0.9616 &  \textbf{0.9900} &  0.9856 &  0.9673 &  0.9824 &  0.9887 &  0.9811 \\
 Sixhumpcamel        &  0.8983 &  \textbf{0.9346} &  0.9299 &  0.9115 &  0.9067 &  0.8970 &  0.9123 &  0.8880 \\
 Mccormick           &  0.9514 &  0.9326 &  0.9055 &  \emph{0.9139} &  \emph{0.9189} &  \emph{0.9283} &  \emph{0.9389} &  \emph{\textbf{0.9424}} \\
 Dropwave            &  0.7308 &  0.7413 &  0.7667 &  0.7237 &  0.7555 &  0.7293 &  0.6860 &  \emph{\textbf{0.7740}} \\
-Beale &&& &&&&&\\ 
+%Beale &&& &&&&&\\ 
 Powers              &  0.2177 &  0.2167 &  0.2216 &  \emph{0.2428} &  \emph{0.2372} &  \emph{0.2390} &  \emph{0.2339} &  \emph{\textbf{0.3670}} \\
 Ackley-2 &  0.8230 &  \textbf{0.8975} &  0.7333 &  0.6382 &  0.5864 &  0.6864 &  0.6293 &  0.7001 \\
 Ackley-5  & 0.1832&   0.2082&   0.5473&   \emph{0.6694}&  0.3582&   0.3744&   \emph{\textbf{0.6700}} &  0.4348\\ 
-Ackley &  0.9893 &  0.9864 &  0.8178 &   \emph{0.9900} &   \emph{0.9912} &   \emph{\textbf{0.9916}} &   \emph{0.8340} &   \emph{0.8567} \\
+Ackley-10 &  0.9893 &  0.9864 &  0.8178 &   \emph{0.9900} &   \emph{0.9912} &   \emph{\textbf{0.9916}} &   \emph{0.8340} &   \emph{0.8567} \\
 Alpine2-2 &  \textbf{0.8628} &  0.8482 &  0.7902 &  0.7467 &  0.5988 &  0.6699 &  0.6393 &  0.7807 \\
 Alpine2-5  &  0.5221 &  0.6151 &  \textbf{0.7797} &  0.6740 &  0.6431 &  0.6592 &  0.6747 &  0.7123 \\
 \bottomrule
-\end{tabular}\caption{\hl{waiting for the last results} Results for the average `gap' measure (5 replicates) across different functions and methods in 5 replicates.  EL-k represents that the expect loss function computed for k steps ahead at each iteration. GLASSES represents the full \us algorithm with a number of steps ahead in each iteration equal to the number of remaining evaluations. The best result for each function is bolded. The cases in which a non-myopic loss outperforms the myopic expected loss are highlighted in italic.}\label{table:comparision}
+\end{tabular}\caption{Results for the average `gap' measure (5 replicates) across different functions and methods in 5 replicates.  EL-k represents that the expect loss function computed for k steps ahead at each iteration. GLASSES represents the full \us algorithm with a number of steps ahead in each iteration equal to the number of remaining evaluations. The best result for each function is bolded. The cases in which a non-myopic loss outperforms the myopic expected loss are highlighted in italic.}\label{table:comparision}
 \end{center}
 \end{table*}
 
@@ -671,6 +677,29 @@ The second term can be written as
 \end{equation}
 where $h_i(\dataVector) = \mathbb{I}\{\dataScalar_i>\eta\}$.  Merge (\ref{eq:term1}) and (\ref{eq:term2}) to obtain Eq.  (\ref{eq:expected_loss_oracle}).
  
+\subsection{Synthetic functions}
+
+In this section we include the formulation of the objective functions used in the experiments that are not available in
+
+
+\begin{table}[h!]
+\centering
+% \vspace{-0.3cm}
+\begin{tabular}{cc}
+\toprule
+Name & Function     \\ \hline\hline
+CosSin & $f(\latentScalar) = \latentScalar \sin(\latentScalar) + \latentScalar \cos(2\latentScalar)$  \\
+Alpine2-$\inputDim$ & $f(\latentVector) =\prod_{i=1}^{\inputDim} \sqrt{\latentScalar_i}\sin(\latentScalar_i)$  \\
+Cosines &  $f(\latentVector) = 1- \sum_{i=1}^2 (g(\latentScalar_i) - r(\latentScalar_i) )  \mbox{ with } g(\latentScalar_i) = (1.6\latentScalar_i - 0.5)^2 \mbox{ and } r(\latentScalar_i) = 0.3 \cos (3\pi (1.6 \latentScalar_i -0.5))$. \\
+\bottomrule
+\end{tabular}\caption{Functions used in the experimental section.}\label{table:functions_test}
+\end{table}
+
+%Sixhumpcamel  &$[-2,2]\times[-1,1]$ & 2\\
+%McCormick  & $[-1.5,4]\times[-3,4]$& 2\\
+%Dropwave   &$[-1,1]\times[-1,1]$ & 2\\
+%Beale   &$[-1,1]\times[-1,1]$ & 2\\
+%Powers  & $[-1,1]\times[-1,1]$& 2\\ %\hline
 
 
 
