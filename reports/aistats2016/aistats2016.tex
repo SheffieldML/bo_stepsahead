@@ -210,7 +210,7 @@ This approach scales poorly with the number of future evaluations considered, an
 \citep{Marchant*Ramos*Sanner*2014} reframe the multi-step lookahead problem as a partially observed Markov decision process, and adopt a Monte Carlo tree search approach in solving it. 
 Again, the scaling of the approach permits the authors to consider no more than six steps into the future. In the past, the multi-step look ahead problem was studied by \cite{StreltsovVakili1999} proposing a utility function that maximizes the total `reward' of the algorithm by taking into account the cost of future computations, rather than trying to find the optimum after a fixed number of evaluations.
 
-Interestingly, there exists a link between the multi-step lookahead problem and \emph{batch} Bayesian optimisation \citep{Ginsbourger2009,Azimi2011,Azimi2012}. In this later case, batches of locations rather than individual observations are selected in each iteration of the algorithm and evaluated in parallel. When such locations are selected \emph{greedily}, that is, one after the other, the key to selecting good batches relies on the ability of the batch criterion of predicting future steps of the algorithm. In this work we will exploit this parallelism to compute a non-myopic loss for Bayesian optimisation. 
+Interestingly, there exists a link between the multi-step lookahead problem and \emph{batch} Bayesian optimisation \citep{Ginsbourger2009,Azimi2012}. In this later case, batches of locations rather than individual observations are selected in each iteration of the algorithm and evaluated in parallel. When such locations are selected \emph{greedily}, that is, one after the other, the key to selecting good batches relies on the ability of the batch criterion of predicting future steps of the algorithm. In this work we will exploit this parallelism to compute a non-myopic loss for Bayesian optimisation. 
 
 %Our algorithm, \us, provides scaling superior to existing alternatives, which is tested in a variety of experiments. 
 
@@ -408,12 +408,12 @@ The intuition behind Eq.~(\ref{eq:oracle_expected_nonmyopic_loss}) is as follows
 
 \begin{figure*}[t!]
 \begin{tabular}{ccc}
-      \addheight{\includegraphics[width=54mm]{1_ahead.pdf}} &
-      \addheight{\includegraphics[width=54mm]{2_ahead.pdf}}  &
-      \addheight{\includegraphics[width=54mm]{3_ahead.pdf}}\\
-      \addheight{\includegraphics[width=54mm]{5_ahead.pdf}} &
-      \addheight{\includegraphics[width=54mm]{10_ahead.pdf}}  &
-      \addheight{\includegraphics[width=54mm]{20_ahead.pdf}}\\
+      \addheight{\includegraphics[width=52mm]{1_ahead.pdf}} &
+      \addheight{\includegraphics[width=52mm]{2_ahead.pdf}}  &
+      \addheight{\includegraphics[width=52mm]{3_ahead.pdf}}\\
+      \addheight{\includegraphics[width=52mm]{5_ahead.pdf}} &
+      \addheight{\includegraphics[width=52mm]{10_ahead.pdf}}  &
+      \addheight{\includegraphics[width=52mm]{20_ahead.pdf}}\\
 \end{tabular}\caption{Expected loss for different number of steps ahead in an example with 10 data points and the Six-hump Camel function. Increasing the number of steps-ahead flattens down the loss since it is likely for the algorithm to hit a good location irrespective of the initial point (all candidate points look better because of the future chances of the algorithm to be in a good location).}\label{table:n_ahead}
 \end{figure*}
 
@@ -557,7 +557,7 @@ Alpine2-5  &  0.5221 &  0.6151 &  \textbf{0.7797} &  0.6740 &  0.6431 &  0.6592 
 % \end{center}
 % \end{table*}\label{table:comparision}
 
-To study the validity of our approximation we choose a variety of functions with a range of dimensions and domain sizes. See Table~\ref{table:test_functions} for details. We use the full \us algorithm (in which at each iteration the number of remaining iterations is used as the number of steps-ahead) and we show the results when 2, 3, 5, and 10 steps look-ahead are used to compute the loss function. Each problem is solved 5 times with different random initialisations of 5 data points. This allows us to compare the average performance of each method on each problem. As baseline we use the myopic expected loss, \el. For comparative purposes we used other two loss functions are commonly used in the literature. In particular, we use the Maximum Probability of Improvement, \mpi, and the \gp lower confidence bound, \lcb. In this later case we set the parameter that balances exploration and exploitation to 1. See \citep{Snoek*Larochelle*Adams_2012} for details on these loss functions. All acquisition functions are optimised using the dividing rectangles algorithm \direct \citep{Jones1993}.
+To study the validity of our approximation we choose a variety of functions with a range of dimensions and domain sizes. See Table~\ref{table:test_functions} for details. We use the full \us algorithm (in which at each iteration the number of remaining iterations is used as the number of steps-ahead) and we show the results when 2, 3, 5, and 10 steps look-ahead are used to compute the loss function. Each problem is solved 5 times with different random initialisations of 5 data points. The number of allows evaluations is 10 times the dimensionality of the problem. This allows us to compare the average performance of each method on each problem. As baseline we use the myopic expected loss, \el. For comparative purposes we used other two loss functions are commonly used in the literature. In particular, we use the Maximum Probability of Improvement, \mpi, and the \gp lower confidence bound, \lcb. In this later case we set the parameter that balances exploration and exploitation to 1. See \citep{Snoek*Larochelle*Adams_2012} for details on these loss functions. All acquisition functions are optimised using the dividing rectangles algorithm \direct \citep{Jones1993}.
  As surrogate model for the functions we used a \gp with a squared exponential kernel plus a bias kernel \citep{Rasmussen:2005:GPM:1162254}. The hyper-parameters of the model were optimised by the standard method of maximising the marginal likelihood, using \lbfgs \citep{Nocedal1980} for 1,000 iterations and selected the best of 5 random restarts.
 To compare the methods we used the `gap' measure of performance \citep{Huang:2006}, which is defined as
 $$G \triangleq \frac{y(\latentVector_{first})-y(\latentVector_{best})}{y(\latentVector_{first})-y(\latentVector_{opt})},$$
@@ -681,7 +681,7 @@ In this section we include the formulation of the objective functions used in th
 \begin{tabular}{cc}
 \toprule
 Name & Function     \\
-
+\midrule
 CosSin & $f(\latentScalar) = \latentScalar \sin(\latentScalar) + \latentScalar \cos(2\latentScalar)$  \\
 Alpine2-$\inputDim$ & $f(\latentVector) =\prod_{i=1}^{\inputDim} \sqrt{\latentScalar_i}\sin(\latentScalar_i)$  \\
 Cosines &  $f(\latentVector) = 1- \sum_{i=1}^2 (g(\latentScalar_i) - r(\latentScalar_i) )  \mbox{ with } g(\latentScalar_i) = (1.6\latentScalar_i - 0.5)^2 \mbox{ and } r(\latentScalar_i) = 0.3 \cos (3\pi (1.6 \latentScalar_i -0.5))$. \\
