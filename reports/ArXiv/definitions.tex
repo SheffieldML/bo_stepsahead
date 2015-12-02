@@ -1,0 +1,267 @@
+% This file defines macros, notation is defined in notationDef.tex
+\usepackage{color}
+\usepackage{verbatim}
+
+\global\long\def\neil#1{\textbf{\color{red}#1}}
+%\global\long\def\todo#1{\textbf{TODO: #1}}
+\global\long\def\instructions#1{\textbf{INSTRUCTIONS: #1}}
+
+\definecolor{brown}{rgb}{0.9,0.59,0.078}
+\definecolor{ironsulf}{rgb}{0,0.7,.5}
+\definecolor{lightpurple}{rgb}{0.156,0,0.245}
+
+\newenvironment{matlab}{\comment}{\endcomment}
+\newenvironment{octave}{\comment}{\endcomment}
+\newenvironment{matlabv}{\verbatim}{\endverbatim}
+\newenvironment{octavev}{\verbatim}{\endverbatim}
+
+\ifdefined\blackBackground
+\definecolor{colorOne}{rgb}{0, 1, 1}
+\definecolor{colorTwo}{rgb}{1, 0, 1}
+\definecolor{colorThree}{rgb}{1, 1, 0}
+\definecolor{colorTwoThree}{rgb}{1, 0, 0}
+\definecolor{colorOneThree}{rgb}{0, 1, 0}
+\definecolor{colorOneTwo}{rgb}{0, 0, 1}
+\else
+\definecolor{colorOne}{rgb}{1, 0, 0}
+\definecolor{colorTwo}{rgb}{0, 1, 0}
+\definecolor{colorThree}{rgb}{0, 0, 1}
+\definecolor{colorTwoThree}{rgb}{0, 1, 1}
+\definecolor{colorOneThree}{rgb}{1, 0, 1}
+\definecolor{colorOneTwo}{rgb}{1, 1, 0}
+\fi
+
+\ifdefined\blackBackground
+\global\long\def\redColor{cyan}
+\global\long\def\greenColor{magenta}
+\global\long\def\blueColor{yellow}
+\global\long\def\magentaColor{green}
+\global\long\def\blackColor{white}
+\global\long\def\whiteColor{black}
+\else
+\global\long\def\redColor{red}
+\global\long\def\greenColor{green}
+\global\long\def\blueColor{blue}
+\global\long\def\magentaColor{magenta}
+\global\long\def\blackColor{black}
+\global\long\def\whiteColor{white}
+\fi
+
+\global\long\def\det#1{\left|#1\right|}
+\global\long\def\erf{\text{erf}}
+\global\long\def\refeq#1{(\ref{#1})}
+\global\long\def\refsec#1{Section \ref{#1}}
+\global\long\def\refsecs#1#2{Sections \ref{#1}--\ref{#2}}
+\global\long\def\reftwosec#1#2{Sections \ref{#1} and \ref{#2}}
+\global\long\def\Refsec#1{Section \ref{#1}}
+
+% Try and avoid these macros for notation, they are definitions of convenience.
+\global\long\def\bfdelta{\boldsymbol{\delta}}
+\global\long\def\bfDelta{\boldsymbol{\Delta}}
+\global\long\def\bfbeta{\boldsymbol{\beta}}
+\global\long\def\bfgamma{\boldsymbol{\gamma}}
+\global\long\def\bfmu{\boldsymbol{\mu}}
+\global\long\def\bfnu{\boldsymbol{\nu}}
+\global\long\def\bfalpha{\boldsymbol{\alpha}}
+\global\long\def\bfepsilon{\boldsymbol{\epsilon}}
+\global\long\def\bfSigma{\boldsymbol{\Sigma}}
+\global\long\def\bftau{\boldsymbol{\tau}}
+\global\long\def\bflambda{\boldsymbol{\lambda}}
+\global\long\def\bfLambda{\boldsymbol{\Lambda}}
+\global\long\def\bfpsi{\boldsymbol{\psi}}
+\global\long\def\bfxi{\boldsymbol{\xi}}
+\global\long\def\bfpi{\bm{\pi}}
+\global\long\def\bfPsi{\boldsymbol{\Psi}}
+\global\long\def\bfphi{\boldsymbol{\phi}}
+\global\long\def\bfPhi{\boldsymbol{\Phi}}
+\global\long\def\bfrho{\boldsymbol{\rho}}
+\global\long\def\bftheta{\boldsymbol{\theta}}
+\global\long\def\bfTheta{\boldsymbol{\Theta}}
+\global\long\def\bfomega{\boldsymbol{\omega}}
+
+
+\global\long\def\Bmath#1{\boldsymbol{#1}}
+
+
+% Avoid these macros for notation, they are definitions of convenience.
+\global\long\def\bfa{\mathbf{a}}
+\global\long\def\bfb{\mathbf{b}}
+\global\long\def\bfc{\mathbf{c}}
+\global\long\def\bfd{\mathbf{d}}
+\global\long\def\bfe{\mathbf{e}}
+\global\long\def\bff{\mathbf{f}}
+\global\long\def\bfg{\mathbf{g}}
+\global\long\def\bfh{\mathbf{h}}
+\global\long\def\bfk{\mathbf{k}}
+\global\long\def\bfl{\mathbf{l}}
+\global\long\def\bfm{\mathbf{m}}
+\global\long\def\bfn{\mathbf{n}}
+\global\long\def\bfo{\mathbf{o}}
+\global\long\def\bfp{\mathbf{p}}
+\global\long\def\bfq{\mathbf{q}}
+\global\long\def\bfr{\mathbf{r}}
+\global\long\def\bfs{\mathbf{s}}
+\global\long\def\bft{\mathbf{t}}
+\global\long\def\bfu{\mathbf{u}}
+\global\long\def\bfv{\mathbf{v}}
+\global\long\def\bfw{\mathbf{w}}
+\global\long\def\bfx{\mathbf{x}}
+\global\long\def\bfy{\mathbf{y}}
+\global\long\def\bfz{\mathbf{z}}
+
+\newcommand{\dif}[1]{\text{d}#1}
+\global\long\def\cov{\text{cov}}
+
+
+\global\long\def\bfzero{\mathbf{0}}
+\global\long\def\bfone{\mathbf{1}}
+
+
+\global\long\def\bfA{\mathbf{A}}
+\global\long\def\bfB{\mathbf{B}}
+\global\long\def\bfC{\mathbf{C}}
+\global\long\def\bfD{\mathbf{D}}
+\global\long\def\bfE{\mathbf{E}}
+\global\long\def\bfG{\mathbf{G}}
+\global\long\def\bfH{\mathbf{H}}
+\global\long\def\bfI{\mathbf{I}}
+\global\long\def\eye{\mathbf{I}}
+\global\long\def\bfK{\mathbf{K}}
+\global\long\def\bfL{\mathbf{L}}
+\global\long\def\bfM{\mathbf{M}}
+\global\long\def\bfO{\mathbf{O}}
+\global\long\def\bfP{\mathbf{P}}
+\global\long\def\bfQ{\mathbf{Q}}
+\global\long\def\bfR{\mathbf{R}}
+\global\long\def\bfS{\mathbf{S}}
+\global\long\def\bfT{\mathbf{T}}
+\global\long\def\bfU{\mathbf{U}}
+\global\long\def\bfV{\mathbf{V}}
+\global\long\def\bfW{\mathbf{W}}
+\global\long\def\bfX{\mathbf{X}}
+\global\long\def\bfY{\mathbf{Y}}
+\global\long\def\bfZ{\mathbf{Z}}
+\global\long\def\llangle{{\langle\vspace{-2mm} \langle}}
+\global\long\def\rrangle{{\rangle\vspace{-2mm} \rangle}}
+\global\long\def\la{\leftarrow}
+
+
+\global\long\def\tf{\tilde{f}}
+\global\long\def\tg{\tilde{g}}
+\global\long\def\tX{\tilde{X}}
+\global\long\def\tY{\tilde{Y}}
+\global\long\def\tZ{\tilde{Z}}
+
+
+\global\long\def\bbE{\mathbb{E}}
+\global\long\def\bbR{\mathbb{R}}
+\global\long\def\bbP{\mathbb{P}}
+\global\long\def\bbT{\mathbb{T}}
+\global\long\def\bbZ{\mathbb{Z}}
+
+
+\global\long\def\ois{2 \pi i s}
+\global\long\def\oik{2 \pi i k}
+\global\long\def\oin{2 \pi i n}
+\global\long\def\oim{2 \pi i m}
+
+
+\global\long\def\T{{\top}}
+\global\long\def\Tr{\mbox{Tr}}
+\global\long\def\trace#1{\text{tr}\left(#1\right)}
+%\global\long\def\diff#1{{\, d#1}}
+\global\long\def\diff#1#2{\frac{\text{d}#1}{\text{d}#2}}
+\global\long\def\vgraph#1{ \newpage\begin{center} \end{center}{center}{center}{center}{center}{center}{center}{center}{center}{center}{center}{center}{center}{center}{center}{center}{center} {\large{\bf #1}} {center} \vspace{2mm} }
+\global\long\def\high#1{\textcolor{blue}{\emph{#1}}}
+\global\long\def\cut#1{}
+\global\long\def\citeasnoun#1{\citeN{#1}}
+\global\long\def\citemulti#1#2{(#1, \citeyearNP{#2})}
+\global\long\def\citemultiN#1#2{#1 (\citeyearNP{#2})}
+\global\long\def\Sum{{\displaystyle \sum}}
+\global\long\def\defeq{{\stackrel{def}{=}}}
+\global\long\def\marg#1{\marginpar{#1}}
+
+
+\global\long\def\pdt#1#2{\frac{\partial^{2} #1}{\partial{#2}^{2} }}
+\global\long\def\pdsd#1#2#3{\frac{\partial^{2} #1}{\partial{#2} \partial{#3} }}
+\global\long\def\pdo#1#2{\frac{\partial{#1}}{\partial{#2}}}
+\global\long\def\pdol#1#2{\partial{#1}/ \partial{#2}}
+\global\long\def\pdu#1{\frac{\partial}{\partial{#1}}}
+
+\global\long\def\reffig#1{figure~\ref{#1}}
+\global\long\def\Reffig#1{Figure~\ref{#1}}
+\global\long\def\reffigrange#1#2{figure~\ref{#1}--\ref{#2}}
+\global\long\def\Reffigrange#1#2{Figure~\ref{#1}--\ref{#2}}
+\global\long\def\refbox#1{box~\ref{#1}}
+\global\long\def\Refbox#1{Box~\ref{#1}}
+\global\long\def\refeqs#1#2{equation~(\ref{#1})--(\ref{#2})}
+\global\long\def\Refeqs#1#2{Equation~(\ref{#1})--(\ref{#2})}
+\global\long\def\reftip#1{tip~\ref{#1}}
+\global\long\def\Reftip#1{Tip~\ref{#1}}
+\global\long\def\refint#1{intuition~\ref{#1}}
+\global\long\def\Refint#1{Intuition~\ref{#1}}
+\global\long\def\reftable#1{table~\ref{#1}}
+\global\long\def\Reftable#1{Table~\ref{#1}}
+\global\long\def\refchap#1{chapter~\ref{#1}}
+\global\long\def\Refchap#1{Chapter~\ref{#1}}
+\global\long\def\refapp#1{appendix~\ref{#1}}
+\global\long\def\Refappendix#1{Appendix~\ref{#1}}
+\global\long\def\refchaprange#1#2{chapter~\ref{#1}--\ref{#2}}
+\global\long\def\Refchaprange#1#2{Chapter~\ref{#1}--\ref{#2}}
+\global\long\def\refsection#1{section~\ref{#1}}
+\global\long\def\Refsection#1{Section~\ref{#1}}
+
+\global\long\def\fixme#1{\emph{\textbf{#1}}}
+
+\global\long\def\detail#1{}
+
+% For putting a footer when an include is made.
+\global\long\def\includetalkfile#1{{\setbeamertemplate{footline}{\url{#1} \hfill \insertframenumber} \input{#1}}}
+
+%\global\long\def\includetalkfile#1{\input{#1}}
+\global\long\def\newsection#1#2{\section{#1}\begin{frame}\frametitle{Outline}\tableofcontents[currentsection,hideallsubsections]\end{frame}\includetalkfile{#2}}
+
+\global\long\def\inputdiagram#1{{\small\input{#1}\vspace{0.5cm}}}
+
+\global\long\def\newsubsection#1#2{\subsection{#1}\includetalkfile{#2}}
+\global\long\def\newsubsubsection#1#2{\subsubsection{#1}\includetalkfile{#2}}
+
+
+\global\long\def\includecvfile#1{\input{#1}}
+\global\long\def\newcvsection#1#2{\section*{#1}\includecvfile{#2}}
+
+\global\long\def\newcvsubsection#1#2{\subsection*{#1}\includecvfile{#2}}
+\global\long\def\newcvsubsubsection#1#2{\subsubsection*{#1}\includecvfile{#2}}
+\global\long\def\newcvparagraph#1#2{\paragraph{#1}\includecvfile{#2}}
+
+\global\long\def\twoimageslidewidth#1#2#3#4{\begin{frame}[plain]
+  \begin{center}
+    \href{#3}{\includegraphics[width=0.45\textwidth]{#1}}\hfill
+    \href{#3}{\includegraphics[width=0.45\textwidth]{#2}}
+  \end{center}
+\end{frame}
+\note{#4}}
+\global\long\def\imageslidewidth#1#2#3{\begin{frame}[plain]
+  \begin{center}
+    \href{#2}{\includegraphics[width=0.9\textwidth]{#1}}
+  \end{center}
+\end{frame}
+\note{#3}}
+\global\long\def\imageslideheight#1#2#3{\begin{frame}[plain]
+  \begin{center}
+    \href{#2}{\includegraphics[height=0.9\textheight]{#1}}
+  \end{center}
+\end{frame}
+\note{#3}}
+
+\global\long\def\paperslide#1#2#3{\begin{frame}[plain]
+  \begin{center}
+    {\setlength\fboxsep{0pt}%
+      \colorbox{white}{
+    \href{#2}{\includegraphics[trim=0cm 20cm 0cm 0cm, clip=true, width=\textwidth]{#1}}}
+    }
+  \end{center}
+\end{frame}
+\note{#3}}
+
+
