@@ -71,7 +71,7 @@
 %\def\bbbr{{\rm I\!R}}
 %-- Header and footer information ----------------------------------
 \newcommand{\footleft}{Funded by the BRIC-BBSRC  project No BB/K011197/1.}
-\newcommand{\footright}{$^*$\texttt{\{j.h.gonzalez\}@sheffield.ac.uk} }
+\newcommand{\footright}{$^*$\texttt{j.h.gonzalez\}@sheffield.ac.uk} }
 \title{\Huge{GLASSES: Relieving The Myopia Of Bayesian Optimisation}}
 \author{Javier Gonz\'{a}lez$^{1,*}$ \quad Michael Osborne$^{2}$ \quad  Neil D. Lawrence$^{1}$}
 \institute{$^1$University of Sheffield, $^2$University of Oxford}
@@ -232,7 +232,7 @@ $$\Lambda_n(\latentVector_*|\I_0 ) =  \int \lambda(y_n) \prod_{j=1}^{n}p(y_{j}|\
 \end{itemize}
 
  \begin{center}
- \textcolor{red}{\textbf{This long-sight loss is extremely expensive to compute}}
+ \textcolor{red}{\textbf{The optimal long-sight loss is extremely expensive to compute}}
  \end{center}
 
 \end{block}
@@ -330,7 +330,7 @@ $t_{j,i}(\dataVector) =\mathbb{I}\{ 0 \leq \dataScalar_i-\dataScalar_j \}$ other
 \end{figure}
 
  \begin{center}
- \textcolor{red}{\textbf{Increasing the number of steps-ahead increased exploration in GLASSES}}
+ \textcolor{red}{\textbf{GLASSES is more explorative the more remaining evaluations are available}}
  \end{center}
  
 
@@ -358,7 +358,7 @@ Alpine2-5  &  0.5221 &  0.6151 &  \textbf{0.7797} &  0.6740 &  0.6431 &  0.6592 
 \end{center}
 \end{table}
  \begin{center}
- \textcolor{red}{\textbf{Non-myopic losses improve the results in practice }}
+ \textcolor{red}{\textbf{GLASSES improves other myopic losses in practice }}
  \end{center}
  
 
