@@ -20,7 +20,7 @@ class GLASSES:
         self.Y = Y
         
         # Initialize model
-        self.kernel = GPy.kern.RBF(self.input_dim, variance=.1, lengthscale=.1)  + GPy.kern.Bias(self.input_dim)
+        self.kernel = GPy.kern.RBF(self.input_dim, variance=1., lengthscale=np.max(self.bounds)/5.)+GPy.kern.Bias(self.input_dim)
         self.model  = GPy.models.GPRegression(X,Y,kernel= self.kernel)
         
         if exact_feval==True:
