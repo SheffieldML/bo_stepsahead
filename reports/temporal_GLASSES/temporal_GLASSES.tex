@@ -3,6 +3,7 @@
 
 \usepackage{booktabs}
 \usepackage{natbib}
+
 \usepackage{hyperref}
 %\usepackage[demo]{graphicx}
 %\usepackage{subcaption}
@@ -127,10 +128,7 @@
 \aistatsaddress{ Unknown Institution 1 \And Unknown Institution 2 \And Unknown Institution 3 } ]
 
 \begin{abstract}
-    We present \us: Global optimisation with Look-Ahead through Stochastic Simulation and Expected-loss Search. 
-    The majority of global optimisation approaches in use are myopic, in only considering the impact of the next function value; the non-myopic approaches that do exist are able to consider only a handful of future evaluations. 
-    Our novel algorithm, \us, permits the consideration of dozens of evaluations into the future.  This is done by approximating the ideal \emph{look-ahead} loss function, which is expensive to evaluate, by a cheaper alternative in which the future steps of the algorithm are simulated beforehand. An Expectation Propagation algorithm is used to compute the expected value of the loss.
-    We show that the far-horizon planning thus enabled leads to substantive performance gains in empirical tests. 
+    We present \us: 
 \end{abstract}
 \section{Introduction} % (fold)
 \label{sec:introduction}
@@ -190,31 +188,9 @@
 \label{fig:bayes_net}
 \end{figure*}
 
-
-Global optimisation is core to any complex problem where design and choice play a role. 
-Within Machine Learning, such problems are found in the tuning of hyperparameters \citep{Snoek*Larochelle*Adams_2012}, sensor selection \citep{Garnett*Osborne*Roberts_2010} or experimental design \citep{gonzalez2014, martinez-cantin_bayesian_2009}. 
-Most global optimisation techniques are myopic, in considering no more than a single step into the future. 
-Relieving this myopia requires solving the \emph{multi-step lookahead} problem: the global optimisation of an function by considering the significance of the next function evaluation on function evaluations (steps) further into the future. 
-It is clear that a solution to the problem would offer performance gains.
-For example, consider the case in which we have a budget of two evaluations with which to optimise a function $f(x)$ over the domain $\inputSpace = [0, 1] \subset \reals$. 
-If we are strictly myopic, our first evaluation will likely be at 
-$x=\nicefrac{1}{2}$, and our second then at only one of $x=\nicefrac{1}{4}$ and $x=\nicefrac{3}{4}$. 
-This myopic strategy will thereby result in ignoring half of the domain $\inputSpace$, regardless of the second choice. 
-If we adopt a two-step lookahead approach, we will select function evaluations that will be more evenly distributed across the domain by the time the budget is exhausted. 
-We will consequently be better informed about $f$ and its optimum.
-
-There is a limited literature on the multi-step lookahead problem.
-\cite{osborne_gaussian_2009} perform multi-step lookahead by optimising future evaluation locations, and sampling over future function values. 
-This approach scales poorly with the number of future evaluations considered, and the authors present results for no more than two-step lookahead.
-\citep{Marchant*Ramos*Sanner*2014} reframe the multi-step lookahead problem as a partially observed Markov decision process, and adopt a Monte Carlo tree search approach in solving it. 
-Again, the scaling of the approach permits the authors to consider no more than six steps into the future. In the past, the multi-step look ahead problem was studied by \cite{StreltsovVakili1999} proposing a utility function that maximizes the total `reward' of the algorithm by taking into account the cost of future computations, rather than trying to find the optimum after a fixed number of evaluations.
-
-Interestingly, there exists a link between the multi-step lookahead problem and \emph{batch} Bayesian optimisation \citep{Ginsbourger2009,Azimi2012}. In this later case, batches of locations rather than individual observations are selected in each iteration of the algorithm and evaluated in parallel. When such locations are selected \emph{greedily}, that is, one after the other, the key to selecting good batches relies on the ability of the batch criterion of predicting future steps of the algorithm. In this work we will exploit this parallelism to compute a non-myopic loss for Bayesian optimisation. 
+his work we will exploit this parallelism to compute a non-myopic loss for Bayesian optimisation. 
 
 %Our algorithm, \us, provides scaling superior to existing alternatives, which is tested in a variety of experiments. 
-
-This paper is organised as follows. In Section \ref{sec:background} we formalise the problem and describe the contributions of this work. Section \ref{sec:glasses} describe the details of the proposed algorithm. Section \ref{sec:experiments} illustrates the superior performance of \us in a variety of test functions and we conclude in Section \ref{sec:conclusions} with a discussion about the most interesting results observed in this work.
-
 
 \section{Background and challenge}\label{sec:background}
 \subsection{Bayesian optimisation with one step look-ahead} % (fold)

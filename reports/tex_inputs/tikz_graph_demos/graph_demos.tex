@@ -1,0 +1,128 @@
+\documentclass[english]{beamer}
+\usepackage{tikz}
+\usetikzlibrary{arrows}
+\usepackage{amsmath}
+\mode<presentation>
+{
+ \usetheme{lectures}
+ \setbeamertemplate{blocks}[rounded][shadow=true]
+ \setbeamertemplate{items}[circle]
+ \setbeamertemplate{navigation symbols}{}
+ \setbeamercovered{transparent}
+ \setbeamertemplate{navigation symbols}{} 
+}
+
+\input{../definitions.tex}
+\input{../notationDef.tex}
+\input{../graphicalModels.tex}
+
+\begin{document}
+
+\title[A Deep GP]{A Deep Geep}
+
+
+
+
+\author[Neil Lawrence]{Neil D. Lawrence\\Departments of Neuro- and Computer Science, University of Sheffield, U.K.}
+
+
+\date{}
+\institute{The Institute of Deep Geep Modelling}
+\frame{\maketitle}
+
+\begin{frame}
+  \frametitle{Deep Models}
+  \def\layersep{1.5cm}
+  \def\nodesep{1cm}
+  \begin{center}
+    \begin{tikzpicture}[node distance=\layersep]
+      \tikzstyle{annot} = [text width=4em, text centered]    % Draw the input layer nodes
+      \foreach \name / \x in {1,...,8}
+        % This is the same as writing \foreach \name / \x in {1/1,2/2,3/3,4/4}
+        \node[obs] (Y-\name) at (\x*\nodesep, 0) {$\dataScalar_\x$};
+
+
+        % Draw the hidden layer nodes
+      \foreach \name / \x in {1,...,6}
+        \path[xshift=\nodesep]
+          node[latent] (X1-\name) at (\x*\nodesep, \layersep) {$\latentScalar_\x$};
+
+        % Draw the hidden layer nodes
+      \foreach \name / \x in {1,...,6}
+        \path[xshift=\nodesep]
+          node[latent] (X2-\name) at (\x*\nodesep, \layersep*2) {$\latentScalar_\x$};
+
+        % Draw the hidden layer nodes
+      \foreach \name / \x in {1,...,4}
+        \path[xshift=\nodesep*2]
+          node[latent] (X3-\name) at (\x*\nodesep, \layersep*3) {$\latentScalar_\x$};
+
+        % Draw the hidden layer nodes
+      \foreach \name / \x in {1,...,4}
+        \path[xshift=\nodesep*2]
+          node[latent] (X4-\name) at (\x*\nodesep, \layersep*4) {$\latentScalar_\x$};
+
+      % Connect every node in the latent layer with every node in the
+      % data layer.
+      \foreach \source in {1,...,6}
+        \foreach \dest in {1,...,8}
+          \draw[->] (X1-\source) -- (Y-\dest);
+
+      \foreach \source in {1,...,6}
+        \foreach \dest in {1,...,6}
+          \draw[->] (X2-\source) -- (X1-\dest);
+
+      \foreach \source in {1,...,4}
+        \foreach \dest in {1,...,6}
+          \draw[->] (X3-\source) -- (X2-\dest);
+
+      \foreach \source in {1,...,4}
+        \foreach \dest in {1,...,4}
+          \draw[->] (X4-\source) -- (X3-\dest);
+
+
+
+      % Annotate the layers
+      \node[annot,left of=X4-1, node distance=1cm] (ls) {Latent layer 4};
+      \node[annot,left of=X3-1, node distance=1cm] (ls) {Latent layer 3};
+      \node[annot,left of=X2-1, node distance=1cm] (ls) {Latent layer 2};
+      \node[annot,left of=X1-1, node distance=1cm] (ls) {Latent layer 1};
+      \node[annot,left of=Y-1, node distance=1cm] (ds) {Data space};
+    \end{tikzpicture}
+  \end{center}
+  
+  
+\end{frame}
+
+\begin{frame}
+    \begin{center}
+      \begin{tikzpicture}
+        
+        % Define nodes
+        \draw<1-3> node[obs] (y) {$\dataVector$};
+        \draw<3> node[latent, above of=y] (f) {$\mappingFunctionVector$};
+        \draw<4-> node[obs] (y) {$\dataScalar_i$};
+        \draw<4-> node[latent, above of=y] (f) {$\mappingFunction_i$};
+        \draw<2> node[latent, above of=y] (u) {$\inducingVector$};
+        \draw<3-5> node[latent, above of=f] (u) {$\inducingVector$};
+        \draw<6-> node[const, above of=f] (u) {$\inducingVector$};
+        
+        % Connect the nodes
+        \draw<2> [->] (u) to (y);%
+        \draw<3-> [->] (f) to (y);%
+        \draw<3-> [->] (u) to (f);%
+
+        \only<4->{\plate[inner sep=10pt] {fy} {(f)(y)} {$i=1\dots\numData$} ;}
+        
+      \end{tikzpicture}
+    \end{center}
+
+
+\end{frame}
+
+\end{document}
+%%% Local Variables: 
+%%% mode: latex
+%%% TeX-master: t
+%%% End: 
+x
