@@ -1,0 +1,19 @@
+--------------------------------- Log file --------------------------------
+DIRECT Version 2.0.4
+ Problem Dimension n                    :      5
+ Eps value                              :   0.1000E-03
+ Maximum number of f-evaluations (maxf) :   2000
+ Maximum number of iterations (MaxT)    :    750
+ Value of f_global                      :  -0.1000+101
+ Global percentage wanted               :   0.1000E-01
+ Volume percentage wanted               :   0.5000E-02
+ Measure percentage wanted              :  -0.1000E+01
+ Epsilon is constant.
+ Jones original DIRECT algorithm is used.
+Bounds on variable x 1    :    -32.76800 <= xi <=     32.76800
+Bounds on variable x 2    :    -32.76800 <= xi <=     32.76800
+Bounds on variable x 3    :    -32.76800 <= xi <=     32.76800
+Bounds on variable x 4    :    -32.76800 <= xi <=     32.76800
+Bounds on variable x 5    :    -32.76800 <= xi <=     32.76800
+---------------------------------------------------------------------------
+ Iteration   # of f-eval.   fmin

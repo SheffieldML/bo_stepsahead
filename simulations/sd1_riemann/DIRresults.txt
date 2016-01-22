@@ -1,0 +1,42 @@
+--------------------------------- Log file --------------------------------
+DIRECT Version 2.0.4
+ Problem Dimension n                    :     10
+ Eps value                              :   0.1000E-03
+ Maximum number of f-evaluations (maxf) :   2000
+ Maximum number of iterations (MaxT)    :    750
+ Value of f_global                      :  -0.1000+101
+ Global percentage wanted               :   0.1000E-01
+ Volume percentage wanted               :   0.5000E-02
+ Measure percentage wanted              :  -0.1000E+01
+ Epsilon is constant.
+ Jones original DIRECT algorithm is used.
+Bounds on variable x 1    :      1.00000 <= xi <=     10.00000
+Bounds on variable x 2    :      1.00000 <= xi <=     10.00000
+Bounds on variable x 3    :      1.00000 <= xi <=     10.00000
+Bounds on variable x 4    :      1.00000 <= xi <=     10.00000
+Bounds on variable x 5    :      1.00000 <= xi <=     10.00000
+Bounds on variable x 6    :      1.00000 <= xi <=     10.00000
+Bounds on variable x 7    :      1.00000 <= xi <=     10.00000
+Bounds on variable x 8    :      1.00000 <= xi <=     10.00000
+Bounds on variable x 9    :      1.00000 <= xi <=     10.00000
+Bounds on variable x10    :      1.00000 <= xi <=     10.00000
+---------------------------------------------------------------------------
+ Iteration   # of f-eval.   fmin
+    1          21         -69.3316650561
+    2          39         -69.3316654889
+DIRECT stopped: Volume of S_min is 0.17D-02% < 0.50D-02% of the original volume.
+--------------------------------- Summary --------------------------------
+Final function value           :  -69.3316655
+Number of function evaluations :           73
+Index  Final solution   x(i) - l(i)   u(i) - x(i) 
+    1    5.5000000       4.5000000      4.5000000
+    2    8.5000000       7.5000000      1.5000000
+    3    5.5000000       4.5000000      4.5000000
+    4    5.5000000       4.5000000      4.5000000
+    5    2.5000000       1.5000000      7.5000000
+    6    5.5000000       4.5000000      4.5000000
+    7    5.5000000       4.5000000      4.5000000
+    8    5.5000000       4.5000000      4.5000000
+    9    5.5000000       4.5000000      4.5000000
+   10    5.5000000       4.5000000      4.5000000
+---------------------------------------------------------------------------

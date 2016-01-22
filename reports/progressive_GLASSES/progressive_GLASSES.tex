@@ -1,0 +1,276 @@
+\documentclass{article} % For LaTeX2e
+\usepackage{nips15submit_e,times}
+\usepackage{hyperref}
+\usepackage{url}
+%\documentstyle[nips14submit_09,times,art10]{article} % For LaTeX 2.09
+
+\usepackage{hyperref}
+\usepackage{url}
+\usepackage[utf8x]{inputenc}
+\usepackage[english]{babel}
+\usepackage{natbib}
+\usepackage{nicefrac}
+\usepackage{algorithm}
+\usepackage{algorithmic}
+\usepackage{amsfonts}
+\usepackage{graphics}
+\usepackage{graphicx}
+\usepackage{tikz}
+\usepackage{color,soul,amsmath}
+
+\usetikzlibrary{bayesnet}
+\tikzstyle{connect}=[-latex]
+\tikzstyle{allconnected}=[line width=0.1cm]
+
+%\usepackage{verbatim}
+%\usepackage[active,tightpage]{preview}
+%\PreviewEnvironment{tikzpicture}
+%\usepackage{savetrees}
+
+%\graphicspath{{../},{./diagrams/}}
+\graphicspath{{../diagrams/}}
+\input{../tex_inputs/notationDef.tex}
+\input{../tex_inputs/definitions.tex}
+
+
+\newcommand{\I}{\mathcal{I}}
+\newcommand{\ud}{\mathrm{d}}
+\newcommand{\E}{\mathbb{E}}
+\newcommand{\Prob}{\mathbb{P}}
+\newcommand{\bL}{\textbf{L}}
+\newcommand{\bI}{\textbf{I}}
+\newcommand{\vk}{\vec{k}}
+\newcommand{\vL}{\vec{\Lambda}}
+\newcommand{\xmin}{x_{\min}}
+\newcommand{\pmin}{p_{\min}}
+\newcommand{\fmin}{f_{\min}}
+\newcommand{\pfmin}{p_{f_{\min}}}
+\renewcommand{\vec}{\boldsymbol}
+\newcommand{\fun}[1]{\mathsf{#1}}
+\renewcommand{\O}{\mathcal{O}}
+\newcommand{\GP}{\mathcal{GP}}
+\newcommand{\N}{\mathcal{N}}
+\newcommand{\Id}{\vec{I}}
+\newcommand{\II}{\mathbb{I}}
+\newcommand{\future}{\mathcal{F}}
+\newcommand{\IR}{\mathbb{R}}
+\newcommand{\argmin}{\operatorname*{arg\: min}}
+\newcommand{\argmax}{\operatorname*{arg\: max}}
+\newcommand{\chol}{\operatorname{\mathsf{C}}}
+\newcommand{\xst}{x_{\ast}}
+\newcommand{\yst}{y_{\ast}}
+\newcommand{\ind}{\mathbb{I}}
+\newcommand{\bz}{\textbf{z}}
+
+\usepackage{xspace}
+\newcommand{\acr}[1]{\textsc{#1}\xspace}
+\newcommand{\gp}{\acr{gp}}
+\newcommand{\dpp}{\acr{dpp}}
+\newcommand{\us}{\acr{glasses}}
+\newcommand{\direct}{\acr{direct}}
+\newcommand{\lbfgs}{\acr{l-bfgs}}
+\newcommand{\map}{\acr{map}}
+\newcommand{\ep}{\acr{ep}}
+\newcommand{\bo}{\acr{bo}}
+\newcommand{\mpi}{\acr{mpi}}
+\newcommand{\el}{\acr{el}}
+\newcommand{\lcb}{\acr{gp-lcb}}
+
+\newtheorem{theorem}{Theorem}
+\newtheorem{lemma}{Lemma}
+\newtheorem{corollary}{Corollary}
+\newtheorem{proposition}{Proposition}
+\newtheorem{definition}{Definition}
+\newtheorem{proof}{Proof}
+\newtheorem{conjecture}{Conjecture}
+\newtheorem{remark}{Remark}
+
+
+
+
+
+\title{
+    Progressive-GLASSES?
+}
+    
+ 
+\author{
+David S.~Hippocampus\thanks{ Use footnote for providing further information about author (webpage, alternative address)---\emph{not} for acknowledging funding agencies.} \\
+Department of Computer Science\\
+Cranberry-Lemon University\\
+Pittsburgh, PA 15213 \\
+\texttt{hippo@cs.cranberry-lemon.edu} \\
+\And
+Coauthor \\
+Affiliation \\
+Address \\
+\texttt{email} \\
+}
+
+\newcommand{\fix}{\marginpar{FIX}}
+\newcommand{\new}{\marginpar{NEW}}
+
+%\nipsfinalcopy % Uncomment for camera-ready version
+
+    
+\begin{document}
+
+\maketitle
+
+\begin{abstract}
+
+(declaration of intent) The vast majority of currently available Bayesian optimization (BO) methods used to tune the parameters of Machine Learning algorithms are doubly-myopic: they try to make the best possible progress in the next function evaluation irrespective of (i) the number of remaining evaluations and (ii) the wall-clock time needed to  evaluate the objective. We present Progressive-GLASSES, \emph{Progressive Global optimisation with Look-Ahead through Stochastic Simulation and Expected-loss Search}, the first BO approach able to address both issues
+ by making non-myopic decisions according to a time budget restriction. We show the superior performance  of Progressive-GLASSES in a  variety of real optimization experiments when compared to the state-of-the-art parameter tuning algorithms. 
+
+
+
+
+\end{abstract}
+
+\section{Some notes and ideas} % (fold)
+\label{sec:introduction}
+
+
+General selling point:
+
+\begin{itemize}
+\item Imagine you have to solve a machine learning task and you are training your favorite algorithm. But you have a problem: you only have one hour before your results have to be summited: \emph{What about having a method able to find the best possible parameters of your algorithm within your limited time budget?}
+\end{itemize}
+
+Particular aspects of Progressive-GLASSES:
+
+\begin{itemize}
+\item Having a fixed time budget (rather than a fixed number of steps ahead)  makes that  the number of steps ahead is not fixed anymore: the added  value of the costs of the steps ahead should also be smaller than the remaining time budget. 
+\item Something interesting here is that the probability measure over the future steps should give measure zero to those sets of points (of whatever size) whose added cost is larger the available budget.
+\item The cost function of evaluating $f$ can be fixed beforehand (we should start in this case, I guess) but a more realistic situation is to consider that we learn it as we run the optimization. we can use the log of a GP for this (perhaps use only the mean) and also to consider that the GP for $f(x)$ and $c(x)$ are coupled (and model it with a multi-output GP).
+\end{itemize}
+
+
+Issues when trying to use what we learned in the original GLASSES paper:
+
+\begin{itemize}
+\item The goal of this work is to generalize GLASSES to cases where there is a limitation in terms of a cost of evaluation rather than in terms of a number of evaluations. A specially interesting case of this is when the cost is the time to evaluate $f$. 
+\item The main problem when trying to generalize GLASSES to this context is that, if you have a limited time budget, you need to be very efficient making the decisions. If not, you are limiting yourself a few number of evaluations of f. 
+\item There are two bottlenecks on GLASSES that I am trying to solve: 1) the simulations of the steps ahead and 2) the computation of the loss. If we can speed up these two steps we will have something interesting.
+\item Regarding step 2: It is possible to write $E_{p(y)} [\min (y,\eta)]$ in terms of cumulated Gaussian distributions so we can avoid the EP step of GLASSES (and gradients would be available). The key to do this is in \emph{Tallis, G 1961: The moment generating function of the truncated multi-normal distribution. J. Roy. Statist. Soc. Ser. B}. D Ginsbourger uses the main theorem of this paper to compute the multi-point expected improvement. The same type of arguments can be used in our context to obtain $E_{p(y)} [\min (y,\eta)]$. 
+\item Regarding 1): I haven't thought yet so much about this point but perhaps we should give another try to the original DPP idea. If we could come up some efficient way of sampling from conditional dpps (of computing the MAP) this would be very elegant way of addressing this point.
+\end{itemize}
+
+
+
+
+Some citations to have in mind:
+
+\cite{Lizotte_2008}
+\cite{Jones_2001}
+\cite{Snoek*Larochelle*Adams_2012}
+\cite{Brochu*Cora*DeFreitas_2010}
+\cite{osborne_gaussian_2009} 
+\cite{Marchant*Ramos*Sanner*2014} 
+
+
+
+%\section{Bayesian Optimisation} % (fold)
+%\label{sec:bayesian_optimisation}
+
+
+
+% section bayesian_optimisation (end)
+
+% section introduction (end)
+
+
+
+ \section{Some new results that we can potentially use}
+
+\begin{proposition}
+Denote by  $\Phi_n (\textbf{r}; \Sigma) = \Prob(\bz \leq \textbf{r})$ the c.d.f. of a general  centered n-dimensional Gaussian vector $\bz$ with covariance matrix $\Sigma$. Let $\bz := (z_1,\dots,z_n)^T$ be a Gaussian vector with mean $\mu \in \Re^n$ and $\Sigma \in \Re^{n\times n}$. It holds that
+\begin{equation} \nonumber
+\E [ z_k|\bz \leq 0] = \mu_k -  \Phi_n ( -\mu; \Sigma)^{-1} \sum_{i=1}^n \Sigma_{ik} \cdot \Phi_1(-\mu_i;\Sigma_{ii}) \cdot \Phi_{n-1}(0;\mu_{\neg i}, \Sigma_{\neg i})
+\end{equation}
+ where $\mu_i$ and $\sigma_{ii}$ are respectively the ith entries of $\mu$ and $\Sigma$, $\mu_{\neg i}$ is the $(n-1)$ dimensional vector with jth element $\Sigma_{ij}\Sigma_{ii}^{-1}m_i -m_j,$ $\forall i\neq j$  and $\Sigma_{\neg i}$ is the $(n-1) \times (n-1)$ matrix with qs-th elements $\Sigma_{qs} - \Sigma_{is} \Sigma_{ii}^{-1} \Sigma_{iq}$.  
+\end{proposition}
+
+
+\begin{proposition}\label{prop:tallis}
+It holds that:
+\begin{equation} \nonumber
+\Lambda_n \bigl(\latentVector_* \mid \I_0, \future_{n}(\latentVector_*) \bigr) = \sum_{k=1}^n \left(  \mu^k_k \cdot \Phi_n ( -\mu^k; \Sigma^k) -  \sum_{i=1}^n \Sigma^k_{ik} \cdot \Phi^k_1(-\mu^k_i;\Sigma^k_{ii}) \cdot \Phi_{n-1}(\mu^k_{\neg i}, \Sigma^k_{\neg i}) \right) + \eta
+\end{equation}
+where for $k=1,\dots,n$ the elements of the vectors $\bz^k:= (\bz^k_1,\dots,\bz^k_n)^T$, which are Gaussian with known mean $\mu^k\in \Re^{n}$ and covariance $\Sigma \in \Re^{n \times n}$, are defined as:
+$$z_j^k= \left\{ \begin{array}{lcl}
+y_k - \eta & \mbox{ if } j=k \\
+  \\
+y_k - y_j  &   \mbox{ if } j \neq k
+\end{array}
+\right.$$
+\end{proposition}
+
+\begin{remark}
+The computation of $\Lambda_n \bigl(\latentVector_* \mid \I_0, \future_{n}(\latentVector_*) \bigr)$ requires $n$ calls to $\Phi_n(\cdot)$ and $n^2$ calls to  $\Phi_1(\cdot)$ and  $\Phi_{n-1}(\cdot)$.
+\end{remark}
+
+
+%\eta\int_{\IR^n} \prod_{i=1}^nh_i(\dataVector) \N(\dataVector; \mu, \Sigma) \ud \dataVector \\  \nonumber
+ %&+ & \sum_{j=1}^n  \int_{\IR^n} \dataScalar_j \prod_{i=1}^n t_{j,i}(\dataVector) \N(\dataVector; \mu, \Sigma) \ud \dataVector
+
+\section{Results}
+
+
+\section{Conclusions}
+
+\bibliographystyle{plain}
+\bibliography{bib_glasses}
+
+\clearpage
+\setcounter{section}{0}
+\setcounter{equation}{0}
+\renewcommand{\thesection}{S\arabic{section}}
+\renewcommand{\theequation}{S.\arabic{equation}}
+
+\begin{center}
+{\LARGE  Supplementary materials for:\\
+`XXX"}
+\end{center}
+\begin{center}
+\textbf{Authors here}
+\end{center}
+
+\section{Proofs}
+
+\begin{proof}
+See (Tallis, 1961) and (Chevalier and Ginsbourger, 2012).
+\end{proof}
+
+
+\begin{proof}
+First, we write $\E [\min (\dataVector,\eta)]$ as the sum of the expectations of $n$ marginal truncated Gaussians. 
+\begin{eqnarray}\label{eq:expected_loss_oracle} \nonumber
+\E [\min (\dataVector,\eta)] & = & \E [\min (\dataVector,0)] \\  \nonumber
+ & = & \E [\min (\dataVector-\eta,0)] +\eta\\  \nonumber
+ & = & \E [\min (\dataVector-\eta)] \cdot \sum_{k=1}^n\ind\{\ y_k\leq \eta,  y_k\leq y_j, \forall k\neq j  \} +  \eta\\  \nonumber
+ & = & \sum_{k=1}^n\E [y_k-\eta|\ y_k\leq \eta,  y_k\leq y_j, \forall k\neq j ] \cdot \ind\{y_k\leq \eta,  y_k\leq y_j, \forall k\neq j  \} +  \eta\\  \nonumber
+ &  = & \sum_{k=1}^n\E [y_k-\eta|\ y_k - \eta \leq 0 ,  y_k - y_j\leq 0 , \forall k\neq j ] \cdot \ind\{y_k - \eta \leq 0 ,  y_k - y_j\leq 0, \forall k\neq j  \} +  \eta\\ 
+ &  = & \sum_{k=1}^n\E [ z^k_k|\bz^k \leq 0] \cdot p(\bz^k \leq 0) +  \eta\\ 
+   \nonumber
+\end{eqnarray}
+where for $k=1,\dots,n$ the elements of the vectors $\bz^k:= (\bz^k_1,\dots,\bz^k_n)^T$ are defined as:
+$$z_j^k= \left\{ \begin{array}{lcl}
+y_k - \eta & \mbox{ if } j=k \\
+  \\
+y_k - y_j  &   \mbox{ if } j \neq k
+\end{array}
+\right.$$
+
+Each element $\E [ z^k_k|\bz^k \leq 0]$ can now be computed using Proposition \ref{prop:tallis}. In particular, let $\mu^k$ and $\Sigma^k$ be mean vector and covariance matrix associated to each $\bz^k$. Then 
+$$\E [ z^k_k|\bz^k \leq 0]  = \mu^k_k -  \Phi_n ( -\mu^k; \Sigma^k)^{-1} \sum_{i=1}^n \Sigma^k_{ik} \cdot \Phi^k_1(-\mu^k_i;\Sigma^k_{ii}) \cdot \Phi_{n-1}(\mu^k_{\neg i}, \Sigma^k_{\neg i}) $$
+and therefore
+\begin{eqnarray}\nonumber
+\Lambda_n \bigl(\latentVector_* \mid \I_0, \future_{n}(\latentVector_*) \bigr) & = &   \sum_{k=1}^n\E [ z^k_k|\bz^k \leq 0] \cdot \Phi_n ( -\mu^k; \Sigma^k) +  \eta\\  \nonumber
+& = &\sum_{k=1}^n \left(  \mu^k_k \cdot \Phi_n ( -\mu^k; \Sigma^k) -  \sum_{i=1}^n \Sigma^k_{ik} \cdot \Phi^k_1(-\mu^k_i;\Sigma^k_{ii}) \cdot \Phi_{n-1}(\mu^k_{\neg i}, \Sigma^k_{\neg i}) \right) + \eta \\ \nonumber
+\end{eqnarray}
+
+
+\end{proof}
+
+\end{document}
