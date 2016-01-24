@@ -119,8 +119,7 @@ Address \\
 
 \begin{abstract}
 
-(declaration of intent) The vast majority of currently available Bayesian optimization (BO) methods used to tune the parameters of Machine Learning algorithms are doubly-myopic: they try to make the best possible progress in the next function evaluation irrespective of (i) the number of remaining evaluations and (ii) the wall-clock time needed to  evaluate the objective. We present Progressive-GLASSES, \emph{Progressive Global optimisation with Look-Ahead through Stochastic Simulation and Expected-loss Search}, the first BO approach able to address both issues
- by making non-myopic decisions according to a time budget restriction. We show the superior performance  of Progressive-GLASSES in a  variety of real optimization experiments when compared to the state-of-the-art parameter tuning algorithms. 
+(Declaration of intent!) The vast majority of currently available Bayesian optimization (BO) methods used to tune the parameters of Machine Learning algorithms are cost-myopic: they try to make the best possible progress in the next function evaluation irrespective of  the available cost  budget to evaluate the objective.  We present Progressive-GLASSES, \emph{Progressive Global optimisation with Look-Ahead through Stochastic Simulation and Expected-loss Search}, the first BO approach able to make optimal non-myopic decisions according to a general cost function, possible unknown, given a budget restriction. We show the superior performance  of Progressive-GLASSES in a  variety of experiements in which a fixed time budget is used to tune the parameters of several algorithms. 
 
 
 
@@ -140,7 +139,7 @@ General selling point:
 Particular aspects of Progressive-GLASSES:
 
 \begin{itemize}
-\item Having a fixed time budget (rather than a fixed number of steps ahead)  makes that  the number of steps ahead is not fixed anymore: the added  value of the costs of the steps ahead should also be smaller than the remaining time budget. 
+\item Having a fixed time budget (rather than a fixed number of steps ahead) and different costs accross the domain of the function  makes that  the number of steps ahead is not fixed anymore: the sum of the costs of the steps ahead should also be smaller than the remaining time budget. 
 \item Something interesting here is that the probability measure over the future steps should give measure zero to those sets of points (of whatever size) whose added cost is larger the available budget.
 \item The cost function of evaluating $f$ can be fixed beforehand (we should start in this case, I guess) but a more realistic situation is to consider that we learn it as we run the optimization. we can use the log of a GP for this (perhaps use only the mean) and also to consider that the GP for $f(x)$ and $c(x)$ are coupled (and model it with a multi-output GP).
 \end{itemize}
@@ -179,12 +178,21 @@ Some citations to have in mind:
 
 % section introduction (end)
 
+\section{Problem, notation, etc.}
+
+
+Let $f: {\mathcal X} \to \Re$ be well behaved function defined on a bounded ${\mathcal X} \subseteq \Re^{\inputDim}$. Our goal is to find 
+$$\latentVector_{M} = \arg \min_{\latentVector \in {\mathcal X}} f(\latentVector).$$ 
+where we  assume that $f$ is a \emph{black-box} from which only perturbed evaluations of the type $\dataScalar_i = f(\latentVector_i) + \noiseScalar_i$, with $\noiseScalar_i \sim\mathcal{N}(0,\dataStd^2)$, are  available.  In this work we assume that every time we evaluate $f$ at $\latentVector_i$ we incurr in a cost $c_i$, which is the oput of a some smooth and differentiable function  $c: {\mathcal X} \to \Re_{0}^{+}$. Especilly interesting is the case in which the cost corresponds to the wall-clock time of evaluatinf $f$, but forms of cost are also valid here.
+
+Our aim is to define  an heuristic strategy able to make a series of evaluations $\latentVector_1,\dots,\latentVector_n$ of $f$ such that the the minimum of $f$ is obtanied as soon as possible while the condition $\sum_{i=1}^n c(\latentVector_i) \leq C$, for some fixed cost budget $C \in \Re^+$, is satisfied.
+
 
 
  \section{Some new results that we can potentially use}
 
 \begin{proposition}
-Denote by  $\Phi_n (\textbf{r}; \Sigma) = \Prob(\bz \leq \textbf{r})$ the c.d.f. of a general  centered n-dimensional Gaussian vector $\bz$ with covariance matrix $\Sigma$. Let $\bz := (z_1,\dots,z_n)^T$ be a Gaussian vector with mean $\mu \in \Re^n$ and $\Sigma \in \Re^{n\times n}$. It holds that
+Denote by  $\Phi_n (\textbf{r}; \Sigma) = \Prob(\bz \leq \textbf{r})$ the c.d.f. of a general  centered n-dimensional Gaussian vector $\bz$ with covariance matrix $\Sigma$. Let $\bz := (z_1,\dots,z_n)^T$ be a Gaussian vector with mean $\mu \in \Re^n$ and $\Sigma \in \Re^{n\times n}$. It holds that (CHECK, THRE IS AN ERROR HERE!)
 \begin{equation} \nonumber
 \E [ z_k|\bz \leq 0] = \mu_k -  \Phi_n ( -\mu; \Sigma)^{-1} \sum_{i=1}^n \Sigma_{ik} \cdot \Phi_1(-\mu_i;\Sigma_{ii}) \cdot \Phi_{n-1}(0;\mu_{\neg i}, \Sigma_{\neg i})
 \end{equation}
