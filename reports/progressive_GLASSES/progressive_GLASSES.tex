@@ -17,6 +17,9 @@
 \usepackage{graphicx}
 \usepackage{tikz}
 \usepackage{color,soul,amsmath}
+\usepackage{amsmath}
+\usepackage{amssymb}
+
 
 \usetikzlibrary{bayesnet}
 \tikzstyle{connect}=[-latex]
@@ -42,7 +45,6 @@
 \newcommand{\vk}{\vec{k}}
 \newcommand{\vL}{\vec{\Lambda}}
 \newcommand{\xmin}{x_{\min}}
-\newcommand{\pmin}{p_{\min}}
 \newcommand{\fmin}{f_{\min}}
 \newcommand{\pfmin}{p_{f_{\min}}}
 \renewcommand{\vec}{\boldsymbol}
@@ -61,6 +63,7 @@
 \newcommand{\yst}{y_{\ast}}
 \newcommand{\ind}{\mathbb{I}}
 \newcommand{\bz}{\textbf{z}}
+\newcommand{\cost}{\textbf{c}}
 
 \usepackage{xspace}
 \newcommand{\acr}[1]{\textsc{#1}\xspace}
@@ -183,16 +186,54 @@ Some citations to have in mind:
 
 Let $f: {\mathcal X} \to \Re$ be well behaved function defined on a bounded ${\mathcal X} \subseteq \Re^{\inputDim}$. Our goal is to find 
 $$\latentVector_{M} = \arg \min_{\latentVector \in {\mathcal X}} f(\latentVector).$$ 
-where we  assume that $f$ is a \emph{black-box} from which only perturbed evaluations of the type $\dataScalar_i = f(\latentVector_i) + \noiseScalar_i$, with $\noiseScalar_i \sim\mathcal{N}(0,\dataStd^2)$, are  available.  In this work we assume that every time we evaluate $f$ at $\latentVector_i$ we incurr in a cost $c_i$, which is the oput of a some smooth and differentiable function  $c: {\mathcal X} \to \Re_{0}^{+}$. Especilly interesting is the case in which the cost corresponds to the wall-clock time of evaluatinf $f$, but forms of cost are also valid here.
+where we  assume that $f$ is a \emph{black-box} from which only perturbed evaluations of the type $\dataScalar_i = f(\latentVector_i) + \noiseScalar_i$, with $\noiseScalar_i \sim\mathcal{N}(0,\dataStd^2)$, are  available.  In this work we assume that every time we evaluate $f$ at $\latentVector_i$ we incur in a cost $c_i$, which is the output of a some smooth and differentiable function  $c: {\mathcal X} \to \Re^{+}$. Especially interesting is the case in which the cost corresponds to the wall-clock time of evaluating $f$, but forms of cost are also valid here.
 
-Our aim is to define  an heuristic strategy able to make a series of evaluations $\latentVector_1,\dots,\latentVector_n$ of $f$ such that the the minimum of $f$ is obtanied as soon as possible while the condition $\sum_{i=1}^n c(\latentVector_i) \leq C$, for some fixed cost budget $C \in \Re^+$, is satisfied.
+Our aim is to define  an heuristic strategy able to make a series of evaluations $\latentVector_1,\dots,\latentVector_n$ of $f$ such that the the minimum of $f$ is obtained as soon as possible while the condition $\sum_{i=1}^n c(\latentVector_i) \leq C$, for some fixed cost budget $C \in \Re^+$, is satisfied.
+
+\begin{itemize}
+\item Gaussian process for $f$.
+\item $c(\latentVector)$ can be: fixed before hand, learned using another GP, that can be potentially coupled with $f$. We will assume that it is a deterministic function, even if it is learned from data (we use the posterior mean of a GP).
+\item Assume that $N$ points have been gathered so far, having a dataset $\dataSet_0 = \{(\latentVector_i,c_i ,\dataScalar_i)\}_{i=1}^N = (\latentMatrix_0, \cost_0,\dataVector_0)$.
+\item $\eta = \min \{\dataVector_0\}$ is the current best found value. We define the \emph{loss per unit of cost} of evaluating $f$ this last time at $\latentVector_*$ assuming it is returning $y_*$ as $\lambda^c(y_*) = \lambda(y_*)/c_*$ where
+$$\lambda(y_*)\triangleq \left\{ \begin{array}{lcl}
+y_*;             & \mbox{if}  &  y_* \leq \eta \\
+\eta; & \mbox{if}  & y_* > \eta. \\
+\end{array}
+\right.$$
+and  $c_* = c(\latentVector_*)$, is the cost of evaluating $f$ at $\latentVector_*$.
+Its expectation is 
+$$ \E[ \lambda^c(y_*)] =  \int \lambda^c(y_*)p(y_* |\latentVector_*,\I_0)\ud y_* =  \frac1{c_*} \E[ \min (y_*,\eta)]$$
+\item Assuming we have an available budget $C$ we can select the next (last) evaluation using the loss 
+$$\Lambda^c(\latentVector_*| \I_0)\triangleq \left\{ \begin{array}{lcl}
+ \E[ \lambda^c(y_*)];             & \mbox{if}  &  c_* \leq C. \\
+\infty; & \mbox{if}  & c_* > C. \\
+\end{array}
+\right.$$
+And this is the myopic loss used in \cite{Snoek*Larochelle*Adams_2012} (the expected improvement).  Only points in ${\mathcal X}$ whose cost is lower that the current available budget are candidates.
+\item Assuming we have an available budget $C$ to select the next (last) evaluation, the loss function is 
+$$\Lambda^c(\latentVector_*| \I_0)\triangleq \left\{ \begin{array}{lcl}
+ \int \lambda(y_n) \prod_{j=1}^{n}p(y_{j}|\latentVector_{j},\I_{j-1}) p(\latentVector_{j}|\I_{j-1}) \ud y \ud\latentVector;             & \mbox{if}  &  \sum c_j \leq C. \\
+\infty; & \mbox{if}  & \sum c_j > C. \\
+\end{array}
+\right.$$
+
+\item Assuming we have an available budget $C$ to select the next (last) evaluation, the loss function is 
+$$\Lambda^c(\latentVector_*| \I_0,\future_{n}(\latentVector_*)\triangleq \left\{ \begin{array}{lcl}
+ \frac1{c_*} \E \bigl[\min (\dataVector,\eta) \bigr];             & \mbox{if}  &  \sum c_j \leq C. \\
+\infty; & \mbox{if}  & \sum c_j > C. \\
+\end{array}
+\right.$$
+where in this case $\dataVector$ is random Gaussian vector associated to the future 
 
 
+\end{itemize}
+
+%$$\ \Lambda^c_1(\latentVector_*| \I_0) \triangleq
 
  \section{Some new results that we can potentially use}
 
 \begin{proposition}
-Denote by  $\Phi_n (\textbf{r}; \Sigma) = \Prob(\bz \leq \textbf{r})$ the c.d.f. of a general  centered n-dimensional Gaussian vector $\bz$ with covariance matrix $\Sigma$. Let $\bz := (z_1,\dots,z_n)^T$ be a Gaussian vector with mean $\mu \in \Re^n$ and $\Sigma \in \Re^{n\times n}$. It holds that (CHECK, THRE IS AN ERROR HERE!)
+Denote by  $\Phi_n (\textbf{r}; \Sigma) = \Prob(\bz \leq \textbf{r})$ the c.d.f. of a general  centered n-dimensional Gaussian vector $\bz$ with covariance matrix $\Sigma$. Let $\bz := (z_1,\dots,z_n)^T$ be a Gaussian vector with mean $\mu \in \Re^n$ and $\Sigma \in \Re^{n\times n}$. It holds that (CHECK, THERE IS AN ERROR HERE!)
 \begin{equation} \nonumber
 \E [ z_k|\bz \leq 0] = \mu_k -  \Phi_n ( -\mu; \Sigma)^{-1} \sum_{i=1}^n \Sigma_{ik} \cdot \Phi_1(-\mu_i;\Sigma_{ii}) \cdot \Phi_{n-1}(0;\mu_{\neg i}, \Sigma_{\neg i})
 \end{equation}
@@ -201,7 +242,7 @@ Denote by  $\Phi_n (\textbf{r}; \Sigma) = \Prob(\bz \leq \textbf{r})$ the c.d.f.
 
 
 \begin{proposition}\label{prop:tallis}
-It holds that:
+It holds that:  (CHECK, THERE IS AN ERROR HERE!)
 \begin{equation} \nonumber
 \Lambda_n \bigl(\latentVector_* \mid \I_0, \future_{n}(\latentVector_*) \bigr) = \sum_{k=1}^n \left(  \mu^k_k \cdot \Phi_n ( -\mu^k; \Sigma^k) -  \sum_{i=1}^n \Sigma^k_{ik} \cdot \Phi^k_1(-\mu^k_i;\Sigma^k_{ii}) \cdot \Phi_{n-1}(\mu^k_{\neg i}, \Sigma^k_{\neg i}) \right) + \eta
 \end{equation}
@@ -254,8 +295,7 @@ See (Tallis, 1961) and (Chevalier and Ginsbourger, 2012).
 \begin{proof}
 First, we write $\E [\min (\dataVector,\eta)]$ as the sum of the expectations of $n$ marginal truncated Gaussians. 
 \begin{eqnarray}\label{eq:expected_loss_oracle} \nonumber
-\E [\min (\dataVector,\eta)] & = & \E [\min (\dataVector,0)] \\  \nonumber
- & = & \E [\min (\dataVector-\eta,0)] +\eta\\  \nonumber
+\E [\min (\dataVector,\eta)] & = & \E [\min (\dataVector-\eta,0)] +\eta\\  \nonumber
  & = & \E [\min (\dataVector-\eta)] \cdot \sum_{k=1}^n\ind\{\ y_k\leq \eta,  y_k\leq y_j, \forall k\neq j  \} +  \eta\\  \nonumber
  & = & \sum_{k=1}^n\E [y_k-\eta|\ y_k\leq \eta,  y_k\leq y_j, \forall k\neq j ] \cdot \ind\{y_k\leq \eta,  y_k\leq y_j, \forall k\neq j  \} +  \eta\\  \nonumber
  &  = & \sum_{k=1}^n\E [y_k-\eta|\ y_k - \eta \leq 0 ,  y_k - y_j\leq 0 , \forall k\neq j ] \cdot \ind\{y_k - \eta \leq 0 ,  y_k - y_j\leq 0, \forall k\neq j  \} +  \eta\\ 

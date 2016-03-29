@@ -1,4 +1,5 @@
 \documentclass[twoside]{article}
+\usepackage[accepted]{aistats2016}
 \usepackage{aistats2016}
 
 \usepackage{booktabs}
@@ -113,9 +114,21 @@
 
 \aistatstitle{GLASSES: Relieving The Myopia Of Bayesian Optimisation}
 
-\aistatsauthor{ Anonymous Author 1 \And Anonymous Author 2 \And Anonymous Author 3 }
+\aistatsauthor{Javier Gonz\'alez \And Michael Osborne \And Neil D. Lawrence}
 
-\aistatsaddress{ Unknown Institution 1 \And Unknown Institution 2 \And Unknown Institution 3 } ]
+\aistatsaddress{
+University of Sheffield\\ 
+Dept. of Computer Science \& \\
+Chem. and Biological Engineering\\
+j.h.gonzalez@sheffield.ac.uk\\
+ \And 
+ University of Oxford \\
+Dept. of Engineering Science\\
+ mosb@robots.ox.ac.uk
+ \And University of Sheffield\\
+ Dept. of Computer Science\\
+ n.lawrence@sheffield.ac.uk } ]
+
 
 \begin{abstract}
     We present \us: Global optimisation with Look-Ahead through Stochastic Simulation and Expected-loss Search. 
@@ -182,12 +195,20 @@
 \end{figure*}
 
 
+\begin{itemize}
+\item Make explicit the conection of the formulation with Snoek et al. (2012)
+\item Of course, we did mean that there aren’t general use Bayesian optimisation packages available with non-myopic loss functions. The typo has been corrected.
+\item We agree that to compare the different methods the standard deviations needs to be included in the experiments. Due to space reasons, such values have been included in the suppl. materials for all the experiments. We anticipate that all standard deviations are quite small and that the differences among the studied methods are significant as currently described in the text. Note that this is not surprising since standard deviations at the end of the experiments (as reported in the table) are typically small: they correspond to phases of the optimization close to convergence. In most BO results of the literature one can observe this behaviour.
+\item extra results in mail
+\item Regarding the computational complexity of GLASSES, the parameter q, as used in the general notation of the paper, determines the input dimension of the function. We have clarified this point in Section 3.3
+\end{itemize}
+
 Global optimisation is core to any complex problem where design and choice play a role. 
 Within Machine Learning, such problems are found in the tuning of hyperparameters \citep{Snoek*Larochelle*Adams_2012}, sensor selection \citep{Garnett*Osborne*Roberts_2010} or experimental design \citep{gonzalez2014, martinez-cantin_bayesian_2009}. 
 Most global optimisation techniques are myopic, in considering no more than a single step into the future. 
 Relieving this myopia requires solving the \emph{multi-step lookahead} problem: the global optimisation of an function by considering the significance of the next function evaluation on function evaluations (steps) further into the future. 
 It is clear that a solution to the problem would offer performance gains.
-For example, consider the case in which we have a budget of two evaluations with which to optimise a function $f(x)$ over the domain $\inputSpace = [0, 1] \subset \reals$. 
+For example, consider the case in which we have a budget of two evaluations with which to optimise a function $f(x)$ over the domain $\inputSpace = [0, 1] \subset \Re$. 
 If we are strictly myopic, our first evaluation will likely be at 
 $x=\nicefrac{1}{2}$, and our second then at only one of $x=\nicefrac{1}{4}$ and $x=\nicefrac{3}{4}$. 
 This myopic strategy will thereby result in ignoring half of the domain $\inputSpace$, regardless of the second choice. 
@@ -595,10 +616,7 @@ In this paper we have explored the myopia in Bayesian optimisation methods. For 
 
 Some interesting challenges will be addressed in the future such as making the optimisation of the loss more efficient (for which \direct is employed in this work): although the smoothness of the loss is guaranteed if the steps ahead are consistently predicted for points close in the space, if the optimization of the steps ahead fails,  the optimization of the loss may be challenging.  Also, the use of non-stationary kernels, extensions to deal with to high dimensional problems and finding efficient was of sampling many steps ahead will also be analysed.
   
-\newpage
 %$\mbox{ }$
-\newpage
-\newpage
 \bibliographystyle{plainnat}
 \bibliography{bib_glasses}
 
@@ -609,15 +627,29 @@ Some interesting challenges will be addressed in the future such as making the o
 \renewcommand{\thesection}{S\arabic{section}}
 \renewcommand{\theequation}{S.\arabic{equation}}
 \onecolumn
-\begin{center}
-{\Large  \textbf{Supplementary materials for:\\
-`GLASSES: Relieving The Myopia Of Bayesian Optimisation'}}
-\end{center}
-\begin{center}
-\textbf{Authors here}
-\end{center}
 
-\vspace{1cm}
+
+\vspace{2cm}
+
+\aistatstitle{Supplementary materials for: \\
+`GLASSES: Relieving The Myopia Of Bayesian Optimisation'}
+
+\aistatsauthor{Javier Gonz\'alez \And Michael Osborne \And Neil D. Lawrence}
+
+\aistatsaddress{
+University of Sheffield\\ 
+Dept. of Computer Science \& \\
+Chem. and Biological Engineering\\
+j.h.gonzalez@sheffield.ac.uk\\
+ \And 
+ University of Oxford \\
+Dept. of Engineering Science\\
+ mosb@robots.ox.ac.uk
+ \And University of Sheffield\\
+ Dept. of Computer Science\\
+ n.lawrence@sheffield.ac.uk } 
+
+
 \section{Oracle Multiple Steps look-ahead Expected Loss }
 Denote by $\eta_n = \min \{\dataVector_0, y_*, y_2\dots,y_{n-1}\}$ the value of the best visited location when looking at $n$ evaluations in the future. Note that $\eta_n$ reduces to the current best lost $\eta$ in the one step-ahead case. It is straightforward to see that 
 $$ \min (y_n,\eta_n) = \min (\dataVector,\eta ).$$
@@ -679,11 +711,32 @@ Cosines &  $f(\latentVector) = 1- \sum_{i=1}^2 (g(\latentScalar_i) - r(\latentSc
 \end{tabular}\caption{Functions used in the experimental section.}\label{table:functions_test}
 \end{table}
 
-%Sixhumpcamel  &$[-2,2]\times[-1,1]$ & 2\\
-%McCormick  & $[-1.5,4]\times[-3,4]$& 2\\
-%Dropwave   &$[-1,1]\times[-1,1]$ & 2\\
-%Beale   &$[-1,1]\times[-1,1]$ & 2\\
-%Powers  & $[-1,1]\times[-1,1]$& 2\\ %\hline
+
+\subsection{Standard deviation of the `gap' measures}
+
+\begin{table*}[t!]
+\begin{center}
+\begin{tabular}{lrrrrrrrr}
+\toprule
+{} &     MPI &     LCB &      EL &    GL-2 &    GL-3 &    GL-5 &   GL-10 &    GL-H \\
+\midrule
+func = fourier(sd=.1)             &  0.1502 &  0.1442 &  0.1221 &  0.0707 &  0.1429 &  0.1749 &  0.0862 &  0.0499 \\
+func = cosines(sd=.1)             &  0.0377 &  0.0368 &  0.0548 &  0.0394 &  0.0389 &  0.0417 &  0.0633 &  0.0135 \\
+func = branin(sd=.1)              &  0.0060 &  0.0121 &  0.0004 &  0.0020 &  0.0146 &  0.0036 &  0.0005 &  0.0030 \\
+func = sixhumpcamel(sd=.1)        &  0.0065 &  0.0199 &  0.0063 &  0.0080 &  0.0104 &  0.0080 &  0.0096 &  0.0092 \\
+func = mccormick(sd=.1)           &  0.0093 &  0.0091 &  0.0242 &  0.0152 &  0.0135 &  0.0128 &  0.0116 &  0.0129 \\
+func = dropwave(sd=.1)            &  0.0473 &  0.0595 &  0.0558 &  0.0293 &  0.0320 &  0.0238 &  0.0229 &  0.0407 \\
+func = powers(sd=.1)              &  0.0073 &  0.0073 &  0.0071 &  0.0186 &  0.0063 &  0.0147 &  0.0059 &  0.1415 \\
+func = ackley(input\_dim=2,sd=.1)  &  0.0491 &  0.0103 &  0.1197 &  0.1061 &  0.1349 &  0.1005 &  0.1171 &  0.1637 \\
+func = ackley(input\_dim=5,sd=.1)  &  0.0196 &  0.0181 &  0.1146 &  0.1809 &  0.1433 &  0.1401 &  0.1779 &  0.1361 \\
+func = ackley(input\_dim=10,sd=.1) &  0.0015 &  0.0016 &  0.1519 &  0.0011 &  0.0020 &  0.0019 &  0.1386 &  0.1209 \\
+func = alpine2(input\_dim=2,sd=.1) &  0.0957 &  0.0903 &  0.1132 &  0.0848 &  0.0534 &  0.0822 &  0.0878 &  0.0439 \\
+func = alpine2(input\_dim=5,sd=.1) &  0.0679 &  0.0577 &  0.0579 &  0.0835 &  0.0878 &  0.0808 &  0.0777 &  0.0814 \\
+\bottomrule
+\end{tabular}\caption{Results for the average `gap' measure (5 replicates) across different functions.  \el-k is the expect loss function computed with $k$ steps ahead at each iteration. \us is the \us algorithm, \mpi is the maximum probability of improvement and \lcb is the lower confidence bound criterion. The best result for each function is bolded. In italic, the cases in which a non-myopic loss outperforms the myopic  loss are highlighted.}\label{table:comparision}
+\end{center}
+\end{table*}
+
 
 
 
