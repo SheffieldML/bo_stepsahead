@@ -386,11 +386,11 @@ An alternative and more efficient approach, that we explore here, is to work wit
 
 Suppose that  we had access to an oracle function $\future_{n}: {\mathcal X}\rightarrow  {\mathcal X}\times \overset{n}{\cdots}\times {\mathcal X}$ able to predict the $n$ future  locations that the loss $\Lambda_n(\cdot)$ would suggest if we started evaluating $f$ at $\latentVector_*$. In other words, $\future_{n}$ takes the putative location $\latentVector_*$ as input and it returns $\latentVector_*$ and the predicted future locations  $\latentVector_2,\dots, \latentVector_n$. We work here under the assumption that the oracle has perfect information about the future locations, in the same way we have have perfect information about the locations that the algorithm already visited. This is an unrealistic assumption in practice, but it will help us to set-up our algorithm. We leave for the next section the details of how to marginalise over $\future_{n}$. 
 
-Assume, for now, that $\future_{n}$ exists and that we have access to it. We it and denote by $\dataVector=(y_*,\dots,\dots,y_n)^T$ the vector of future locations evaluations of $f$ at $\future_n(\latentVector_*)$. Assuming that $\dataVector$ is known, it is possible to rewrite the expected loss in Eq.~(\ref{eq:expected_nonmyopic_loss}) as
+Assume, for now, that $\future_{n}$ exists and that we have access to it. We  denote by $\dataVector=(y_*,\dots,\dots,y_n)^T$ the vector of future locations evaluations of $f$ at $\future_n(\latentVector_*)$. Assuming that $\dataVector$ is known, it is possible to rewrite the expected loss in Eq.~(\ref{eq:expected_nonmyopic_loss}) as
 \begin{equation}\label{eq:oracle_expected_nonmyopic_loss}
 \Lambda_n \bigl(\latentVector_* \mid \I_0, \future_{n}(\latentVector_*) \bigr) = \E \bigl[\min (\dataVector,\eta) \bigr], 
 \end{equation}
-where the expectation is taken over the multivariate Gaussian distribution, with mean vector $\mu$ and covariance matrix $\Sigma$, that gives rise after marginalising the posterior distribution of the GP at $\future_{n}(\latentVector_*)$. Note that under a fixed $\future_{n}(\latentVector_*)$, it also holds that 
+where the expectation is taken over the multivariate Gaussian distribution, with mean vector $\mu$ and covariance matrix $\Sigma$, corresponding to the posterior distribution of the GP at $\future_{n}(\latentVector_*)$. Note that under a fixed $\future_{n}(\latentVector_*)$, it also holds that 
 $
 \Lambda_n \bigl(\latentVector_* \mid \I_0, \future_{n}(\latentVector_*) \bigr) 
 = 
