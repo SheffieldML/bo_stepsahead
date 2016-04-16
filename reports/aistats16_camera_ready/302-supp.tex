@@ -1,0 +1,274 @@
+\documentclass[twoside]{article}
+\usepackage[accepted]{aistats2016}
+
+\usepackage{booktabs}
+\usepackage{natbib}
+
+\usepackage{hyperref}
+%\usepackage[demo]{graphicx}
+%\usepackage{subcaption}
+\usepackage{url}
+%\usepackage[utf8x]{inputenc}
+\usepackage[english]{babel}
+\usepackage{natbib}
+\usepackage{nicefrac}
+\usepackage{algorithm}
+\usepackage{algorithmic}
+%\usepackage{amsfonts}
+\usepackage{graphics}
+\usepackage{graphicx}
+\usepackage{tikz}
+\usepackage{color,soul,amsmath}
+\usepackage{amssymb}
+\usetikzlibrary{bayesnet}
+\tikzstyle{connect}=[-latex]
+\tikzstyle{allconnected}=[line width=0.1cm]
+
+%\usepackage{verbatim}
+%\usepackage[active,tightpage]{preview}
+%\PreviewEnvironment{tikzpicture}
+%\usepackage{savetrees}
+
+\newcommand{\vp}{\vec{\phi}}
+\newcommand{\vmu}{\vec{\mu}}
+\newcommand{\vf}{\vec{f}}
+
+\newcommand{\I}{\mathcal{I}}
+\newcommand{\ud}{\mathrm{d}}
+\newcommand{\E}{\mathbb{E}}
+
+%\newcommand{\dataVector}{\textbf{y}}
+\newcommand{\bL}{\textbf{L}}
+\newcommand{\bI}{\textbf{I}}
+\newcommand{\vk}{\vec{k}}
+\newcommand{\vL}{\vec{\Lambda}}
+\newcommand{\xmin}{x_{\min}}
+\newcommand{\pmin}{p_{\min}}
+\newcommand{\fmin}{f_{\min}}
+
+\newcommand{\pfmin}{p_{f_{\min}}}
+\renewcommand{\vec}{\boldsymbol}
+\newcommand{\fun}[1]{\mathsf{#1}}
+\renewcommand{\O}{\mathcal{O}}
+\newcommand{\GP}{\mathcal{GP}}
+\newcommand{\N}{\mathcal{N}}
+\newcommand{\Id}{\vec{I}}
+\newcommand{\II}{\mathbb{I}}
+\newcommand{\future}{\mathcal{F}}
+\newcommand{\IR}{\mathbb{R}}
+\newcommand{\argmin}{\operatorname*{arg\: min}}
+\newcommand{\argmax}{\operatorname*{arg\: max}}
+\newcommand{\chol}{\operatorname{\mathsf{C}}}
+
+\newcommand{\reals}{\mathbb{R}}
+
+\newcommand{\xst}{x_{\ast}}
+\newcommand{\yst}{y_{\ast}}
+
+\usepackage{xspace}
+\newcommand{\acr}[1]{\textsc{#1}\xspace}
+\newcommand{\gp}{\acr{gp}}
+\newcommand{\dpp}{\acr{dpp}}
+\newcommand{\us}{\acr{glasses}}
+\newcommand{\direct}{\acr{direct}}
+\newcommand{\lbfgs}{\acr{l-bfgs}}
+\newcommand{\map}{\acr{map}}
+\newcommand{\ep}{\acr{ep}}
+\newcommand{\bo}{\acr{bo}}
+\newcommand{\mpi}{\acr{mpi}}
+\newcommand{\el}{\acr{el}}
+\newcommand{\lcb}{\acr{gp-lcb}}
+
+
+\newcommand*{\addheight}[2][.5ex]{%
+  \raisebox{0pt}[\dimexpr\height+(#1)\relax]{#2}%
+}
+
+%\input{{../}{./tex_inputs/notationDef.tex}}
+%\input{{../}{./tex_inputs/definitions.tex}}
+
+%\graphicspath{{../},{./diagrams/}}
+%\graphicspath{{../diagrams/}}
+\input{notationDef.tex}
+%\input{definitions.tex}
+
+
+% If your paper is accepted, change the options for the package
+% aistats2016 as follows:
+%
+
+%
+% This option will print headings for the title of your paper and
+% headings for the authors names, plus a copyright note at the end of
+% the first column of the first page.
+
+
+\begin{document}
+
+% If your paper is accepted and the title of your paper is very long,
+% the style will print as headings an error message. Use the following
+% command to supply a shorter title of your paper so that it can be
+% used as headings.
+%
+%\runningtitle{I use this title instead because the last one was very long}
+
+% If your paper is accepted and the number of authors is large, the
+% style will print as headings an error message. Use the following
+% command to supply a shorter version of the authors names so that
+% they can be used as headings (for example, use only the surnames)
+%
+%\runningauthor{Surname 1, Surname 2, Surname 3, ...., Surname n}
+
+\twocolumn[
+
+\aistatstitle{Suppl. materials: `GLASSES: Relieving The Myopia Of Bayesian Optimisation'}
+
+\aistatsauthor{Javier Gonz\'alez \And Michael Osborne \And Neil D. Lawrence}
+
+\aistatsaddress{
+University of Sheffield\\ 
+Dept. of Computer Science \& \\
+Chem. and Biological Engineering\\
+j.h.gonzalez@sheffield.ac.uk\\
+ \And 
+ University of Oxford \\
+Dept. of Engineering Science\\
+ mosb@robots.ox.ac.uk
+ \And University of Sheffield\\
+ Dept. of Computer Science\\
+ n.lawrence@sheffield.ac.uk } ]
+
+
+
+
+
+\setcounter{section}{0}
+\setcounter{equation}{0}
+\renewcommand{\thesection}{S\arabic{section}}
+\renewcommand{\theequation}{S.\arabic{equation}}
+\onecolumn
+
+
+%\aistatstitle{Supplementary materials for:\\
+%GLASSES: Relieving The Myopia Of Bayesian Optimisation}
+
+
+%\aistatsauthor{Javier Gonz\'alez \And Michael Osborne \And Neil D. Lawrence}
+%\aistatsaddress{University of Sheffield \And University of Oxford \And University of Sheffield} 
+
+
+%\begin{center}
+%\textbf{Authors here}
+%\end{center}
+
+\section{Oracle Multiple Steps look-ahead Expected Loss }
+Denote by $\eta_n = \min \{\dataVector_0, y_*, y_2\dots,y_{n-1}\}$ the value of the best visited location when looking at $n$ evaluations in the future. Note that $\eta_n$ reduces to the current best lost $\eta$ in the one step-ahead case. It is straightforward to see that 
+$$ \min (y_n,\eta_n) = \min (\dataVector,\eta ).$$
+It holds hat
+\begin{eqnarray}\nonumber
+\Lambda_n(\latentVector_*|\I_0, \future_{n}(\latentVector_*)) & = & \int \min (\dataVector,\eta) \prod_{j=1}^{n}p(y_{j}|\I_{j-1}, \future_{n}(\latentVector_*)) \ud y_*\dots \ud y_n
+\end{eqnarray}
+where the integrals with respect to $\latentVector_2\dots \ud\latentVector_n$ are  $p(\latentVector_{j}|\I_{j-1}, \future_{n}(\latentVector_*))=1$, $j=2,\dots,n$ since we don't need to optimise for any location and $p(y_{j}|\latentVector_{j},\I_{j-1}, \future_{n}(\latentVector_*))=p(y_{j}|\I_{j-1}, \future_{n}(\latentVector_*))$. Notice that
+\begin{eqnarray}\nonumber
+\prod_{j=1}^{n}p(y_{j}|\I_{j-1}, \future_{n}(\latentVector_*))& =& p(y_n|\I_{n-1}, \future_{n}(\latentVector_*)) \prod_{j=1}^{n-1}p(y_{j}|\I_{j-1} \future_{n}(\latentVector_*))\\\nonumber
+& = & p(y_n,y_{n-1}|\I_{n-2}, \future_{n}(\latentVector_*))  \prod_{j=1}^{n-2}p(y_{j}|\I_{j-1} \future_{n}(\latentVector_*))\\\nonumber
+& & \dots \\\nonumber
+& = & p(y_n,y_{n-1},\dots,y_2|\I_{1}, \future_{n}(\latentVector_*))\prod_{j=1}^{2}p(y_{j}|\I_{j-1} \future_{n}(\latentVector_*))\\\nonumber
+& = & p(\dataVector|\I_{0}, \future_{n}(\latentVector_*)) \nonumber
+\end{eqnarray}
+and therefore 
+$$ \Lambda_n(\latentVector_*|\I_0, \future_{n}(\latentVector_*)) =\E [\min (\dataVector,\eta)] =\int \min (\dataVector,\eta)p(\dataVector|\I_{0}, \future_{n}(\latentVector_*))d\dataVector  $$
+
+\vspace{1cm}
+\section{Formulation of the Oracle Multiple Steps look-ahead Expected Loss to be computed using Expectation Propagation}
+Assume that $\dataVector \sim \N(\dataVector; \mu, \Sigma)$. Then we have that
+\begin{eqnarray}\nonumber
+\E[\min (\dataVector,\eta)] & = & \int_{\IR^n} \min (\dataVector,\eta)  \N(\dataVector; \mu, \Sigma) d\dataVector\\ \nonumber
+& = & \int_{\IR^n - (\eta,\infty)^n } \min (\dataVector)  \N(\dataVector; \mu, \Sigma) d\dataVector + \int_{(\eta,\infty)^n} \eta  \N(\dataVector; \mu, \Sigma) d\dataVector.  \nonumber
+\end{eqnarray}
+The first term can be written as follows:
+\begin{equation}
+ \int_{\IR^n - (\eta,\infty)^n } \min (\dataVector)  \N(\dataVector; \mu, \Sigma) d\dataVector  =    \sum_{j=1}^n \int_{P_j} \dataScalar_j \N(\dataVector; \mu, \Sigma) \ud \dataVector \nonumber
+\end{equation}\nonumber
+where $P_j := \{ \dataVector \in\IR^n - (\eta,\infty)^n  : \dataScalar_j \leq \dataScalar_i,\,\, \forall i \neq j \}$. We can do this because the regions $P_j$ are disjoint and it holds that $\cup_{j=1}^{n}P_j = \IR^n - (\eta,\infty)^n $.  Also, note that the $\min(\dataVector)$ can be replaced within the integrals since within each $P_j$ it holds that $\min(\dataVector) = \dataScalar_j$. Rewriting the integral in terms of indicator functions we have that
+\begin{eqnarray}\label{eq:term1}
+ \sum_{j=1}^n \int_{P_j} \dataScalar_j \N(\dataVector; \mu, \Sigma) \ud \dataVector   =  \sum_{j=1}^n  \int_{\IR^n} \dataScalar_j \prod_{i=1}^n t_{j,i}(\dataVector) \N(\dataVector; \mu, \Sigma) \ud \dataVector 
+\end{eqnarray}
+
+where $t_{j,i}(y) =\mathbb{I}\{\dataScalar_i \leq\eta\}$ if $j=i$ and $t_{j,i}(y) =\mathbb{I}\{\dataScalar_j \leq \dataScalar_i \}$ otherwise.
+
+The second term can be written as
+\begin{equation}\label{eq:term2}
+ \int_{(\eta,\infty)^n } \eta  \N(\dataVector; \mu, \Sigma) d\dataVector = \eta\int_{\IR^n} \prod_{i=1}^nh_i(\dataVector) \N(\dataVector; \mu, \Sigma) d\dataVector
+\end{equation}
+where $h_i(\dataVector) = \mathbb{I}\{\dataScalar_i>\eta\}$.  Merge (\ref{eq:term1}) and (\ref{eq:term2}) to conclude the proof.
+ 
+
+\section{Synthetic functions}
+
+In this section we include the formulation of the objective functions used in the experiments that are not available in the references provided. 
+
+
+\begin{table}[h!]
+\centering
+% \vspace{-0.3cm}
+\begin{tabular}{cc}
+\toprule
+Name & Function     \\
+\midrule
+SinCos & $f(\latentScalar) = \latentScalar \sin(\latentScalar) + \latentScalar \cos(2\latentScalar)$  \\
+Alpine2-$\inputDim$ & $f(\latentVector) =\prod_{i=1}^{\inputDim} \sqrt{\latentScalar_i}\sin(\latentScalar_i)$  \\
+Cosines &  $f(\latentVector) = 1- \sum_{i=1}^2 (g(\latentScalar_i) - r(\latentScalar_i) )  \mbox{ with } g(\latentScalar_i) = (1.6\latentScalar_i - 0.5)^2 \mbox{ and } r(\latentScalar_i) = 0.3 \cos (3\pi (1.6 \latentScalar_i -0.5))$. \\
+\bottomrule
+\end{tabular}\caption{Functions used in the experimental section.}\label{table:functions_test}
+\end{table}
+
+\section{Evaluating the effect of the loss function}
+
+To isolate the impact of the acquisition function on the performance of the optimisation we run an experiment in which the function to optimise is sampled from the \gp used to perform the optimisation. In particular, we use the square exponential kernel with variance and length-scale fixed to 1 and we solve problems of dimensions 1 and 2 in $[0,1]$ and $[0,1]\times[0,1]$ respectively. The average minimum value obtained by the \lcb, \mpi, \el and \us is shown in Table 2.
+
+\begin{table}[h!]
+\begin{center}\label{table:resutls_isolation}
+\begin{tabular}{lrr}
+\toprule
+{} &     1D &    2D \\
+\midrule
+\lcb        &     -1.90  &  -1.28\\
+\mpi          &    -2.09  &  -1.15\\
+\el            &    -2.35  &  -1.34\\
+\us  &  -2.38 &   -1.37\\
+\bottomrule
+\end{tabular}\caption{Average min. results for 1D and 2D problems in which random samples from the model used to perform the optimisation are taken as objectives. \us achieves the best results of the used acquisitions.}
+\end{center}
+\end{table}
+
+
+\newpage
+\section{Standard deviation of the `gap' measures}
+
+\begin{table}[h!]
+\begin{center}
+\begin{tabular}{lrrrrrrrr}
+\toprule
+{} &     MPI &     LCB &      EL &    GL-2 &    GL-3 &    GL-5 &   GL-10 &    GL-H \\
+\midrule
+SinCos             &  0.1502 &  0.1442 &  0.1221 &  0.0707 &  0.1429 &  0.1749 &  0.0862 &  0.0499 \\
+Cosines            &  0.0377 &  0.0368 &  0.0548 &  0.0394 &  0.0389 &  0.0417 &  0.0633 &  0.0135 \\
+Branin             &  0.0060 &  0.0121 &  0.0004 &  0.0020 &  0.0146 &  0.0036 &  0.0005 &  0.0030 \\
+Six-hump Camel          &  0.0065 &  0.0199 &  0.0063 &  0.0080 &  0.0104 &  0.0080 &  0.0096 &  0.0092 \\
+McCormick            &  0.0093 &  0.0091 &  0.0242 &  0.0152 &  0.0135 &  0.0128 &  0.0116 &  0.0129 \\
+Dropwave            &  0.0473 &  0.0595 &  0.0558 &  0.0293 &  0.0320 &  0.0238 &  0.0229 &  0.0407 \\
+Powers               &  0.0073 &  0.0073 &  0.0071 &  0.0186 &  0.0063 &  0.0147 &  0.0059 &  0.1415 \\
+Ackley-2 &  0.0491 &  0.0103 &  0.1197 &  0.1061 &  0.1349 &  0.1005 &  0.1171 &  0.1637 \\
+Ackley-5   &  0.0196 &  0.0181 &  0.1146 &  0.1809 &  0.1433 &  0.1401 &  0.1779 &  0.1361 \\
+Ackley-10 &  0.0015 &  0.0016 &  0.1519 &  0.0011 &  0.0020 &  0.0019 &  0.1386 &  0.1209 \\
+Alpine2-2 &  0.0957 &  0.0903 &  0.1132 &  0.0848 &  0.0534 &  0.0822 &  0.0878 &  0.0439 \\
+Alpine2-5 &  0.0679 &  0.0577 &  0.0579 &  0.0835 &  0.0878 &  0.0808 &  0.0777 &  0.0814 \\
+\bottomrule
+\end{tabular}\caption{Standard deviation of the average `gap' measure (5 replicates) across different functions.  \el-k is the expect loss function computed with $k$ steps ahead at each iteration. \us is the \us algorithm, \mpi is the maximum probability of improvement and \lcb is the lower confidence bound criterion.}
+\end{center}
+\end{table}\label{table:comparision_std}
+
+
+
+\end{document}
